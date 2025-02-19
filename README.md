@@ -1,4 +1,5 @@
 [![Build](https://github.com/Lygaen/icc-poo/actions/workflows/tests.yml/badge.svg)](https://github.com/Lygaen/icc-poo/actions/workflows/tests.yml)
+![Coveralls](https://img.shields.io/coverallsCoverage/github/Lygaen/icc-poo)
 # Object-Oriented Programmation
 
 EPFL's 2025 autumn programmation project.
