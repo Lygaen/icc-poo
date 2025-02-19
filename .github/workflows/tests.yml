@@ -22,3 +22,12 @@ jobs:
 
       - name: Run tests
         run: uv run pytest
+      
+      - name: Install Coveralls
+        run: uv pip install coveralls
+
+      - name: Upload Coveralls results
+        run: uv run coveralls --service=github-actions
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_PARALLEL: true
