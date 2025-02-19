@@ -6,7 +6,9 @@ type NullableTree = 'Tree' | None
 class Tree:
     left: NullableTree
     right: NullableTree
-    value: str
+    value: str # TODO Use enum instead
+
+# TODO tree_simplify to simplify a tree (csts,...)
 
 def tree_leaf(value: str) -> Tree:
     return Tree(None, None, value)
@@ -16,6 +18,8 @@ def tree_to_str(tree: Tree) -> str:
     right = "" if tree.right is None else " " +tree_to_str(tree.right)
     return f"({left}{tree.value}{right})"
 
+# [x] Support for latex stringify
+# [ ] Test and coverage
 # def tree_to_latex(tree: NullableTree) -> str:
 #     if tree is None:
 #         return ""
