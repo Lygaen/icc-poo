@@ -15,6 +15,7 @@ class GameView(arcade.View):
     player_sprite: arcade.Sprite
     player_sprite_list: arcade.SpriteList[arcade.Sprite]
     wall_list: arcade.SpriteList[arcade.Sprite]
+    coin_list: arcade.SpriteList[arcade.Sprite]
     physics_engine: arcade.PhysicsEnginePlatformer
     camera: arcade.camera.Camera2D
 
@@ -38,6 +39,7 @@ class GameView(arcade.View):
         self.player_sprite_list = arcade.SpriteList()
         self.player_sprite_list.append(self.player_sprite)
         self.wall_list = arcade.SpriteList(use_spatial_hash=True)
+        self.coin_list = arcade.SpriteList(use_spatial_hash=True)
 
         for i in range(0, 1186, 64):
             self.wall_list.append(arcade.Sprite(
@@ -50,6 +52,15 @@ class GameView(arcade.View):
         for i in [256,512,769]:
             self.wall_list.append(arcade.Sprite(
                 ":resources:images/tiles/boxCrate_double.png",
+                center_x=i,
+                center_y=96,
+                scale=0.5
+            ))
+
+        
+        for i in range(128, 1250, 256):
+            self.coin_list.append(arcade.Sprite(
+                ":resources:images/items/coinGold.png",
                 center_x=i,
                 center_y=96,
                 scale=0.5
@@ -68,6 +79,7 @@ class GameView(arcade.View):
         self.clear() # always start with self.clear()   
         with self.camera.activate():
           self.wall_list.draw()
+          self.coin_list.draw()
           self.player_sprite_list.draw()
 
     def on_key_press(self, key: int, modifiers: int) -> None:
