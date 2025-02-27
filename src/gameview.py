@@ -17,6 +17,7 @@ class GameView(arcade.View):
     wall_list: arcade.SpriteList[arcade.Sprite]
     coin_list: arcade.SpriteList[arcade.Sprite]
     physics_engine: arcade.PhysicsEnginePlatformer
+    coin_sound: arcade.Sound
     camera: arcade.camera.Camera2D
 
     def __init__(self) -> None:
@@ -40,6 +41,7 @@ class GameView(arcade.View):
         self.player_sprite_list.append(self.player_sprite)
         self.wall_list = arcade.SpriteList(use_spatial_hash=True)
         self.coin_list = arcade.SpriteList(use_spatial_hash=True)
+        self.coin_sound = arcade.load_sound(":resources:sounds/coin1.wav")
 
         for i in range(0, 1186, 64):
             self.wall_list.append(arcade.Sprite(
@@ -122,4 +124,5 @@ class GameView(arcade.View):
         self.camera.position = self.player_sprite.position # type: ignore
 
         for coin in arcade.check_for_collision_with_list(self.player_sprite, self.coin_list):
+            arcade.play_sound(self.coin_sound)
             coin.remove_from_sprite_lists()
