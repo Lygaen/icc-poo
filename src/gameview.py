@@ -82,6 +82,10 @@ class GameView(arcade.View):
           self.wall_list.draw()
           self.coin_list.draw()
           self.player_sprite_list.draw()
+          #self.wall_list.draw_hit_boxes()
+          #self.coin_list.draw_hit_boxes()
+          #self.player_sprite_list.draw_hit_boxes()
+        
 
     def on_key_press(self, key: int, modifiers: int) -> None:
         """Called when the user presses a key on the keyboard."""
