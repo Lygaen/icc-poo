@@ -92,10 +92,10 @@ class GameView(arcade.View):
         match key:
             case arcade.key.RIGHT:
                 # start moving to the right
-                self.player_sprite.change_x = +PLAYER_MOVEMENT_SPEED
+                self.player_sprite.change_x += PLAYER_MOVEMENT_SPEED
             case arcade.key.LEFT:
                 # start moving to the left
-                self.player_sprite.change_x = -PLAYER_MOVEMENT_SPEED
+                self.player_sprite.change_x -= PLAYER_MOVEMENT_SPEED
             case arcade.key.UP:
                 if self.physics_engine.can_jump():
                     # jump by giving an initial vertical speed
@@ -106,9 +106,12 @@ class GameView(arcade.View):
     def on_key_release(self, key: int, modifiers: int) -> None:
         """Called when the user releases a key on the keyboard."""
         match key:
-            case arcade.key.RIGHT | arcade.key.LEFT:
+            case arcade.key.RIGHT:
                 # stop lateral movement
-                self.player_sprite.change_x = 0
+                self.player_sprite.change_x -= PLAYER_MOVEMENT_SPEED
+            case arcade.key.LEFT:
+                # stop lateral movement
+                self.player_sprite.change_x += PLAYER_MOVEMENT_SPEED
     
     def on_update(self, delta_time: float) -> None:
         """Called once per frame, before drawing.
