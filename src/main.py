@@ -7,6 +7,7 @@ WINDOW_TITLE = "Platformer"
 
 class GameView(arcade.View):
     """Main in-game view."""
+    player_sprite: arcade.Sprite
 
     def __init__(self) -> None:
         # Magical incantion: initialize the Arcade view
@@ -20,7 +21,12 @@ class GameView(arcade.View):
 
     def setup(self) -> None:
         """Set up the game here."""
-        pass
+        self.player_sprite = arcade.Sprite(
+            ":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png",
+            center_x=64,
+            center_y=128
+        )
+
 
     def on_draw(self) -> None:
         """Render the screen."""
