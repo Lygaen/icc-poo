@@ -30,7 +30,8 @@ class GameView(arcade.View):
 
     def on_draw(self) -> None:
         """Render the screen."""
-        self.clear() # always start with self.clear()
+        self.clear() # always start with self.clear()   
+        arcade.draw_sprite(self.player_sprite)
 
 def main() -> None:
     """Main function."""
