@@ -18,6 +18,7 @@ class GameView(arcade.View):
     coin_list: arcade.SpriteList[arcade.Sprite]
     physics_engine: arcade.PhysicsEnginePlatformer
     coin_sound: arcade.Sound
+    jump_sound: arcade.Sound
     camera: arcade.camera.Camera2D
 
     def __init__(self) -> None:
@@ -42,6 +43,7 @@ class GameView(arcade.View):
         self.wall_list = arcade.SpriteList(use_spatial_hash=True)
         self.coin_list = arcade.SpriteList(use_spatial_hash=True)
         self.coin_sound = arcade.load_sound(":resources:sounds/coin1.wav")
+        self.jump_sound = arcade.load_sound(":resources:sounds/jump1.wav")
 
         for i in range(0, 1186, 64):
             self.wall_list.append(arcade.Sprite(
@@ -102,6 +104,7 @@ class GameView(arcade.View):
                 if self.physics_engine.can_jump():
                     # jump by giving an initial vertical speed
                     self.player_sprite.change_y = PLAYER_JUMP_SPEED
+                    arcade.play_sound(self.jump_sound)
             case arcade.key.ESCAPE:
                 self.setup()
 
