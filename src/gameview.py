@@ -7,6 +7,9 @@ PLAYER_MOVEMENT_SPEED : int = 5
 PLAYER_GRAVITY = 1
 """Gravity applied to the player, in pixels per frame²."""
 
+PLAYER_JUMP_SPEED = 18
+"""Instant vertical speed for jumping, in pixels per frame."""
+
 class GameView(arcade.View):
     """Main in-game view."""
     player_sprite: arcade.Sprite
@@ -72,6 +75,9 @@ class GameView(arcade.View):
             case arcade.key.LEFT:
                 # start moving to the left
                 self.player_sprite.change_x = -PLAYER_MOVEMENT_SPEED
+            case arcade.key.UP:
+                # jump by giving an initial vertical speed
+                self.player_sprite.change_y = PLAYER_JUMP_SPEED
 
     def on_key_release(self, key: int, modifiers: int) -> None:
         """Called when the user releases a key on the keyboard."""
