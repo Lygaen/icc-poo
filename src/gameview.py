@@ -37,11 +37,6 @@ class GameView(arcade.View):
         self.player_sprite_list = arcade.SpriteList()
         self.player_sprite_list.append(self.player_sprite)
         self.wall_list = arcade.SpriteList(use_spatial_hash=True)
-        self.physics_engine = arcade.PhysicsEnginePlatformer(
-            self.player_sprite,
-            walls=self.wall_list,
-            gravity_constant=PLAYER_GRAVITY
-        )
 
         for i in range(0, 1186, 64):
             self.wall_list.append(arcade.Sprite(
@@ -58,6 +53,12 @@ class GameView(arcade.View):
                 center_y=96,
                 scale=0.5
             ))
+            
+        self.physics_engine = arcade.PhysicsEnginePlatformer(
+            self.player_sprite,
+            walls=self.wall_list,
+            gravity_constant=PLAYER_GRAVITY
+        )
 
 
     def on_draw(self) -> None:
