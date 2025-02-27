@@ -109,3 +109,6 @@ class GameView(arcade.View):
         """
         self.physics_engine.update()
         self.camera.position = self.player_sprite.position # type: ignore
+
+        for coin in arcade.check_for_collision_with_list(self.player_sprite, self.coin_list):
+            coin.remove_from_sprite_lists()
