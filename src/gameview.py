@@ -16,6 +16,7 @@ class GameView(arcade.View):
     player_sprite_list: arcade.SpriteList[arcade.Sprite]
     wall_list: arcade.SpriteList[arcade.Sprite]
     physics_engine: arcade.PhysicsEnginePlatformer
+    camera: arcade.camera.Camera2D
 
     def __init__(self) -> None:
         # Magical incantion: initialize the Arcade view
@@ -53,19 +54,21 @@ class GameView(arcade.View):
                 center_y=96,
                 scale=0.5
             ))
-            
+
         self.physics_engine = arcade.PhysicsEnginePlatformer(
             self.player_sprite,
             walls=self.wall_list,
             gravity_constant=PLAYER_GRAVITY
         )
+        self.camera = arcade.camera.Camera2D()
 
 
     def on_draw(self) -> None:
         """Render the screen."""
         self.clear() # always start with self.clear()   
-        self.player_sprite_list.draw()
-        self.wall_list.draw()
+        with self.camera.activate():
+          self.wall_list.draw()
+          self.player_sprite_list.draw()
 
     def on_key_press(self, key: int, modifiers: int) -> None:
         """Called when the user presses a key on the keyboard."""
@@ -93,3 +96,4 @@ class GameView(arcade.View):
         This is where in-world time "advances", or "ticks".
         """
         self.physics_engine.update()
+        self.camera.position = self.player_sprite.position # type: ignore
