@@ -4,11 +4,15 @@ import arcade
 PLAYER_MOVEMENT_SPEED : int = 5
 """Lateral speed of the player, in pixels per frame."""
 
+PLAYER_GRAVITY = 1
+"""Gravity applied to the player, in pixels per frame²."""
+
 class GameView(arcade.View):
     """Main in-game view."""
     player_sprite: arcade.Sprite
     player_sprite_list: arcade.SpriteList[arcade.Sprite]
     wall_list: arcade.SpriteList[arcade.Sprite]
+    physics_engine: arcade.PhysicsEnginePlatformer
 
     def __init__(self) -> None:
         # Magical incantion: initialize the Arcade view
@@ -30,6 +34,11 @@ class GameView(arcade.View):
         self.player_sprite_list = arcade.SpriteList()
         self.player_sprite_list.append(self.player_sprite)
         self.wall_list = arcade.SpriteList(use_spatial_hash=True)
+        self.physics_engine = arcade.PhysicsEnginePlatformer(
+            self.player_sprite,
+            walls=self.wall_list,
+            gravity_constant=PLAYER_GRAVITY
+        )
 
         for i in range(0, 1186, 64):
             self.wall_list.append(arcade.Sprite(
@@ -76,4 +85,4 @@ class GameView(arcade.View):
 
         This is where in-world time "advances", or "ticks".
         """
-        self.player_sprite.center_x += self.player_sprite.change_x
+        self.physics_engine.update()
