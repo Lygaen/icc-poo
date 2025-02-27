@@ -71,6 +71,7 @@ class GameView(arcade.View):
             walls=self.wall_list,
             gravity_constant=PLAYER_GRAVITY
         )
+        self.physics_engine.disable_multi_jump()
         self.camera = arcade.camera.Camera2D()
 
 
@@ -92,8 +93,9 @@ class GameView(arcade.View):
                 # start moving to the left
                 self.player_sprite.change_x = -PLAYER_MOVEMENT_SPEED
             case arcade.key.UP:
-                # jump by giving an initial vertical speed
-                self.player_sprite.change_y = PLAYER_JUMP_SPEED
+                if self.physics_engine.can_jump():
+                    # jump by giving an initial vertical speed
+                    self.player_sprite.change_y = PLAYER_JUMP_SPEED
             case arcade.key.ESCAPE:
                 self.setup()
 
