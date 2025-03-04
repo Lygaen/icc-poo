@@ -7,7 +7,6 @@ arcade.resources.add_resource_handle("maps", Path("./assets/maps/").resolve())
 
 class Map:
     __path: Path
-    __player_pos: arcade.Vec2
     __walls: arcade.SpriteList[arcade.Sprite]
     __interactables: arcade.SpriteList[arcade.Sprite]
 
@@ -42,9 +41,12 @@ class Map:
         if not self.__path.exists():
             raise ValueError(f"Map '{self.__path}' was not found on disk")
         
+        self.__walls = arcade.SpriteList(use_spatial_hash=True)
+        self.__interactables = arcade.SpriteList(use_spatial_hash=True)
+        
         content: list[str]
         with self.__path.open("r", encoding="utf-8") as file:
-            content = ["\n".join(file.readlines())]
+            content = ["".join(file.readlines())]
             content = content[0].split("---", 1) # Split between header (0), map (1)
         
         size = self.__parse_header(content[0])
@@ -53,18 +55,14 @@ class Map:
     @property
     def physics_colliders_list(self) -> arcade.SpriteList[arcade.Sprite]:
         return self.__walls
-
-    @property
-    def player_pos(self) -> arcade.Vec2:
-        return self.__player_pos
     
     def __parse_map(self, map: str, size: arcade.Vec2, start: arcade.Vec2 = arcade.Vec2(0,0)) -> None:
         lines = map.splitlines()
 
-        if len(lines) - 1 > size.y:
+        if len(lines) - 2 > size.y:
             raise ValueError("Invalid map height")
         
-        lines = lines[:int(size.y)-1]
+        lines = lines[1:-1]
         lines.reverse() # So that we loop bottom-up
 
         for y, line in enumerate(lines):
