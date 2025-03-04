@@ -4,8 +4,6 @@ from enum import Enum
 
 arcade.resources.add_resource_handle("maps", Path("./assets/maps/").resolve())
 
-MAP_GRID_SIZE = 64
-MAP_SCALE_FACTOR = 0.5
 
 class Map:
     __path: Path
@@ -20,7 +18,7 @@ class Map:
         NOGO = 4
         START = 5
 
-    MAP_CHAR_INFO: dict[str, tuple[str, ObjectType]] = {
+    __CHAR_INFO: dict[str, tuple[str, ObjectType]] = {
         "=": (":resources:/images/tiles/grassMid.png", ObjectType.WALL),
         "-": (":resources:/images/tiles/grassHalf_mid.png", ObjectType.WALL),
         "x": (":resources:/images/tiles/boxCrate_double.png", ObjectType.WALL),
@@ -29,6 +27,8 @@ class Map:
         "£": (":resources:/images/tiles/lava.png", ObjectType.NOGO),
         "S": (":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png", ObjectType.START),
     }
+    __GRID_SIZE = 64
+    __GRID_SCALE = 0.5
 
     def __init__(self, path: str):
         self.__path = arcade.resources.resolve(":maps:" + path)
@@ -74,11 +74,11 @@ class Map:
                 if char == " ":
                     continue
 
-                pos = start + arcade.Vec2(x * MAP_GRID_SIZE, y * MAP_GRID_SIZE)
-                info = self.MAP_CHAR_INFO[char]
+                pos = start + arcade.Vec2(x * self.__GRID_SIZE, y * self.__GRID_SIZE)
+                info = self.__CHAR_INFO[char]
 
                 sprite = arcade.Sprite(info[0], 
-                                scale=MAP_SCALE_FACTOR,
+                                scale=self.__GRID_SCALE,
                                 center_x=pos.x,
                                 center_y=pos.y)
 
