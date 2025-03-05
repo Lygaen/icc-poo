@@ -15,8 +15,8 @@ PLAYER_JUMP_SPEED = 18
 class Player(GameObject):
     physics_engine: arcade.PhysicsEnginePlatformer
 
-    def __init__(self, physics_engine: arcade.PhysicsEnginePlatformer, **kwargs: Any) -> None:
-        super(Player, self).__init__(":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png", **kwargs)
+    def __init__(self, physics_engine: arcade.PhysicsEnginePlatformer, list: arcade.SpriteList[GameObject], **kwargs: Any) -> None:
+        super(Player, self).__init__(list, ":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png", **kwargs)
         self.physics_engine = physics_engine
     
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:

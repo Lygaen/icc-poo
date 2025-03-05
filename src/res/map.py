@@ -104,6 +104,7 @@ class Map:
                     case Map.ObjectType.START:
                         player = Player(
                                 self.__physics_engine,
+                                self.__passthrough_objects,
                                 scale=self.__GRID_SCALE,
                                 center_x=pos.x,
                                 center_y=pos.y)
@@ -113,12 +114,12 @@ class Map:
                         # TODO Monster Start
                         pass
                     case Map.ObjectType.COIN | Map.ObjectType.NOGO:
-                        self.__passthrough_objects.append(GameObject(info[0], 
+                        self.__passthrough_objects.append(GameObject(self.__passthrough_objects, info[0], 
                                 scale=self.__GRID_SCALE,
                                 center_x=pos.x,
                                 center_y=pos.y))
                     case Map.ObjectType.WALL:
-                        self.__physics_objects.append(GameObject(info[0], 
+                        self.__physics_objects.append(GameObject(self.__physics_objects, info[0], 
                                 scale=self.__GRID_SCALE,
                                 center_x=pos.x,
                                 center_y=pos.y))
