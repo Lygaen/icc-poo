@@ -1,11 +1,14 @@
+from __future__ import annotations
+
 import itertools
 import arcade
 from pathlib import Path
 from enum import Enum
 from typing import Iterator, cast
+import typing
 
-from src.entities.gameobject import GameObject
-from src.entities.player import Player
+if typing.TYPE_CHECKING:
+    from src.entities.gameobject import GameObject
 
 arcade.resources.add_resource_handle("maps", Path("./assets/maps/").resolve())
 
@@ -13,8 +16,8 @@ class Map:
     __path: Path
     __physics_objects: arcade.SpriteList[GameObject]
     __passthrough_objects: arcade.SpriteList[GameObject]
-    __physics_engine: arcade.PhysicsEnginePlatformer
-    __player: GameObject
+    physics_engine: arcade.PhysicsEnginePlatformer
+    player: GameObject
 
     class ObjectType(Enum):
         WALL = 1
@@ -44,9 +47,9 @@ class Map:
         self.__passthrough_objects.draw()
 
     def update(self, delta_time: float) -> None:
-        self.__physics_engine.update()
-        self.__physics_objects.update(delta_time)
-        self.__passthrough_objects.update(delta_time)
+        self.physics_engine.update()
+        self.__physics_objects.update(delta_time, map=self)
+        self.__passthrough_objects.update(delta_time, map=self)
 
     @property
     def game_objects(self) -> Iterator[GameObject]:
@@ -64,7 +67,7 @@ class Map:
             content = ["".join(file.readlines())]
             content = content[0].split("---", 1) # Split between header (0), map (1)
         
-        self.__physics_engine = arcade.PhysicsEnginePlatformer(
+        self.physics_engine = arcade.PhysicsEnginePlatformer(
             arcade.Sprite(),
             walls=self.__physics_objects,
             gravity_constant=1,
@@ -73,15 +76,17 @@ class Map:
         size = self.__parse_header(content[0])
         self.__parse_map(content[1], size)
 
-        self.__physics_engine.player_sprite = self.__player
-        self.__physics_engine.walls.clear()
-        self.__physics_engine.walls.append(self.__physics_objects)
+        self.physics_engine.player_sprite = self.player
+        self.physics_engine.walls.clear()
+        self.physics_engine.walls.append(self.__physics_objects)
     
     @property
     def physics_colliders_list(self) -> arcade.SpriteList[GameObject]:
         return self.__physics_objects
     
     def __parse_map(self, map: str, size: arcade.Vec2, start: arcade.Vec2 = arcade.Vec2(0,0)) -> None:
+        from src.entities.player import Player
+        from src.entities.gameobject import GameObject
         lines = map.splitlines()
 
         if len(lines) - 2 > size.y:
@@ -103,23 +108,22 @@ class Map:
                 match info[1]:
                     case Map.ObjectType.START:
                         player = Player(
-                                self.__physics_engine,
-                                self.__passthrough_objects,
+                                self,
                                 scale=self.__GRID_SCALE,
                                 center_x=pos.x,
                                 center_y=pos.y)
                         self.__passthrough_objects.append(player)
-                        self.__player = player
+                        self.player = player
                     case Map.ObjectType.MONSTER:
                         # TODO Monster Start
                         pass
                     case Map.ObjectType.COIN | Map.ObjectType.NOGO:
-                        self.__passthrough_objects.append(GameObject(self.__passthrough_objects, info[0], 
+                        self.__passthrough_objects.append(GameObject(self, info[0], 
                                 scale=self.__GRID_SCALE,
                                 center_x=pos.x,
                                 center_y=pos.y))
                     case Map.ObjectType.WALL:
-                        self.__physics_objects.append(GameObject(self.__physics_objects, info[0], 
+                        self.__physics_objects.append(GameObject(self, info[0], 
                                 scale=self.__GRID_SCALE,
                                 center_x=pos.x,
                                 center_y=pos.y))
@@ -142,3 +146,14 @@ class Map:
                     raise ValueError(f"Unkown variable field name '{vname}' in map")
         
         return arcade.Vec2(width, height)
+
+    def destroy(self, object: GameObject) -> None:
+        for obj in self.__passthrough_objects:
+            if obj == object:
+                self.__passthrough_objects.remove(object)
+                return
+        
+        for obj in self.__physics_objects:
+            if obj == object:
+                self.__passthrough_objects.remove(object)
+                return

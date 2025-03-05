@@ -2,6 +2,7 @@ from typing import Any
 import arcade
 
 from src.entities.gameobject import GameObject
+from src.res.map import Map
 
 PLAYER_MOVEMENT_SPEED : int = 5
 """Lateral speed of the player, in pixels per frame."""
@@ -13,11 +14,8 @@ PLAYER_JUMP_SPEED = 18
 """Instant vertical speed for jumping, in pixels per frame."""
 
 class Player(GameObject):
-    physics_engine: arcade.PhysicsEnginePlatformer
-
-    def __init__(self, physics_engine: arcade.PhysicsEnginePlatformer, list: arcade.SpriteList[GameObject], **kwargs: Any) -> None:
-        super(Player, self).__init__(list, ":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png", **kwargs)
-        self.physics_engine = physics_engine
+    def __init__(self, map: Map, **kwargs: Any) -> None:
+        super(Player, self).__init__(map, ":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png", **kwargs)
     
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         super().update(delta_time, **kwargs)
@@ -31,8 +29,9 @@ class Player(GameObject):
                 # start moving to the left
                 self.change_x -= PLAYER_MOVEMENT_SPEED
             case arcade.key.UP:
-                if self.physics_engine.can_jump():
+                if self.map.physics_engine.can_jump():
                     self.change_y = PLAYER_JUMP_SPEED
+                    self.destroy()
     
     def on_key_release(self, key: int, modifiers: int) -> None:
         """Called when the user releases a key on the keyboard."""
