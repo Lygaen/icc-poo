@@ -4,16 +4,17 @@ from pathlib import Path
 from enum import Enum
 from typing import Iterator, cast
 
-from src.entities.evlistener import EventListener
+from src.entities.gameobject import GameObject
 from src.entities.player import Player
 
 arcade.resources.add_resource_handle("maps", Path("./assets/maps/").resolve())
 
-
 class Map:
     __path: Path
-    __physics_objects: arcade.SpriteList[arcade.Sprite]
-    __passthrough_objects: arcade.SpriteList[arcade.Sprite]
+    __physics_objects: arcade.SpriteList[GameObject]
+    __passthrough_objects: arcade.SpriteList[GameObject]
+    __physics_engine: arcade.PhysicsEnginePlatformer
+    __player: GameObject
 
     class ObjectType(Enum):
         WALL = 1
@@ -43,13 +44,13 @@ class Map:
         self.__passthrough_objects.draw()
 
     def update(self, delta_time: float) -> None:
+        self.__physics_engine.update()
         self.__physics_objects.update(delta_time)
         self.__passthrough_objects.update(delta_time)
 
     @property
-    def event_listeners(self) -> Iterator[EventListener]:
-        return map(lambda x: cast(EventListener, x), filter(lambda x: issubclass(x.__class__, EventListener),
-                                                             itertools.chain(self.__passthrough_objects, self.__physics_objects)))
+    def game_objects(self) -> Iterator[GameObject]:
+        return itertools.chain(self.__passthrough_objects, self.__physics_objects)
     
     def reload(self) -> None:
         if not self.__path.exists():
@@ -63,11 +64,21 @@ class Map:
             content = ["".join(file.readlines())]
             content = content[0].split("---", 1) # Split between header (0), map (1)
         
+        self.__physics_engine = arcade.PhysicsEnginePlatformer(
+            arcade.Sprite(),
+            walls=self.__physics_objects,
+            gravity_constant=1,
+        )
+        
         size = self.__parse_header(content[0])
         self.__parse_map(content[1], size)
+
+        self.__physics_engine.player_sprite = self.__player
+        self.__physics_engine.walls.clear()
+        self.__physics_engine.walls.append(self.__physics_objects)
     
     @property
-    def physics_colliders_list(self) -> arcade.SpriteList[arcade.Sprite]:
+    def physics_colliders_list(self) -> arcade.SpriteList[GameObject]:
         return self.__physics_objects
     
     def __parse_map(self, map: str, size: arcade.Vec2, start: arcade.Vec2 = arcade.Vec2(0,0)) -> None:
@@ -89,24 +100,28 @@ class Map:
                 pos = start + arcade.Vec2(x * self.__GRID_SIZE, y * self.__GRID_SIZE)
                 info = self.__CHAR_INFO[char]
 
-                sprite = arcade.Sprite(info[0], 
+                match info[1]:
+                    case Map.ObjectType.START:
+                        player = Player(
+                                self.__physics_engine,
                                 scale=self.__GRID_SCALE,
                                 center_x=pos.x,
                                 center_y=pos.y)
-
-                match info[1]:
-                    case Map.ObjectType.START:
-                        self.__passthrough_objects.append(Player(
-                                scale=self.__GRID_SCALE,
-                                center_x=pos.x,
-                                center_y=pos.y))
+                        self.__passthrough_objects.append(player)
+                        self.__player = player
                     case Map.ObjectType.MONSTER:
                         # TODO Monster Start
                         pass
                     case Map.ObjectType.COIN | Map.ObjectType.NOGO:
-                        self.__passthrough_objects.append(sprite)
+                        self.__passthrough_objects.append(GameObject(info[0], 
+                                scale=self.__GRID_SCALE,
+                                center_x=pos.x,
+                                center_y=pos.y))
                     case Map.ObjectType.WALL:
-                        self.__passthrough_objects.append(sprite)
+                        self.__physics_objects.append(GameObject(info[0], 
+                                scale=self.__GRID_SCALE,
+                                center_x=pos.x,
+                                center_y=pos.y))
 
     def __parse_header(self, header: str) -> arcade.Vec2:
         width: int

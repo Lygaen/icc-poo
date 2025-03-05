@@ -25,5 +25,9 @@ class GameView(arcade.View):
         self.map.update(delta_time)
     
     def on_key_press(self, symbol: int, modifiers: int) -> None:
-        for listeners in self.map.event_listeners:
+        for listeners in self.map.game_objects:
             listeners.on_key_press(symbol, modifiers)
+    
+    def on_key_release(self, symbol: int, modifiers: int) -> None:
+        for listeners in self.map.game_objects:
+            listeners.on_key_release(symbol, modifiers)
