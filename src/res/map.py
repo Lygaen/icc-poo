@@ -1,6 +1,11 @@
+import itertools
 import arcade
 from pathlib import Path
 from enum import Enum
+from typing import Iterator, cast
+
+from src.entities.evlistener import EventListener
+from src.entities.player import Player
 
 arcade.resources.add_resource_handle("maps", Path("./assets/maps/").resolve())
 
@@ -37,9 +42,14 @@ class Map:
         self.__physics_objects.draw()
         self.__passthrough_objects.draw()
 
-    def update(self) -> None:
-        self.__physics_objects.update()
-        self.__passthrough_objects.update()
+    def update(self, delta_time: float) -> None:
+        self.__physics_objects.update(delta_time)
+        self.__passthrough_objects.update(delta_time)
+
+    @property
+    def event_listeners(self) -> Iterator[EventListener]:
+        return map(lambda x: cast(EventListener, x), filter(lambda x: issubclass(x.__class__, EventListener),
+                                                             itertools.chain(self.__passthrough_objects, self.__physics_objects)))
     
     def reload(self) -> None:
         if not self.__path.exists():
@@ -86,8 +96,10 @@ class Map:
 
                 match info[1]:
                     case Map.ObjectType.START:
-                        # TODO Player Start
-                        pass
+                        self.__passthrough_objects.append(Player(
+                                scale=self.__GRID_SCALE,
+                                center_x=pos.x,
+                                center_y=pos.y))
                     case Map.ObjectType.MONSTER:
                         # TODO Monster Start
                         pass

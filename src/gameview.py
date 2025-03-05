@@ -20,3 +20,10 @@ class GameView(arcade.View):
         """Render the screen."""
         self.clear()  
         self.map.draw()
+    
+    def on_update(self, delta_time: float) -> None:
+        self.map.update(delta_time)
+    
+    def on_key_press(self, symbol: int, modifiers: int) -> None:
+        for listeners in self.map.event_listeners:
+            listeners.on_key_press(symbol, modifiers)
