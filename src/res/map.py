@@ -87,6 +87,8 @@ class Map:
     def __parse_map(self, map: str, size: arcade.Vec2, start: arcade.Vec2 = arcade.Vec2(0,0)) -> None:
         from src.entities.player import Player
         from src.entities.gameobject import GameObject
+        from src.entities.coin import Coin
+        
         lines = map.splitlines()
 
         if len(lines) - 2 > size.y:
@@ -117,6 +119,11 @@ class Map:
                     case Map.ObjectType.MONSTER:
                         # TODO Monster Start
                         pass
+                    case Map.ObjectType.COIN:
+                        self.__passthrough_objects.append(Coin(self, 
+                                scale=self.__GRID_SCALE,
+                                center_x=pos.x,
+                                center_y=pos.y))
                     case Map.ObjectType.COIN | Map.ObjectType.NOGO:
                         self.__passthrough_objects.append(GameObject(self, info[0], 
                                 scale=self.__GRID_SCALE,
