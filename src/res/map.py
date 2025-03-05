@@ -7,8 +7,8 @@ arcade.resources.add_resource_handle("maps", Path("./assets/maps/").resolve())
 
 class Map:
     __path: Path
-    __walls: arcade.SpriteList[arcade.Sprite]
-    __interactables: arcade.SpriteList[arcade.Sprite]
+    __physics_objects: arcade.SpriteList[arcade.Sprite]
+    __passthrough_objects: arcade.SpriteList[arcade.Sprite]
 
     class ObjectType(Enum):
         WALL = 1
@@ -34,15 +34,19 @@ class Map:
         self.reload()
     
     def draw(self) -> None:
-        self.__walls.draw()
-        self.__interactables.draw()
+        self.__physics_objects.draw()
+        self.__passthrough_objects.draw()
+
+    def update(self) -> None:
+        self.__physics_objects.update()
+        self.__passthrough_objects.update()
     
     def reload(self) -> None:
         if not self.__path.exists():
             raise ValueError(f"Map '{self.__path}' was not found on disk")
         
-        self.__walls = arcade.SpriteList(use_spatial_hash=True)
-        self.__interactables = arcade.SpriteList(use_spatial_hash=True)
+        self.__physics_objects = arcade.SpriteList(use_spatial_hash=True)
+        self.__passthrough_objects = arcade.SpriteList(use_spatial_hash=True)
         
         content: list[str]
         with self.__path.open("r", encoding="utf-8") as file:
@@ -54,7 +58,7 @@ class Map:
     
     @property
     def physics_colliders_list(self) -> arcade.SpriteList[arcade.Sprite]:
-        return self.__walls
+        return self.__physics_objects
     
     def __parse_map(self, map: str, size: arcade.Vec2, start: arcade.Vec2 = arcade.Vec2(0,0)) -> None:
         lines = map.splitlines()
@@ -88,9 +92,9 @@ class Map:
                         # TODO Monster Start
                         pass
                     case Map.ObjectType.COIN | Map.ObjectType.NOGO:
-                        self.__interactables.append(sprite)
+                        self.__passthrough_objects.append(sprite)
                     case Map.ObjectType.WALL:
-                        self.__walls.append(sprite)
+                        self.__passthrough_objects.append(sprite)
 
     def __parse_header(self, header: str) -> arcade.Vec2:
         width: int
