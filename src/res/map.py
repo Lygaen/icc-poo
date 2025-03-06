@@ -86,9 +86,9 @@ class Map:
     
     def __parse_map(self, map: str, size: arcade.Vec2, start: arcade.Vec2 = arcade.Vec2(0,0)) -> None:
         from src.entities.player import Player
-        from src.entities.gameobject import GameObject
         from src.entities.coin import Coin
         from src.entities.lava import Lava
+        from src.entities.wall import Wall
         
         lines = map.splitlines()
 
@@ -131,7 +131,7 @@ class Map:
                                 center_x=pos.x,
                                 center_y=pos.y))
                     case Map.ObjectType.WALL:
-                        self.__physics_objects.append(GameObject(self, info[0], 
+                        self.__physics_objects.append(Wall(self, char, 
                                 scale=self.__GRID_SCALE,
                                 center_x=pos.x,
                                 center_y=pos.y))
