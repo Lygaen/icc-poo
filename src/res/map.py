@@ -13,13 +13,46 @@ if typing.TYPE_CHECKING:
 arcade.resources.add_resource_handle("maps", Path("./assets/maps/").resolve())
 
 class Map:
+    """The main class handling :
+    - Map Loading
+    - GameObject registry
+    - Full-map drawing and updating
+
+    See the relevant functions for details
+    """
+
     __path: Path
+    """The Path to the map on disk
+    """
+
     __physics_objects: arcade.SpriteList[GameObject]
+    """The list of objects that should be checked for collisions,
+    meaning that they can be walked on. This is used mainly because
+    physics engine needs a sprite list in its constructor
+    """
+
     __passthrough_objects: arcade.SpriteList[GameObject]
+    """The list of objects that are not used for collisions on the
+    physics engine. All other objects.
+    """
+
     physics_engine: arcade.PhysicsEnginePlatformer
+    """The physics engine that handles gravity and collisions
+    for the player.
+    """
     player: GameObject
+    """The player gameobject. *SHOULD* only be modified internally.
+    """
 
     class ObjectType(Enum):
+        """The type of object to be added on the sprite list.
+        Currently depends on the map format.
+
+        Types are pretty self-explanatory, with the details of :
+        - NOGO is currently only lava
+        - START is the starting point of the player
+        """
+
         WALL = 1
         COIN = 2
         MONSTER = 3
@@ -28,6 +61,20 @@ class Map:
 
         @classmethod
         def from_representation(cls, value: str) -> Self:
+            """Returns the ObjectType from the string representation
+
+            Args:
+                value (str): The string representation of the object type,
+                See implementation details for which type are returned for
+                which string.
+
+            Raises:
+                ValueError: If and only if the given representation is not
+                defined for any type
+
+            Returns:
+                Self: The ObjectType in question
+            """
             match value:
                 case "=" | "-" | "x":
                     return cast(Self, cls.WALL)
@@ -43,26 +90,62 @@ class Map:
                     raise ValueError(f"Invalid '{value}' for ObjectType enum")
 
     __GRID_SIZE = 64
+    """The size of the grid in pixels.
+    """
     __GRID_SCALE = 0.5
+    """Grid sprite scalar aka. by how much the sprites are scaled
+    to fit inside a grid block.
+    """
+    __GRAVITY_CONSTANT = 1
+    """The gravity constant (in pixels) for the physics engine,
+    to be applied each and every update frame.
+    """
 
     def __init__(self, path: str):
+        """Initializes the map with a given path
+
+        Args:
+            path (str): The path of the map, starting from the "assets/maps"
+            folder
+        """
         self.__path = arcade.resources.resolve(":maps:" + path)
         self.reload()
     
     def draw(self) -> None:
+        """Draw the map and all sub-objects
+        """
         self.__physics_objects.draw()
         self.__passthrough_objects.draw()
 
     def update(self, delta_time: float) -> None:
+        """Updates the map and all sub-objects given the delta
+        time between this frame and the last
+
+        Args:
+            delta_time (float): the delta in time between this frame
+            and the last
+        """
         self.physics_engine.update()
         self.__physics_objects.update(delta_time, map=self)
         self.__passthrough_objects.update(delta_time, map=self)
 
     @property
     def game_objects(self) -> Iterator[GameObject]:
+        """All game objects, indefferent of type or the list
+        they are in.
+
+        Yields:
+            Iterator[GameObject]: Iterator to loop through the gameobjects
+        """
         return itertools.chain(self.__passthrough_objects, self.__physics_objects)
     
     def reload(self) -> None:
+        """Reloads the map, player and engine
+
+        Raises:
+            ValueError: The map was not found on disk
+        """
+
         if not self.__path.exists():
             raise ValueError(f"Map '{self.__path}' was not found on disk")
         
@@ -77,7 +160,7 @@ class Map:
         self.physics_engine = arcade.PhysicsEnginePlatformer(
             arcade.Sprite(),
             walls=self.__physics_objects,
-            gravity_constant=1,
+            gravity_constant=self.__GRAVITY_CONSTANT,
         )
         
         size = self.__parse_header(content[0])
@@ -89,9 +172,28 @@ class Map:
     
     @property
     def physics_colliders_list(self) -> arcade.SpriteList[GameObject]:
+        """The physics colliders lists, aka. the gameobjects that
+        the sprites should be checking against for collisions,
+        blocks, ...
+
+        Returns:
+            arcade.SpriteList[GameObject]: The sprite list (may be changed
+            to an iterator later)
+        """
         return self.__physics_objects
     
     def __parse_map(self, map: str, size: arcade.Vec2, start: arcade.Vec2 = arcade.Vec2(0,0)) -> None:
+        """Parses the map, initializing internals with the parsed data.
+
+        Args:
+            map (str): The map as the string representation
+            size (arcade.Vec2): The size of the map
+            start (arcade.Vec2, optional): The start of the player. Defaults to arcade.Vec2(0,0).
+
+        Raises:
+            ValueError: Invalid map height if the given size and map do not match
+            ValueError: Invalid width if a line do not match the given size (line_width > size.x)
+        """
         from src.entities.player import Player
         from src.entities.coin import Coin
         from src.entities.lava import Lava
@@ -147,8 +249,20 @@ class Map:
                                 center_y=pos.y))
 
     def __parse_header(self, header: str) -> arcade.Vec2:
-        width: int
-        height: int
+        """Parses the header from the string, returning
+        the metadata of the parsed header.
+
+        Args:
+            header (str): The header to parse from
+
+        Raises:
+            ValueError: An unkown variable was found
+
+        Returns:
+            arcade.Vec2: The size of the header
+        """
+        width: int = 0
+        height: int = 0
         for line in header.splitlines():
             if line.lstrip() == "":
                 continue
@@ -166,6 +280,11 @@ class Map:
         return arcade.Vec2(width, height)
 
     def destroy(self, object: GameObject) -> None:
+        """Destroys a given gameobject from the map
+
+        Args:
+            object (GameObject): The object to destroy
+        """
         for obj in self.__passthrough_objects:
             if obj == object:
                 self.__passthrough_objects.remove(object)
@@ -173,5 +292,5 @@ class Map:
         
         for obj in self.__physics_objects:
             if obj == object:
-                self.__passthrough_objects.remove(object)
+                self.__physics_objects.remove(object)
                 return

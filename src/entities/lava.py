@@ -5,6 +5,9 @@ from src.entities.gameobject import GameObject
 from src.res.map import Map
 
 class Lava(GameObject):
+    """The lava object, currently only resets the map
+    """
+
     def __init__(self, map: Map, **kwargs: Any) -> None:
         super().__init__(map, ":resources:/images/tiles/lava.png", **kwargs)
     

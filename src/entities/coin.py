@@ -5,6 +5,9 @@ from src.entities.gameobject import GameObject
 from src.res.map import Map
 
 class Coin(GameObject):
+    """Generic coin object. Currently only self destroys.
+    """
+
     def __init__(self, map: Map, **kwargs: Any) -> None:
         super().__init__(map, ":resources:/images/items/coinGold.png", **kwargs)
     

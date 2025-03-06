@@ -11,9 +11,17 @@ PLAYER_JUMP_SPEED = 12
 """Instant vertical speed for jumping, in pixels per frame."""
 
 class Player(GameObject):
+    """The main player game object.
+    """
     is_move_initiated: bool
+    """Whether the move was initiated (the key was pressed)
+    on a frame where the player was present.
+    """
 
     def __init__(self, map: Map, **kwargs: Any) -> None:
+        """Initializes the player tl;dr see GameObject#__init__
+        """
+
         super().__init__(map, ":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png", **kwargs)
         self.is_move_initiated = False
     
@@ -30,7 +38,6 @@ class Player(GameObject):
                     self.change_y = PLAYER_JUMP_SPEED
     
     def on_key_release(self, key: int, modifiers: int) -> None:
-        """Called when the user releases a key on the keyboard."""
         match key:
             case arcade.key.RIGHT:
                 if self.is_move_initiated:
