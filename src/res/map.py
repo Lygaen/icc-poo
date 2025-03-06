@@ -88,6 +88,7 @@ class Map:
         from src.entities.player import Player
         from src.entities.gameobject import GameObject
         from src.entities.coin import Coin
+        from src.entities.lava import Lava
         
         lines = map.splitlines()
 
@@ -124,8 +125,8 @@ class Map:
                                 scale=self.__GRID_SCALE,
                                 center_x=pos.x,
                                 center_y=pos.y))
-                    case Map.ObjectType.COIN | Map.ObjectType.NOGO:
-                        self.__passthrough_objects.append(GameObject(self, info[0], 
+                    case Map.ObjectType.NOGO:
+                        self.__passthrough_objects.append(Lava(self,
                                 scale=self.__GRID_SCALE,
                                 center_x=pos.x,
                                 center_y=pos.y))
