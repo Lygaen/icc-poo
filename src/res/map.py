@@ -4,7 +4,7 @@ import itertools
 import arcade
 from pathlib import Path
 from enum import Enum
-from typing import Iterator, cast
+from typing import Iterator, Self, cast
 import typing
 
 if typing.TYPE_CHECKING:
@@ -26,15 +26,22 @@ class Map:
         NOGO = 4
         START = 5
 
-    __CHAR_INFO: dict[str, tuple[str, ObjectType]] = {
-        "=": (":resources:/images/tiles/grassMid.png", ObjectType.WALL),
-        "-": (":resources:/images/tiles/grassHalf_mid.png", ObjectType.WALL),
-        "x": (":resources:/images/tiles/boxCrate_double.png", ObjectType.WALL),
-        "*": (":resources:/images/items/coinGold.png", ObjectType.COIN),
-        "o": (":resources:/images/enemies/slimeBlue.png", ObjectType.MONSTER),
-        "£": (":resources:/images/tiles/lava.png", ObjectType.NOGO),
-        "S": (":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png", ObjectType.START),
-    }
+        @classmethod
+        def from_representation(cls, value: str) -> Self:
+            match value:
+                case "=" | "-" | "x":
+                    return cast(Self, cls.WALL)
+                case "*":
+                    return cast(Self, cls.COIN)
+                case "o":
+                    return cast(Self, cls.MONSTER)
+                case "£":
+                    return cast(Self, cls.NOGO)
+                case "S":
+                    return cast(Self, cls.START)
+                case _:
+                    raise ValueError(f"Invalid '{value}' for ObjectType enum")
+
     __GRID_SIZE = 64
     __GRID_SCALE = 0.5
 
@@ -107,9 +114,9 @@ class Map:
                     continue
 
                 pos = start + arcade.Vec2(x * self.__GRID_SIZE, y * self.__GRID_SIZE)
-                info = self.__CHAR_INFO[char]
+                objType = Map.ObjectType.from_representation(char)
 
-                match info[1]:
+                match objType:
                     case Map.ObjectType.START:
                         player = Player(
                                 self,
