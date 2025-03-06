@@ -42,12 +42,14 @@ class Monster(GameObject):
             return
         if self.check_collision(Dir.face):
             self.change_x *= -1
+            self.direction *= -1
             if self.check_collision(Dir.face):
                 self.change_x *= 0
             super().update(delta_time, **kwargs)
             return
         if not self.check_collision(Dir.facedown):
             self.change_x *= -1
+            self.direction *= -1
             if not self.check_collision(Dir.facedown):
                 self.change_x *= 0
             super().update(delta_time, **kwargs)
