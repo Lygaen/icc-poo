@@ -18,12 +18,17 @@ class Player(GameObject):
     on a frame where the player was present.
     """
 
+    jump_sound: arcade.Sound
+    """SFX for when the player is jumping.
+    """
+
     def __init__(self, map: Map, **kwargs: Any) -> None:
         """Initializes the player tl;dr see GameObject#__init__
         """
 
         super().__init__(map, ":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png", **kwargs)
         self.is_move_initiated = False
+        self.jump_sound = arcade.Sound(":resources:sounds/jump1.wav")
     
     def on_key_press(self, symbol: int, modifiers: int) -> None:
         match symbol:
@@ -36,6 +41,7 @@ class Player(GameObject):
             case arcade.key.UP:
                 if self.map.physics_engine.can_jump():
                     self.change_y = PLAYER_JUMP_SPEED
+                    arcade.play_sound(self.jump_sound)
     
     def on_key_release(self, key: int, modifiers: int) -> None:
         match key:
