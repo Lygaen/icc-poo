@@ -32,9 +32,9 @@ class Slime(GameObject):
             case Dir.down:
                 circle.position = (self.position[0], self.position[1] - self.size[1]//2)
             case Dir.face:
-                circle.position = (self.position[0] + self.direction*self.size[0]//2, self.position[1])
+                circle.position = (self.position[0] + self.scale_x*self.direction*self.size[0]//2, self.position[1])
             case Dir.facedown:
-                circle.position = (self.position[0] + self.direction*(self.size[0]//2 + 2), self.position[1] - self.size[1]//2 - 1)
+                circle.position = (self.position[0] + self.scale_x*self.direction*(self.size[0]//2 + 2), self.position[1] - self.size[1]//2 - 1)
             case _:
                 #pas encore implémenté (pas de besoin pour le moment)
                 return False
@@ -51,6 +51,7 @@ class Slime(GameObject):
         if self.check_collision(Dir.face):
             self.change_x *= -1
             self.direction *= -1
+            self.scale_x *= -1
             if self.check_collision(Dir.face):
                 self.change_x *= 0
             super().update(delta_time, **kwargs)
@@ -58,6 +59,7 @@ class Slime(GameObject):
         if not self.check_collision(Dir.facedown):
             self.change_x *= -1
             self.direction *= -1
+            self.scale_x *= -1
             if not self.check_collision(Dir.facedown):
                 self.change_x *= 0
             super().update(delta_time, **kwargs)
