@@ -14,11 +14,15 @@ class Dir(Enum):
     backdown = 6
     backup = 7
 
-class Monster(GameObject):
+class Slime(GameObject):
     direction : int
+    gameover_sound: arcade.Sound
+    """Sound for when player touches lava
+    """
 
     def __init__(self, map: Map, **kwargs: Any) -> None:
         super().__init__(map, ":resources:/images/enemies/slimeBlue.png", **kwargs)
+        self.gameover_sound = arcade.Sound(":resources:sounds/gameover1.wav")
         self.change_x = -1
         self.direction = -1
     
@@ -37,6 +41,10 @@ class Monster(GameObject):
         return (len(arcade.check_for_collision_with_list(circle, self.map.physics_colliders_list)) != 0)
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
+        if arcade.check_for_collision(self.map.player, self):
+            arcade.play_sound(self.gameover_sound)
+            self.map.reload()
+
         if not self.check_collision(Dir.down):
             super().update(delta_time, **kwargs)
             return

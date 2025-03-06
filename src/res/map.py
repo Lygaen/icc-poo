@@ -198,7 +198,7 @@ class Map:
         from src.entities.coin import Coin
         from src.entities.lava import Lava
         from src.entities.wall import Wall
-        from src.entities.monster import Monster
+        from src.entities.monster import Slime
         
         lines = map.splitlines()
 
@@ -228,7 +228,7 @@ class Map:
                         self.__passthrough_objects.append(player)
                         self.player = player
                     case Map.ObjectType.MONSTER:
-                        self.__passthrough_objects.append(Monster(self, 
+                        self.__passthrough_objects.append(Slime(self, 
                                 scale=self.__GRID_SCALE,
                                 center_x=pos.x,
                                 center_y=pos.y))
