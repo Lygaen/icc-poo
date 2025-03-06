@@ -4,6 +4,7 @@ from enum import Enum
 
 from src.entities.gameobject import GameObject
 from src.res.map import Map
+
 class Dir(Enum):
     down = 0
     up = 1
@@ -17,7 +18,7 @@ class Dir(Enum):
 class Slime(GameObject):
     direction : int
     gameover_sound: arcade.Sound
-    """Sound for when player touches lava
+    """Sound for when player touches the slime
     """
 
     def __init__(self, map: Map, **kwargs: Any) -> None:
