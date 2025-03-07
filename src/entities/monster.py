@@ -53,7 +53,7 @@ class Slime(GameObject):
             self.change_x *= -1
             self.direction *= -1
             self.scale_x *= -1
-            if self.check_collision(Dir.face):
+            if self.check_collision(Dir.face) or not self.check_collision(Dir.facedown):
                 self.change_x *= 0
             super().update(delta_time, **kwargs)
             return
@@ -61,7 +61,7 @@ class Slime(GameObject):
             self.change_x *= -1
             self.direction *= -1
             self.scale_x *= -1
-            if not self.check_collision(Dir.facedown):
+            if not self.check_collision(Dir.facedown) or self.check_collision(Dir.face):
                 self.change_x *= 0
             super().update(delta_time, **kwargs)
             return
