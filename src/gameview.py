@@ -1,4 +1,5 @@
 import arcade
+from src.res.camera import BetterCamera
 from src.res.map import Map
 
 class GameView(arcade.View):
@@ -7,7 +8,7 @@ class GameView(arcade.View):
     map: Map
     """The current map of the game
     """
-    camera: arcade.Camera2D
+    camera: BetterCamera
     """The camera pointing to the player.
     Will be changed to a proper camera handling
     """
@@ -24,7 +25,7 @@ class GameView(arcade.View):
     def setup(self) -> None:
         """Set up the game, loading the map, ..."""
         self.map = Map("map1.txt")
-        self.camera = arcade.Camera2D()
+        self.camera = BetterCamera()
 
     def on_draw(self) -> None:
         """Render the screen."""
@@ -40,7 +41,7 @@ class GameView(arcade.View):
             delta_time (float): The delta time between the last frame and the current
         """
         self.map.update(delta_time)
-        self.camera.position = arcade.Vec2(self.map.player.position[0], self.map.player.position[1])
+        self.camera.update(delta_time, self.map.player.position)
     
     def on_key_press(self, symbol: int, modifiers: int) -> None:
         """On Key Press event

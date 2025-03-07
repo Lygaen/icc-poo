@@ -27,6 +27,11 @@ class Player(GameObject):
         """
 
         super().__init__(map, ":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png", **kwargs)
+
+        # Ugly bug where arcade didn't register on my laptop
+        # when a key was pressed on specific frames but registered
+        # the release when the map was just reloaded.
+        # Very specific. Very annoying.
         self.is_move_initiated = False
         self.jump_sound = arcade.Sound(":resources:sounds/jump1.wav")
     
@@ -46,7 +51,7 @@ class Player(GameObject):
     def on_key_release(self, key: int, modifiers: int) -> None:
         match key:
             case arcade.key.RIGHT:
-                if self.is_move_initiated:
+                if self.is_move_initiated: # See in __init__ for explanation (yes, there is one)
                     self.change_x -= PLAYER_MOVEMENT_SPEED
             case arcade.key.LEFT:
                 if self.is_move_initiated:

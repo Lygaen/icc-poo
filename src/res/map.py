@@ -7,6 +7,8 @@ from enum import Enum
 from typing import Iterator, Self, cast
 import typing
 
+# MyPy shenanigans for cycle deps, sorry future me ;(
+# EDIT : Yeah, be sorry >:(
 if typing.TYPE_CHECKING:
     from src.entities.gameobject import GameObject
 
@@ -77,7 +79,7 @@ class Map:
             """
             match value:
                 case "=" | "-" | "x":
-                    return cast(Self, cls.WALL)
+                    return cast(Self, cls.WALL) # Ugly cast, mypy is eating my sanity
                 case "*":
                     return cast(Self, cls.COIN)
                 case "o":
@@ -101,7 +103,7 @@ class Map:
     to be applied each and every update frame.
     """
 
-    def __init__(self, path: str):
+    def __init__(self, path: str) -> None:
         """Initializes the map with a given path
 
         Args:
@@ -158,7 +160,7 @@ class Map:
             content = content[0].split("---", 1) # Split between header (0), map (1)
         
         self.physics_engine = arcade.PhysicsEnginePlatformer(
-            arcade.Sprite(),
+            arcade.Sprite(), # Empty because we have yet to initialize the map
             walls=self.__physics_objects,
             gravity_constant=self.__GRAVITY_CONSTANT,
         )
@@ -194,30 +196,39 @@ class Map:
             ValueError: Invalid map height if the given size and map do not match
             ValueError: Invalid width if a line do not match the given size (line_width > size.x)
         """
+
+        # Once again, loooooove mypy for it forcing me
+        # to use runtime imports !
         from src.entities.player import Player
         from src.entities.coin import Coin
         from src.entities.lava import Lava
         from src.entities.wall import Wall
         from src.entities.monster import Slime
         
-        lines = map.splitlines()
+        lines = map.splitlines() # Lines includes "---"
 
         if len(lines) - 2 > size.y:
             raise ValueError("Invalid map height")
         
-        lines = lines[1:-1]
+        lines = lines[1:-1] # Remove "---"
         lines.reverse() # So that we loop bottom-up
 
         for y, line in enumerate(lines):
             if len(line) > size.x:
                 raise ValueError(f"Invalid map width at line {y}")
             for x, char in enumerate(line):
-                if char == " ":
+                if char == " ": # ~void~
                     continue
 
                 pos = start + arcade.Vec2(x * self.__GRID_SIZE, y * self.__GRID_SIZE)
                 objType = Map.ObjectType.from_representation(char)
 
+                # The following is *pretty* ugly. Because arcade
+                # doesn't have a proper way to store dynamic values
+                # at runtime, I wanted to create a Gameobject system.
+                # So the following needs to be that way until I find
+                # a better way to handle things.
+                # I may come back later to refactor it. maybe. might.
                 match objType:
                     case Map.ObjectType.START:
                         player = Player(
