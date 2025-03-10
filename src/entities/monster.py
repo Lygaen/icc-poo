@@ -14,7 +14,7 @@ class Dir(Enum):
     back = 5
     backdown = 6
     backup = 7
-
+# TODO commentaires et docstring
 class Slime(GameObject):
     direction : int
     gameover_sound: arcade.Sound
