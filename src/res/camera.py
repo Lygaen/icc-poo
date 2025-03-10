@@ -23,7 +23,7 @@ class BetterCamera(arcade.Camera2D):
     __LERP_SMOOTH = 15
     """How smooth the camera should be when moving. Higher the smoother / slower.
     """
-    __FREEZONE_FACTOR = 8
+    __FREEZONE_FACTOR = 10
     """The scale factor of the freezone, higher the smaller the size
     relative to the window (2 -> 1/2 of the screen, 3 -> 1/3 ...)
     """
