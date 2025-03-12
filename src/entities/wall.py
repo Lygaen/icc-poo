@@ -17,7 +17,7 @@ class Wall(GameObject):
     """Generic wall object. Wall that does NOTHING. NADA. ZERO.
     """
 
-    def __init__(self, map: Map, representation: str, **kwargs: Any) -> None:
+    def __init__(self, map: list[Map], representation: str, **kwargs: Any) -> None:
         """Initializes the wall using the map and representation.
 
         Args:

@@ -11,7 +11,7 @@ class Coin(GameObject):
     """Sound for when collecting a coin.
     """
 
-    def __init__(self, map: Map, **kwargs: Any) -> None:
+    def __init__(self, map: list[Map], **kwargs: Any) -> None:
         super().__init__(map, ":resources:/images/items/coinGold.png", **kwargs)
         self.coin_sound = arcade.Sound(":resources:sounds/coin1.wav")
     
@@ -20,5 +20,5 @@ class Coin(GameObject):
 
         if arcade.check_for_collision(self.map.player, self):
             arcade.play_sound(self.coin_sound)
-            self.map.game_view.score += 1
+            self.game_view.score += 1
             self.destroy()

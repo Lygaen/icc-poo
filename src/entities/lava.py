@@ -11,7 +11,7 @@ class Lava(GameObject):
     """Sound for when player touches lava
     """
 
-    def __init__(self, map: Map, **kwargs: Any) -> None:
+    def __init__(self, map: list[Map], **kwargs: Any) -> None:
         super().__init__(map, ":resources:/images/tiles/lava.png", **kwargs)
         self.gameover_sound = arcade.Sound(":resources:sounds/gameover1.wav")
     

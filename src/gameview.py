@@ -30,7 +30,7 @@ class GameView(arcade.View):
 
     def setup(self) -> None:
         """Set up the game, loading the map, ..."""
-        self.map = Map(self, "map1.txt")
+        self.map = Map([self], "map1.txt")
         self.camera = BetterCamera()
 
     def on_draw(self) -> None:

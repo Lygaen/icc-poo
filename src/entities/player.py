@@ -22,7 +22,7 @@ class Player(GameObject):
     """SFX for when the player is jumping.
     """
 
-    def __init__(self, map: Map, **kwargs: Any) -> None:
+    def __init__(self, map: list[Map], **kwargs: Any) -> None:
         """Initializes the player tl;dr see GameObject#__init__
         """
 

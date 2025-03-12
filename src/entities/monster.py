@@ -51,7 +51,7 @@ class Slime(GameObject):
     """Sound for when player touches the slime
     """
 
-    def __init__(self, map: Map, **kwargs: Any) -> None:
+    def __init__(self, map: list[Map], **kwargs: Any) -> None:
         super().__init__(map, ":resources:/images/enemies/slimeBlue.png", **kwargs)
         self.gameover_sound = arcade.Sound(":resources:sounds/gameover1.wav")
         self.change_x = -1

@@ -59,11 +59,7 @@ class Map:
         Returns:
             GameView: The parent game view
         """
-
-        # Silent casting from list to gameview because
-        # type is runtime-imported
-        # TODO prettify this part
-        return self.__game_view_ref #type: ignore
+        return self.__game_view_ref[0]
 
 
     class ObjectType(Enum):
@@ -150,8 +146,8 @@ class Map:
             and the last
         """
         self.physics_engine.update()
-        self.__physics_objects.update(delta_time, map=self)
-        self.__passthrough_objects.update(delta_time, map=self)
+        self.__physics_objects.update(delta_time)
+        self.__passthrough_objects.update(delta_time)
 
     @property
     def game_objects(self) -> Iterator[GameObject]:
@@ -254,29 +250,29 @@ class Map:
                 match objType:
                     case Map.ObjectType.START:
                         player = Player(
-                                self,
+                                [self],
                                 scale=self.__GRID_SCALE,
                                 center_x=pos.x,
                                 center_y=pos.y)
                         self.__passthrough_objects.append(player)
                         self.player = player
                     case Map.ObjectType.MONSTER:
-                        self.__passthrough_objects.append(Slime(self, 
+                        self.__passthrough_objects.append(Slime([self], 
                                 scale=self.__GRID_SCALE,
                                 center_x=pos.x,
                                 center_y=pos.y))
                     case Map.ObjectType.COIN:
-                        self.__passthrough_objects.append(Coin(self, 
+                        self.__passthrough_objects.append(Coin([self], 
                                 scale=self.__GRID_SCALE,
                                 center_x=pos.x,
                                 center_y=pos.y))
                     case Map.ObjectType.NOGO:
-                        self.__passthrough_objects.append(Lava(self,
+                        self.__passthrough_objects.append(Lava([self],
                                 scale=self.__GRID_SCALE,
                                 center_x=pos.x,
                                 center_y=pos.y))
                     case Map.ObjectType.WALL:
-                        self.__physics_objects.append(Wall(self, char, 
+                        self.__physics_objects.append(Wall([self], char, 
                                 scale=self.__GRID_SCALE,
                                 center_x=pos.x,
                                 center_y=pos.y))
