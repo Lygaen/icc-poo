@@ -37,10 +37,11 @@ class GameView(arcade.View):
         """Render the screen."""
         self.clear()
 
-        print(f"Score : {self.score}")
-
         with self.camera.activate():
             self.map.draw()
+        
+        with arcade.Camera2D().activate():
+            arcade.Text(f"Score : {self.score}", 0, 0).draw()
     
     def on_update(self, delta_time: float) -> None:
         """Updates all related internals
