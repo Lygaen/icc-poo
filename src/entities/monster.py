@@ -2,8 +2,7 @@ from typing import Any
 import arcade
 from enum import Enum
 
-from src.entities.gameobject import GameObject
-from src.entities.lava import DamageSource
+from src.entities.gameobject import GameObject, DamageSource
 from src.res.map import Map
 
 class Dir(Enum):                #this is an enumeration type of cardinal directions, which will be used to check for hitboxes in the immediate neighborhood of the slime along the chosen direction

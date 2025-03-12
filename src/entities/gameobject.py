@@ -84,6 +84,29 @@ class GameObject(arcade.Sprite):
         """
         pass
 
+    def on_mouse_press(self, x: int, y: int, button: int, modifiers: int) -> None:
+        """On Mouse Press event
+
+        Args:
+            x (int): x position of click
+            y (int): y position of click
+            button (int): button clicked
+            modifiers (int): additional modifiers
+        """
+        pass
+
+    
+    def on_mouse_release(self, x: int, y: int, button: int, modifiers: int) -> None:
+        """On Mouse Release event
+
+        Args:
+            x (int): x position of click
+            y (int): y position of click
+            button (int): button clicked
+            modifiers (int): additional modifiers
+        """
+        pass
+
     def destroy(self) -> None:
         """Destroys the current object on the map.
         Next tick, neither #draw or #update will be called.

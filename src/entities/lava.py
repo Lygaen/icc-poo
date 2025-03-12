@@ -1,8 +1,7 @@
 from typing import Any
 import arcade
 
-from src.entities.gameobject import GameObject
-from src.entities.player import DamageSource
+from src.entities.gameobject import GameObject, DamageSource
 from src.res.map import Map
 
 class Lava(GameObject):

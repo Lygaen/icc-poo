@@ -71,3 +71,27 @@ class GameView(arcade.View):
         """
         for listeners in self.map.game_objects:
             listeners.on_key_release(symbol, modifiers)
+    
+    def on_mouse_press(self, x: int, y: int, button: int, modifiers: int) -> None:
+        """On Mouse Press event
+
+        Args:
+            x (int): x position of click
+            y (int): y position of click
+            button (int): button clicked
+            modifiers (int): additional modifiers
+        """
+        for listeners in self.map.game_objects:
+            listeners.on_mouse_press(x, y, button, modifiers)
+    
+    def on_mouse_release(self, x: int, y: int, button: int, modifiers: int) -> None:
+        """On Mouse Release event
+
+        Args:
+            x (int): x position of click
+            y (int): y position of click
+            button (int): button clicked
+            modifiers (int): additional modifiers
+        """
+        for listeners in self.map.game_objects:
+            listeners.on_mouse_release(x, y, button, modifiers)
