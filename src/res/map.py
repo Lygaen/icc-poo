@@ -11,6 +11,7 @@ import typing
 # EDIT : Yeah, be sorry >:(
 if typing.TYPE_CHECKING:
     from src.entities.gameobject import GameObject
+    from src.gameview import GameView
 
 arcade.resources.add_resource_handle("maps", Path("./assets/maps/").resolve())
 
@@ -45,6 +46,25 @@ class Map:
     player: GameObject
     """The player gameobject. *SHOULD* only be modified internally.
     """
+
+    __game_view_ref: list[GameView]
+    """Using list to have a reference to the game view. *Should* only
+    be accessed from the game_view property
+    """
+
+    @property
+    def game_view(self) -> GameView:
+        """Gives the game view in which the map was created.
+
+        Returns:
+            GameView: The parent game view
+        """
+
+        # Silent casting from list to gameview because
+        # type is runtime-imported
+        # TODO prettify this part
+        return self.__game_view_ref #type: ignore
+
 
     class ObjectType(Enum):
         """The type of object to be added on the sprite list.
@@ -103,14 +123,16 @@ class Map:
     to be applied each and every update frame.
     """
 
-    def __init__(self, path: str) -> None:
+    def __init__(self, view: list[GameView], path: str) -> None:
         """Initializes the map with a given path
 
         Args:
+            view (list[GameView]): just pass in self. Make a reference to the parent game view.
             path (str): The path of the map, starting from the "assets/maps"
             folder
         """
         self.__path = arcade.resources.resolve(":maps:" + path)
+        self.__game_view_ref = view
         self.reload()
     
     def draw(self) -> None:

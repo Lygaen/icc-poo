@@ -20,4 +20,5 @@ class Coin(GameObject):
 
         if arcade.check_for_collision(self.map.player, self):
             arcade.play_sound(self.coin_sound)
+            self.map.game_view.score += 1
             self.destroy()

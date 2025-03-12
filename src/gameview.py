@@ -13,23 +13,31 @@ class GameView(arcade.View):
     Will be changed to a proper camera handling
     """
 
+    score: int
+    """The current score of the player, saved
+    between maps.
+    """
+
     def __init__(self) -> None:
         """Initializes the game view and other arcade stuff.
         """
         super().__init__()
 
         self.background_color = arcade.csscolor.CORNFLOWER_BLUE
+        self.score = 0
 
         self.setup()
 
     def setup(self) -> None:
         """Set up the game, loading the map, ..."""
-        self.map = Map("map1.txt")
+        self.map = Map(self, "map1.txt")
         self.camera = BetterCamera()
 
     def on_draw(self) -> None:
         """Render the screen."""
         self.clear()
+
+        print(f"Score : {self.score}")
 
         with self.camera.activate():
             self.map.draw()
