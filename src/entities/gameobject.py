@@ -1,9 +1,19 @@
-from typing import Any, cast
+import enum
 import arcade
 from arcade.types import PathOrTexture, Point2
 
 from src.gameview import GameView
 from src.res.map import Map
+
+class DamageSource(enum.Enum):
+    """Damage source enum. From which type
+    of entity does the damage come from ?
+
+    Each field is pretty much self-explanatory.
+    """
+    PLAYER = 1
+    MONSTER = 2
+    LAVA = 3
 
 class GameObject(arcade.Sprite):
     """The GameObject superclass. Ideally should not
@@ -46,6 +56,15 @@ class GameObject(arcade.Sprite):
         """
         super().__init__(path_or_texture, scale, center_x, center_y)
         self.__map_ref = map
+    
+    def on_damage(self, source: DamageSource, damage: float) -> None:
+        """On damage event
+
+        Args:
+            source (DamageSource): The source of the damage
+            damage (float): The amount of damage
+        """
+        pass
 
     def on_key_press(self, symbol: int, modifiers: int) -> None:
         """On Key Press event

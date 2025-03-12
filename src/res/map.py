@@ -159,6 +159,18 @@ class Map:
         """
         return itertools.chain(self.__passthrough_objects, self.__physics_objects)
     
+    def check_for_collisions_all(self, object: GameObject) -> list[GameObject]:
+        """Checking for collisions, optimizing with spatial-hashing.
+        This is the better way to check collision against anything.
+
+        Args:
+            object (GameObject): The target gameobject to check collisions against
+
+        Returns:
+            list[GameObject]: A list of all colliding gameobjects
+        """
+        return arcade.check_for_collision_with_lists(object, [self.__passthrough_objects, self.__physics_objects])
+
     def reload(self) -> None:
         """Reloads the map, player and engine
 
