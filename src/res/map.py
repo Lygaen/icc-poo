@@ -159,6 +159,18 @@ class Map:
         """
         return itertools.chain(self.__passthrough_objects, self.__physics_objects)
     
+    @property
+    def event_listeners(self) -> Iterator[GameObject]:
+        """Event listener filtered game objects.
+        Iterator to loop over all game objects that explicitly
+        ask to listen for windows events.
+
+        Yields:
+            Iterator[GameObject]: Iterator to loop through event listeners
+        """
+
+        return filter(lambda obj: obj.event_listener, self.game_objects)
+    
     def check_for_collisions_all(self, object: GameObject) -> list[GameObject]:
         """Checking for collisions, optimizing with spatial-hashing.
         This is the better way to check collision against anything.

@@ -38,6 +38,7 @@ class Player(GameObject):
         self.is_move_initiated = False
         self.jump_sound = arcade.Sound(":resources:sounds/jump1.wav")
         self.gameover_sound = arcade.Sound(":resources:sounds/gameover1.wav")
+        self.event_listener = True
     
     def on_key_press(self, symbol: int, modifiers: int) -> None:
         match symbol:

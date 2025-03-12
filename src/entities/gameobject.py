@@ -25,6 +25,10 @@ class GameObject(arcade.Sprite):
     for having a reference to it
     """
 
+    event_listener: bool
+    """Whether this game object should be called for windows events
+    """
+
     @property
     def map(self) -> Map:
         """Returns the map where the object is registered
@@ -56,9 +60,10 @@ class GameObject(arcade.Sprite):
         """
         super().__init__(path_or_texture, scale, center_x, center_y)
         self.__map_ref = map
+        self.event_listener = False
     
     def on_damage(self, source: DamageSource, damage: float) -> None:
-        """On damage event
+        """On damage event - General Event
 
         Args:
             source (DamageSource): The source of the damage
@@ -67,8 +72,10 @@ class GameObject(arcade.Sprite):
         pass
 
     def on_key_press(self, symbol: int, modifiers: int) -> None:
-        """On Key Press event
+        """On Key Press event - Window Event
 
+        event_listener flag needs to be set for this function to be
+        called !
         Args:
             symbol (int): the key pressed
             modifiers (int): the related modifiers
@@ -78,6 +85,8 @@ class GameObject(arcade.Sprite):
     def on_key_release(self, symbol: int, modifiers: int) -> None:
         """On Key Release event
 
+        event_listener flag needs to be set for this function to be
+        called !
         Args:
             symbol (int): the key released
             modifiers (int): the related modifiers
@@ -87,6 +96,8 @@ class GameObject(arcade.Sprite):
     def on_mouse_press(self, x: int, y: int, button: int, modifiers: int) -> None:
         """On Mouse Press event
 
+        event_listener flag needs to be set for this function to be
+        called !
         Args:
             x (int): x position of click
             y (int): y position of click
@@ -99,6 +110,8 @@ class GameObject(arcade.Sprite):
     def on_mouse_release(self, x: int, y: int, button: int, modifiers: int) -> None:
         """On Mouse Release event
 
+        event_listener flag needs to be set for this function to be
+        called !
         Args:
             x (int): x position of click
             y (int): y position of click
