@@ -105,7 +105,12 @@ class Player(GameObject):
             self.map.reload()
 
     def on_mouse_press(self, x: int, y: int, button: int, modifiers: int) -> None:
+        self.__mouse_position = (x, y)
         self.sword.visible = True
+
+    def on_mouse_release(self, x: int, y: int, button: int, modifiers: int) -> None:
+        self.__mouse_position = (x, y)
+        self.sword.visible = False
 
     def on_mouse_motion(self, x: int, y: int, dx: int, dy: int) -> None:
         self.__mouse_position = (x, y)
@@ -132,9 +137,6 @@ class Player(GameObject):
         self.sword.radians = angle
 
         super().update(delta_time, *args, **kwargs)
-
-    def on_mouse_release(self, x: int, y: int, button: int, modifiers: int) -> None:
-        self.sword.visible = False
 
     def destroy(self) -> None:
         self.sword.destroy()
