@@ -1,10 +1,11 @@
 width: 20
 height: 6
+next-map: map2.txt
 ---
 *    -  -
 ---        -
      o*
     ---        -
- S          *o   x*
+ S          *o   x*E
 ======£££££=========
 ---

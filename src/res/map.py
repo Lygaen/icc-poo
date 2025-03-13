@@ -5,6 +5,7 @@ import arcade
 from pathlib import Path
 from enum import Enum
 from typing import Iterator, Self, cast
+from dataclasses import dataclass
 import typing
 
 # MyPy shenanigans for cycle deps, sorry future me ;(
@@ -76,6 +77,7 @@ class Map:
         MONSTER = 3
         NOGO = 4
         START = 5
+        EXIT = 6
 
         @classmethod
         def from_representation(cls, value: str) -> Self:
@@ -104,6 +106,8 @@ class Map:
                     return cast(Self, cls.NOGO)
                 case "S":
                     return cast(Self, cls.START)
+                case "E":
+                    return cast(Self, cls.EXIT)
                 case _:
                     raise ValueError(f"Invalid '{value}' for ObjectType enum")
 
@@ -130,7 +134,7 @@ class Map:
         self.__path = arcade.resources.resolve(":maps:" + path)
         self.__game_view_ref = view
         self.reload()
-    
+
     def draw(self) -> None:
         """Draw the map and all sub-objects
         """
@@ -158,7 +162,7 @@ class Map:
             Iterator[GameObject]: Iterator to loop through the gameobjects
         """
         return itertools.chain(self.__passthrough_objects, self.__physics_objects)
-    
+
     @property
     def event_listeners(self) -> Iterator[GameObject]:
         """Event listener filtered game objects.
@@ -170,7 +174,7 @@ class Map:
         """
 
         return filter(lambda obj: obj.event_listener, self.game_objects)
-    
+
     def check_for_collisions_all(self, object: GameObject) -> list[GameObject]:
         """Checking for collisions, optimizing with spatial-hashing.
         This is the better way to check collision against anything.
@@ -183,6 +187,10 @@ class Map:
         """
         return arcade.check_for_collision_with_lists(object, [self.__passthrough_objects, self.__physics_objects])
 
+    def change_maps(self, path: str) -> None:
+        self.__path = arcade.resources.resolve(":maps:" + path)
+        self.reload()
+
     def reload(self) -> None:
         """Reloads the map, player and engine
 
@@ -192,28 +200,28 @@ class Map:
 
         if not self.__path.exists():
             raise ValueError(f"Map '{self.__path}' was not found on disk")
-        
+
         self.__physics_objects = arcade.SpriteList(use_spatial_hash=True)
         self.__passthrough_objects = arcade.SpriteList(use_spatial_hash=True)
-        
+
         content: list[str]
         with self.__path.open("r", encoding="utf-8") as file:
             content = ["".join(file.readlines())]
             content = content[0].split("---", 1) # Split between header (0), map (1)
-        
+
         self.physics_engine = arcade.PhysicsEnginePlatformer(
             arcade.Sprite(), # Empty because we have yet to initialize the map
             walls=self.__physics_objects,
             gravity_constant=self.__GRAVITY_CONSTANT,
         )
-        
-        size = self.__parse_header(content[0])
-        self.__parse_map(content[1], size)
+
+        info = self.__parse_header(content[0])
+        self.__parse_map(content[1], info)
 
         self.physics_engine.player_sprite = self.player
         self.physics_engine.walls.clear()
         self.physics_engine.walls.append(self.__physics_objects)
-    
+
     @property
     def physics_colliders_list(self) -> arcade.SpriteList[GameObject]:
         """The physics colliders lists, aka. the gameobjects that
@@ -225,8 +233,8 @@ class Map:
             to an iterator later)
         """
         return self.__physics_objects
-    
-    def __parse_map(self, map: str, size: arcade.Vec2, start: arcade.Vec2 = arcade.Vec2(0,0)) -> None:
+
+    def __parse_map(self, map: str, info: Metadata, start: arcade.Vec2 = arcade.Vec2(0,0)) -> None:
         """Parses the map, initializing internals with the parsed data.
 
         Args:
@@ -244,25 +252,25 @@ class Map:
         from src.entities.player import Player
         from src.entities.coin import Coin
         from src.entities.lava import Lava
-        from src.entities.wall import Wall
+        from src.entities.wall import Wall, Exit
         from src.entities.monster import Slime
-        
+
         lines = map.splitlines() # Lines includes "---"
 
-        if len(lines) - 2 > size.y:
+        if len(lines) - 2 > info.height:
             raise ValueError("Invalid map height")
-        
+
         lines = lines[1:-1] # Remove "---"
         lines.reverse() # So that we loop bottom-up
 
         for y, line in enumerate(lines):
-            if len(line) > size.x:
-                raise ValueError(f"Invalid map width at line {y}")
+            if len(line) > info.width:
+                raise ValueError(f"Invalid map width at line {y}, for width {len(line)} (expected {info.width})")
             for x, char in enumerate(line):
                 if char == " ": # ~void~
                     continue
 
-                pos = start + arcade.Vec2(x * self.__GRID_SIZE, y * self.__GRID_SIZE)
+                pos = start + (x * self.__GRID_SIZE, y * self.__GRID_SIZE)
                 objType = Map.ObjectType.from_representation(char)
 
                 # The following is *pretty* ugly. Because arcade
@@ -281,12 +289,12 @@ class Map:
                         self.__passthrough_objects.append(player)
                         self.player = player
                     case Map.ObjectType.MONSTER:
-                        self.__passthrough_objects.append(Slime([self], 
+                        self.__passthrough_objects.append(Slime([self],
                                 scale=self.__GRID_SCALE,
                                 center_x=pos.x,
                                 center_y=pos.y))
                     case Map.ObjectType.COIN:
-                        self.__passthrough_objects.append(Coin([self], 
+                        self.__passthrough_objects.append(Coin([self],
                                 scale=self.__GRID_SCALE,
                                 center_x=pos.x,
                                 center_y=pos.y))
@@ -296,12 +304,25 @@ class Map:
                                 center_x=pos.x,
                                 center_y=pos.y))
                     case Map.ObjectType.WALL:
-                        self.__physics_objects.append(Wall([self], char, 
+                        self.__physics_objects.append(Wall([self], char,
                                 scale=self.__GRID_SCALE,
                                 center_x=pos.x,
                                 center_y=pos.y))
+                    case Map.ObjectType.EXIT:
+                        if info.next_map is None:
+                            raise ValueError("Found exit but no next_map !")
+                        self.__passthrough_objects.append(Exit([self], info.next_map,
+                            scale=self.__GRID_SCALE,
+                            center_x=pos.x,
+                            center_y=pos.y))
 
-    def __parse_header(self, header: str) -> arcade.Vec2:
+    @dataclass(frozen=True)
+    class Metadata:
+        width: int
+        height: int
+        next_map: str | None
+
+    def __parse_header(self, header: str) -> Metadata:
         """Parses the header from the string, returning
         the metadata of the parsed header.
 
@@ -316,6 +337,7 @@ class Map:
         """
         width: int = 0
         height: int = 0
+        next_map: str | None = None
         for line in header.splitlines():
             if line.lstrip() == "":
                 continue
@@ -327,10 +349,12 @@ class Map:
                     width = int(vvalue)
                 case "height":
                     height = int(vvalue)
+                case "next-map":
+                    next_map = vvalue.replace(" ", "")
                 case _:
                     raise ValueError(f"Unkown variable field name '{vname}' in map")
-        
-        return arcade.Vec2(width, height)
+
+        return self.Metadata(width, height, next_map)
 
     def destroy(self, object: GameObject) -> None:
         """Destroys a given gameobject from the map
@@ -342,7 +366,7 @@ class Map:
             if obj == object:
                 self.__passthrough_objects.remove(object)
                 return
-        
+
         for obj in self.__physics_objects:
             if obj == object:
                 self.__physics_objects.remove(object)
