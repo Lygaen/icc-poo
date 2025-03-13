@@ -3,6 +3,7 @@ import arcade
 from arcade.types import PathOrTexture, Point2
 
 from src.gameview import GameView
+from src.res.camera import BetterCamera
 from src.res.map import Map
 
 class DamageSource(enum.Enum):
@@ -48,6 +49,16 @@ class GameObject(arcade.Sprite):
 
         return self.map.game_view
 
+    @property
+    def camera(self) -> BetterCamera:
+        """Returns the game view where the map is currently drawn onto.
+
+        Returns:
+            GameView: The game view in question
+        """
+
+        return self.map.game_view.camera
+
     def __init__(self, map: list[Map], path_or_texture: PathOrTexture | None = None, scale: Point2 | float = 1, center_x: float = 0, center_y: float = 0) -> None:
         """Initializes a gameobject given the parameters
 
@@ -61,7 +72,7 @@ class GameObject(arcade.Sprite):
         super().__init__(path_or_texture, scale, center_x, center_y)
         self.__map_ref = map
         self.event_listener = False
-    
+
     def on_damage(self, source: DamageSource, damage: float) -> None:
         """On damage event - General Event
 
@@ -81,7 +92,7 @@ class GameObject(arcade.Sprite):
             modifiers (int): the related modifiers
         """
         pass
-        
+
     def on_key_release(self, symbol: int, modifiers: int) -> None:
         """On Key Release event
 
@@ -106,7 +117,7 @@ class GameObject(arcade.Sprite):
         """
         pass
 
-    
+
     def on_mouse_release(self, x: int, y: int, button: int, modifiers: int) -> None:
         """On Mouse Release event
 
@@ -118,6 +129,9 @@ class GameObject(arcade.Sprite):
             button (int): button clicked
             modifiers (int): additional modifiers
         """
+        pass
+
+    def on_mouse_motion(self, x: int, y: int, dx: int, dy: int) -> None:
         pass
 
     def destroy(self) -> None:

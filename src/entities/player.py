@@ -1,14 +1,21 @@
-from typing import Any
+from typing import Any, cast
 import arcade
 
 from src.entities.gameobject import DamageSource, GameObject
 from src.res.map import Map
+
+import math
 
 PLAYER_MOVEMENT_SPEED : int = 3
 """Lateral speed of the player, in pixels per frame."""
 
 PLAYER_JUMP_SPEED = 12
 """Instant vertical speed for jumping, in pixels per frame."""
+
+class Sword(GameObject):
+    def __init__(self, map: list[Map], **kwargs: Any) -> None:
+        super().__init__(map, "assets/sword_silver.png", **kwargs)
+        self.scale = (0.5 * 0.7, 0.5 * 0.7)
 
 class Player(GameObject):
     """The main player game object.
@@ -25,6 +32,10 @@ class Player(GameObject):
     """SFX for when the player is jumping.
     """
 
+    sword: Sword
+
+    __mouse_position: arcade.Vec2
+
     def __init__(self, map: list[Map], **kwargs: Any) -> None:
         """Initializes the player tl;dr see GameObject#__init__
         """
@@ -39,6 +50,11 @@ class Player(GameObject):
         self.jump_sound = arcade.Sound(":resources:sounds/jump1.wav")
         self.gameover_sound = arcade.Sound(":resources:sounds/gameover1.wav")
         self.event_listener = True
+        self.sword = Sword(map)
+        self.sword.visible = False
+        self.__mouse_position = arcade.Vec2(0, 0)
+
+        self.map.add_objects([self.sword])
 
     def on_key_press(self, symbol: int, modifiers: int) -> None:
         match symbol:
@@ -71,3 +87,39 @@ class Player(GameObject):
                 return
             case _:
                 return
+
+    def on_mouse_press(self, x: int, y: int, button: int, modifiers: int) -> None:
+        self.sword.visible = True
+
+    def on_mouse_motion(self, x: int, y: int, dx: int, dy: int) -> None:
+        dir = self.camera.unproject((x, y))
+        self.__mouse_position = arcade.Vec2(dir[0], dir[1])
+
+    def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
+        dir = arcade.Vec2(self.__mouse_position.x - self.map.player.position[0], self.__mouse_position.y - self.map.player.position[1])
+        dir = dir.normalize()
+        SCALE_FACTOR = 0.4
+        start_pos = self.position
+
+        if dir.x < 0:
+            start_pos = (self.left, self.center_y - self.size[1] // 3)
+        else:
+            start_pos = (self.right, self.center_y - self.size[1] // 3)
+
+        self.sword.position = (start_pos[0] + dir[0] * self.sword.size[0] * SCALE_FACTOR,
+            start_pos[1] + dir[1] * self.sword.size[1] * SCALE_FACTOR)
+
+        angle = math.asin(dir.x) - (math.pi / 4)
+
+        if dir.y < 0:
+            angle = -angle + (math.pi / 2)
+        self.sword.radians = angle
+
+        super().update(delta_time, *args, **kwargs)
+
+    def on_mouse_release(self, x: int, y: int, button: int, modifiers: int) -> None:
+        self.sword.visible = False
+
+    def destroy(self) -> None:
+        self.sword.destroy()
+        super().destroy()

@@ -371,3 +371,11 @@ class Map:
             if obj == object:
                 self.__physics_objects.remove(object)
                 return
+
+    def add_objects(self, objects: list[GameObject], is_physics: bool = False) -> None:
+        if is_physics:
+            for obj in objects:
+                self.__physics_objects.append(obj)
+        else:
+            for obj in objects:
+                self.__passthrough_objects.append(obj)
