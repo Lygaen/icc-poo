@@ -76,6 +76,8 @@ class Slime(GameObject):
         return (len(arcade.check_for_collision_with_list(circle, self.map.physics_colliders_list)) != 0)        #return true if there is at least one collider in collision with the little circle, false otherwise
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
+        if self.HP <= 0:
+            self.destroy()
         for object in self.map.check_for_collisions_all(self):       #if slimey touches player, player dies
             object.on_damage(DamageSource.MONSTER, 1.0)
 
