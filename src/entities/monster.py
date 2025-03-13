@@ -2,7 +2,7 @@ from typing import Any
 import arcade
 from enum import Enum
 
-from src.entities.gameobject import GameObject
+from src.entities.gameobject import GameObject, DamageSource
 from src.res.map import Map
 
 class Dir(Enum):                #this is an enumeration type of cardinal directions, which will be used to check for hitboxes in the immediate neighborhood of the slime along the chosen direction
@@ -51,7 +51,7 @@ class Slime(GameObject):
     """Sound for when player touches the slime
     """
 
-    def __init__(self, map: Map, **kwargs: Any) -> None:
+    def __init__(self, map: list[Map], **kwargs: Any) -> None:
         super().__init__(map, ":resources:/images/enemies/slimeBlue.png", **kwargs)
         self.gameover_sound = arcade.Sound(":resources:sounds/gameover1.wav")
         self.change_x = -1
@@ -74,9 +74,8 @@ class Slime(GameObject):
         return (len(arcade.check_for_collision_with_list(circle, self.map.physics_colliders_list)) != 0)        #return true if there is at least one collider in collision with the little circle, false otherwise
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
-        if arcade.check_for_collision(self.map.player, self):       #if slimey touches player, player dies
-            arcade.play_sound(self.gameover_sound)
-            self.map.reload()
+        for object in self.map.check_for_collisions_all(self):       #if slimey touches player, player dies
+            object.on_damage(DamageSource.MONSTER, 1.0)
 
         if not self.check_collision(Dir.down):      #if there is no ground under slimey, slimey cannot change direction and keep its inertia (little to no friction in this world)
             super().update(delta_time, **kwargs)

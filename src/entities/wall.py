@@ -17,7 +17,7 @@ class Wall(GameObject):
     """Generic wall object. Wall that does NOTHING. NADA. ZERO.
     """
 
-    def __init__(self, map: Map, representation: str, **kwargs: Any) -> None:
+    def __init__(self, map: list[Map], representation: str, **kwargs: Any) -> None:
         """Initializes the wall using the map and representation.
 
         Args:
@@ -26,3 +26,24 @@ class Wall(GameObject):
             if invalid, will default to a NO_TEXTURE
         """
         super().__init__(map, CHAR_INFO.get(representation), **kwargs)
+
+class Exit(GameObject):
+    """Exit sign, allowing the player to move to the next stage on touch.
+    """
+    __next_map: str
+
+    def __init__(self, map: list[Map], next_map: str, **kwargs: Any) -> None:
+        """Initializes the wall using the map and representation.
+
+        Args:
+            map (Map): The map of the GO
+            next_map (str): The path to the next map
+        """
+        super().__init__(map, ":resources:/images/tiles/signExit.png", **kwargs)
+        self.__next_map = next_map
+
+    def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
+        super().update(delta_time, *args, **kwargs)
+
+        if arcade.check_for_collision(self, self.map.player):
+            self.map.change_maps(self.__next_map)
