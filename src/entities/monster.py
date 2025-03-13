@@ -52,12 +52,12 @@ class Slime(GameObject):
     """Sound for when player touches the slime
     """
 
-    def __init__(self, map: list[Map], HP : int, **kwargs: Any) -> None:
+    def __init__(self, map: list[Map], **kwargs: Any) -> None:
         super().__init__(map, ":resources:/images/enemies/slimeBlue.png", **kwargs)
         self.gameover_sound = arcade.Sound(":resources:sounds/gameover1.wav")
         self.change_x = -1
         self.direction = -1
-        self.HP = HP
+        self.HP = 32
     
     def check_collision(self, dir : Dir)-> bool:
         """To check if there is a collider in the immediate neighborhood of the slime along a certain direction (in argument)
