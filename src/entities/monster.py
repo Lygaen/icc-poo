@@ -46,15 +46,17 @@ class Monster(GameObject):
                 return False
         return (len(arcade.check_for_collision_with_list(circle, self.map.physics_colliders_list)) != 0)        #return true if there is at least one collider in collision with the little circle, false otherwise
 
+    #if monstey hit something hurtful that belong to the player, monstey suffers (i.e. loses hp)
     def on_damage(self, source: DamageSource, damage: float) -> None:
         if source == DamageSource.PLAYER:
             self.HP -= damage
 
+        #if monstey has no HP left, monstey dies in atrocious circumstances
         if self.HP <= 0:
             self.destroy()
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
-        for object in self.map.check_for_collisions_all(self):       #if slimey touches player, player dies
+        for object in self.map.check_for_collisions_all(self):       #if monstey touches player, player suffer (i.e. loses HP)
             object.on_damage(DamageSource.MONSTER, self.__base_damage * delta_time)
 
         super().update(delta_time, *args, **kwargs)
@@ -86,7 +88,7 @@ class Slime(Monster):
             return
         elif self.change_x == 0:                                                            #if slimey was in depression (i.e. not moving) and the space in front of it or at its back is freed, it goes out of its depression and starts moving again
             self.change_x = self.direction                                                  #N.B. when we arrive at this part of the code (if we reach it), we already make sure that slimey can move in the direction he his looking (stocked with self.direction)
-            if self.scale_x*self.direction < 0:     #when slimey was stuck, self.direction kept its directions changes, but the sprite was frozen to prevent it to change orientation every frames. now we accord the sprite orientation to self.direction so it's not gona start moonwalking
+            if self.scale_x*self.direction < 0:     #when slimey was stuck, self.direction kept its directions changes, but the sprite was frozen to prevent it to change orientation every frames. now we accord the sprite orientation to self.direction so it's not gonna start moonwalking
                 self.scale_x *= -1
             super().update(delta_time, **kwargs)
             return
