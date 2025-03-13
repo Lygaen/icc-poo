@@ -39,7 +39,7 @@ class Player(GameObject):
         self.jump_sound = arcade.Sound(":resources:sounds/jump1.wav")
         self.gameover_sound = arcade.Sound(":resources:sounds/gameover1.wav")
         self.event_listener = True
-    
+
     def on_key_press(self, symbol: int, modifiers: int) -> None:
         match symbol:
             case arcade.key.RIGHT:
@@ -52,16 +52,16 @@ class Player(GameObject):
                 if self.map.physics_engine.can_jump():
                     self.change_y = PLAYER_JUMP_SPEED
                     arcade.play_sound(self.jump_sound)
-    
-    def on_key_release(self, key: int, modifiers: int) -> None:
-        match key:
+
+    def on_key_release(self, symbol: int, modifiers: int) -> None:
+        match symbol:
             case arcade.key.RIGHT:
                 if self.is_move_initiated: # See in __init__ for explanation (yes, there is one)
                     self.change_x -= PLAYER_MOVEMENT_SPEED
             case arcade.key.LEFT:
                 if self.is_move_initiated:
                     self.change_x += PLAYER_MOVEMENT_SPEED
-    
+
     def on_damage(self, source: DamageSource, damage: float) -> None:
         match source:
             case DamageSource.MONSTER | DamageSource.LAVA:
