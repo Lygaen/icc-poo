@@ -28,6 +28,8 @@ class Wall(GameObject):
         super().__init__(map, CHAR_INFO.get(representation), **kwargs)
 
 class Exit(GameObject):
+    """Exit sign, allowing the player to move to the next stage on touch.
+    """
     __next_map: str
 
     def __init__(self, map: list[Map], next_map: str, **kwargs: Any) -> None:
@@ -35,8 +37,7 @@ class Exit(GameObject):
 
         Args:
             map (Map): The map of the GO
-            representation (str): The string representation of the wall,
-            if invalid, will default to a NO_TEXTURE
+            next_map (str): The path to the next map
         """
         super().__init__(map, ":resources:/images/tiles/signExit.png", **kwargs)
         self.__next_map = next_map
