@@ -21,7 +21,7 @@ class Sword(GameObject):
         super().update(delta_time, *args, **kwargs)
 
         for hits in self.map.check_for_collisions_all(self):
-            hits.on_damage(DamageSource.PLAYER, 1.0)
+            hits.on_damage(DamageSource.PLAYER, 50 * delta_time)
 
 class Player(GameObject):
     """The main player game object.
@@ -39,6 +39,8 @@ class Player(GameObject):
     """
 
     sword: Sword
+
+    HP: float
 
     __mouse_position: arcade.Vec2
 
@@ -59,6 +61,7 @@ class Player(GameObject):
         self.sword = Sword(map)
         self.sword.visible = False
         self.__mouse_position = arcade.Vec2(0, 0)
+        self.HP = 20
 
         self.map.add_objects([self.sword])
 
@@ -86,13 +89,17 @@ class Player(GameObject):
 
     def on_damage(self, source: DamageSource, damage: float) -> None:
         match source:
-            case DamageSource.MONSTER | DamageSource.LAVA:
-                arcade.play_sound(self.gameover_sound)
-                self.game_view.score = 0
-                self.map.reload()
-                return
+            case DamageSource.LAVA:
+                self.HP = 0
+            case DamageSource.MONSTER:
+                self.HP -= damage
             case _:
                 return
+
+        if self.HP <= 0:
+            arcade.play_sound(self.gameover_sound)
+            self.game_view.score = 0
+            self.map.reload()
 
     def on_mouse_press(self, x: int, y: int, button: int, modifiers: int) -> None:
         self.sword.visible = True
