@@ -20,6 +20,9 @@ class Sword(GameObject):
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         super().update(delta_time, *args, **kwargs)
 
+        if not self.visible:
+            return
+
         for hits in self.map.check_for_collisions_all(self):
             hits.on_damage(DamageSource.PLAYER, 50 * delta_time)
 
@@ -42,7 +45,7 @@ class Player(GameObject):
 
     HP: float
 
-    __mouse_position: arcade.Vec2
+    __mouse_position: arcade.types.Point2
 
     def __init__(self, map: list[Map], **kwargs: Any) -> None:
         """Initializes the player tl;dr see GameObject#__init__
@@ -105,11 +108,11 @@ class Player(GameObject):
         self.sword.visible = True
 
     def on_mouse_motion(self, x: int, y: int, dx: int, dy: int) -> None:
-        dir = self.camera.unproject((x, y))
-        self.__mouse_position = arcade.Vec2(dir[0], dir[1])
+        self.__mouse_position = (x, y)
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
-        dir = arcade.Vec2(self.__mouse_position.x - self.map.player.position[0], self.__mouse_position.y - self.map.player.position[1])
+        mouse = self.camera.unproject(self.__mouse_position)
+        dir = arcade.Vec2(mouse.x - self.map.player.position[0], mouse.y - self.map.player.position[1])
         dir = dir.normalize()
         SCALE_FACTOR = 0.4
         start_pos = self.position
