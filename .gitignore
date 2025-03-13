@@ -11,3 +11,4 @@ wheels/
 .venv
 .coverage
 .vscode
+.zed
