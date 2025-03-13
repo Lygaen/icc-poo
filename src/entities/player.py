@@ -17,6 +17,12 @@ class Sword(GameObject):
         super().__init__(map, "assets/sword_silver.png", **kwargs)
         self.scale = (0.5 * 0.7, 0.5 * 0.7)
 
+    def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
+        super().update(delta_time, *args, **kwargs)
+
+        for hits in self.map.check_for_collisions_all(self):
+            hits.on_damage(DamageSource.PLAYER, 1.0)
+
 class Player(GameObject):
     """The main player game object.
     """
