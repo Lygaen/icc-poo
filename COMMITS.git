@@ -1,683 +1,683 @@
-commit 9710575c9be7f6d5ad9a97533cb236d3532a439e
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Thu Mar 13 11:31:54 2025 +0100
 
     map3
 
-commit d81427042ea13303590bfbb952ff833b82261290
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Thu Mar 13 11:28:10 2025 +0100
 
     map2
 
-commit f16496b9aeaa9c62a4384a35ac1e5d1a4e9fb94d
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Mar 13 11:27:22 2025 +0100
 
     Added docstrings
 
-commit 1658e1af5e1b13486d0410187ffe44b2985643f5
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Thu Mar 13 11:26:56 2025 +0100
 
     map3
 
-commit 0b71952f0ffdcd39447ef9c4aa9d883d12c3a268
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Thu Mar 13 11:23:25 2025 +0100
 
     comments monster.py
 
-commit a3bccf92a065f26ea8e62ee5fc76a5adaa1fb854
+
 Merge: 87e49ed 4ae04ff
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Mar 13 11:12:21 2025 +0100
 
     Merge branch 'master' of github.com:Lygaen/icc-poo
 
-commit 87e49edfa227699cfe2ab27c898ecc25cdec136b
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Mar 13 11:11:37 2025 +0100
 
     Added player HP and UI indicator
 
-commit 4ae04ff1f8001195d761fa06147c60817b997972
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Thu Mar 13 11:05:18 2025 +0100
 
     map2
 
-commit 76b5abb783b08c2a0f030c7e0c5b2003db8eb70e
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Thu Mar 13 11:03:21 2025 +0100
 
     map2
 
-commit e5777a51c758a5827c4e6cba014cd05118c294d4
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Mar 13 11:02:01 2025 +0100
 
     Player bugs... again
 
-commit 3bf4e5f44ffca400b4a50cbb08b378fd3804189a
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Mar 13 11:00:03 2025 +0100
 
     Player bugs (hate them)
 
-commit 1c15effc0751d1f238690aecbb84807f169e22c6
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Mar 13 10:54:55 2025 +0100
 
     Added HP system
 
-commit 5df9a9cb3ac5625bf486c4324d3ae56d6cbf5479
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Thu Mar 13 10:44:16 2025 +0100
 
     monster
 
-commit 9fa84631220abff824bbb81d8912e18c8574f46e
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Thu Mar 13 10:42:42 2025 +0100
 
     monstre meurt
 
-commit 7d3fd014edf7724e69b1fe73f5bcc6c69e8f395b
+
 Merge: 5646b68 3942742
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Mar 13 10:40:30 2025 +0100
 
     Merge branch 'master' of github.com:Lygaen/icc-poo
 
-commit 39427422a0dbaf29ff9974d22b4ecf14d159037b
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Thu Mar 13 10:40:12 2025 +0100
 
     blob 32hp
 
-commit 5646b68aa205bb744eb09f60ee1df1f5492830ee
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Mar 13 10:39:12 2025 +0100
 
     Added on damage for sword
 
-commit 6c11972c2669acaa1ac62eefa1b8583bcf9268bb
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Thu Mar 13 10:38:49 2025 +0100
 
     blobHP
 
-commit dbfaf678f07f0c9c962867b04de49cc954d90671
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Mar 13 10:37:06 2025 +0100
 
     Added fricking swoooooord
 
-commit 3f480452344dc72656b275485bc0a53a46917036
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Thu Mar 13 10:05:08 2025 +0100
 
     map2 exit
 
-commit 29a558730081660f1055d0414a7bc3f8ad40fad3
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Thu Mar 13 10:02:05 2025 +0100
 
     map2
 
-commit d6bee136a9e9f6269e24d5cba61b18c72aacb768
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Thu Mar 13 10:01:08 2025 +0100
 
     map2
 
-commit 399f395095941bac8f251028a6e57df7aa5a2433
+
 Merge: b1fdf48 e4327dc
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Thu Mar 13 10:00:01 2025 +0100
 
     Merge branch 'master' of github.com:Lygaen/icc-poo
 
-commit b1fdf48199f066a77db33ade41e5833e192eff55
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Thu Mar 13 09:58:53 2025 +0100
 
     map3
 
-commit e4327dc0d303b272745993879e01a002f70a5de0
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Mar 13 09:38:02 2025 +0100
 
     Edited player abstraction
 
-commit bb349cd06e97d07a42dbb805b642a24b96a0c74e
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Mar 13 09:36:17 2025 +0100
 
     Forgot to add docstrings
 
-commit 0cd5889c9cb3c05403a5c87d8dd0bed26a344265
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Mar 13 09:32:32 2025 +0100
 
     Added next map loading
 
-commit 133801953efe2e698ca4f3e4a27a70b09afd44b1
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Mar 13 09:11:07 2025 +0100
 
     Added daemon mypy to exclusions
 
-commit d3c586e19bc3c91158ffd6ac3d468f6c02effd3b
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Mar 13 08:44:46 2025 +0100
 
     Modified gitignore
 
-commit af1d0b3f545be8143ce90862c8723e74bfbd678e
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Wed Mar 12 18:34:07 2025 +0100
 
     Event listeners optimizations
 
-commit a2b1cec1f77f3c27d911814af6b4bdcd0e846611
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Wed Mar 12 18:25:34 2025 +0100
 
     Added mouse event listener
 
-commit 95d74bf9e01685e4bb33031f14768718864859c2
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Wed Mar 12 15:50:10 2025 +0100
 
     Added UI boiiii
 
-commit c0f3d0aa1e8b889672b9d469ebec47f5509d3f99
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Wed Mar 12 15:45:50 2025 +0100
 
     Updated to latest arcade
 
-commit f0f93452e34e5aca0055c26c3bedd4fa3d617827
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Wed Mar 12 15:29:58 2025 +0100
 
     Added better damage + collision system
 
-commit 60b45b03e40611d2c054804dd33cdc119d31d514
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Wed Mar 12 15:07:32 2025 +0100
 
     Using refs instead of per-frames updates
 
-commit 8c7f2378f61471af3116a358a8fac53baa3300ba
+
 Merge: e72db64 66af1f6
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Wed Mar 12 14:55:10 2025 +0100
 
     Merge branch 'master' of https://github.com/Lygaen/icc-poo
 
-commit e72db64fba9de747062f820c63c9d8ce3b598382
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Wed Mar 12 14:53:28 2025 +0100
 
     Added scoring system with ref
 
-commit 66af1f6c8e427c8efec8e2ad652cd17b462dc9fd
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Mon Mar 10 16:14:08 2025 +0100
 
     classe parent monster (mise en commentaires)
 
-commit b49f975cdebfa605873eced683923023ec743af2
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Mon Mar 10 15:40:17 2025 +0100
 
     map2 changes
 
-commit e2f19ec7c7d05b93326a130a618dc23a713e97ef
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Mon Mar 10 15:37:36 2025 +0100
 
     commentaires slime
 
-commit 277b1f3d76dc0d7189bf897a1af09d27387e4fd4
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Mon Mar 10 14:54:08 2025 +0100
 
     TODO
 
-commit 9104dbab4f5f7a99b8792cb9862253653c678557
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Mon Mar 10 14:49:21 2025 +0100
 
     map2
 
-commit cb7861847d8bca3329f8e599e22f14a8394f9b48
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Mon Mar 10 14:40:31 2025 +0100
 
     camera freezone modif
 
-commit 8e3d6f84596f911da5f1cc74bd56d190b04d6357
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Fri Mar 7 19:23:41 2025 +0100
 
     Added camera stuff
 
-commit 2a32aca6959a94ac0eaaa2bf520223e573c78a29
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Fri Mar 7 11:42:32 2025 +0100
 
     correction monsterwalk
 
-commit 9cf7edccef521091b9c4b417cc43109183182579
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Fri Mar 7 11:32:53 2025 +0100
 
     map2
 
-commit 2d3272490b6e252db4caf9b5cb54588d3b8757dd
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Fri Mar 7 11:22:57 2025 +0100
 
     Removed invalid tests
 
-commit e366fc13b1289be1601e3f3090139fd805e1dc3d
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Mar 6 13:39:01 2025 +0100
 
     Indentation fix
 
-commit 83711f872928ed502b7d7100ea0fbe3de4087d8f
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Thu Mar 6 11:05:19 2025 +0100
 
     monstre se retourne
 
-commit 7e536b1ded594ea9a9285f7c81e349a9ce86c261
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Mar 6 10:58:16 2025 +0100
 
     Name + Sound
 
-commit 3cf91e426b5afb5b85820888b1761a088b5719e2
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Thu Mar 6 10:56:55 2025 +0100
 
     monster slime hunter movement
 
-commit 64335d0cdb04a4ce577e852317dc6cf4864f5a94
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Thu Mar 6 10:55:13 2025 +0100
 
     monster hunter (movement)
 
-commit ab9ff9f05b7c1c0df69613f710755e9e93524f80
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Mar 6 10:54:27 2025 +0100
 
     Added sounds
 
-commit dbabc0247bf905b8e75e07f94f28eb62c8e80995
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Mar 6 10:44:05 2025 +0100
 
     Added fricking docssss
 
-commit df74651cee424715b88cd2c955b4ab5940f44534
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Thu Mar 6 10:34:03 2025 +0100
 
     monster movement
 
-commit 289323e120dabc908a4cf23d4e4aec0b08ee2733
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Mar 6 09:43:57 2025 +0100
 
     Map changes
 
-commit dac7a90e90fa7321cc00342c27afb64a6cd4a924
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Mar 6 09:14:00 2025 +0100
 
     Added monster template
 
-commit 4f9de63eac5f9fa1db22ffb2756228edb6fadc2e
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Mar 6 08:56:00 2025 +0100
 
     Generalized wall loading
 
-commit f321e40540b39fa35cb5b8754f49521f0130bbf9
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Mar 6 08:47:59 2025 +0100
 
     Camera + player change
 
-commit 0aeae8d20c02d9954b1900a18bbc6b77a4147d0b
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Wed Mar 5 18:45:08 2025 +0100
 
     Added coin
 
-commit 65735368c3adb9db48dcc45029cac0cb9d94407f
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Wed Mar 5 18:42:16 2025 +0100
 
     Added map access for GOs
 
-commit d77aa86a360972fccdc97fb87320c40f936ba5f3
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Wed Mar 5 17:52:24 2025 +0100
 
     Added destroy possibility
 
-commit fbace9df89d81ea03474f775ba435a7ce828b961
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Wed Mar 5 17:47:08 2025 +0100
 
     Added player controls
 
-commit 2ea62dbd77f5460ae181a84cd690251c5065393c
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Wed Mar 5 15:55:41 2025 +0100
 
     Added event listeners
 
-commit 91f9348a6c4267d06998556b5e410152c7520c8d
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Wed Mar 5 14:48:24 2025 +0100
 
     Accurate renaming
 
-commit 5ec7b7a99eab7466ae771f13ccc598d80a2c7eba
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Tue Mar 4 20:50:39 2025 +0100
 
     Cleaned up my boiii
 
-commit 25f4a19ace14736c19c89b9a1dea47d4b2f2424d
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Tue Mar 4 20:39:31 2025 +0100
 
     Match constants style
 
-commit 01a3efc253195084f6dad7578a45d7dee7d80337
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Tue Mar 4 20:38:13 2025 +0100
 
     Added sprite loading
 
-commit c17d6d5a6de1b5fc71ce3fc820a06b32975a7918
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Tue Mar 4 20:03:17 2025 +0100
 
     Start of map parsing
 
-commit 74ab6edf504612470dcc145a8510e4bc242a38df
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Tue Mar 4 19:29:59 2025 +0100
 
     Fixed mypy moduling issue
 
-commit 9b6ae07e42f66fca65a14fde041ad69fa350ba3e
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Feb 27 11:20:33 2025 +0100
 
     Added jump sound
 
-commit f91d94f7052c3f48f1c22f0cc0048865fed8d205
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Feb 27 11:19:09 2025 +0100
 
     Added coin sound
 
-commit 2d7bb3013b3dfa68b57e6cff0324227b6f87ff9a
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Feb 27 11:11:06 2025 +0100
 
     Added better keyboard
 
-commit 508e069e598900643944fd867a536cdc33a492b5
+
 Merge: 2608107 55240bc
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Feb 27 11:01:27 2025 +0100
 
     Merge branch 'master' of https://github.com/Lygaen/icc-poo
 
-commit 2608107b4f4ac451c1843fd1a5027e83aad17bc4
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Feb 27 11:01:23 2025 +0100
 
     Disabled multi jump
 
-commit 55240bc23fdbbf8b9d5ff67e475b78e7fa654cd5
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Thu Feb 27 11:00:36 2025 +0100
 
     hitboxes
 
-commit cc1b9449981a1b8b49a39d0508c3119bd2d1afc2
+
 Merge: 6da8406 0da6a23
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Feb 27 10:58:01 2025 +0100
 
     Merge branch 'master' of https://github.com/Lygaen/icc-poo
 
-commit 6da84064f2cd8ccbef89af135a0f842c21c97787
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Feb 27 10:57:54 2025 +0100
 
     Added tests
 
-commit 0da6a23a3ddde65492d2ea5af9b493ac0baa5c30
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Thu Feb 27 10:56:01 2025 +0100
 
     escape -> reset
 
-commit 0164e9547c8102440d8443000cfb35cafbd33bab
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Feb 27 10:51:51 2025 +0100
 
     Added coin hitbox
 
-commit ccde2e16b79e391260d8ebe20dc16625ad7b76af
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Feb 27 10:50:36 2025 +0100
 
     Added coins
 
-commit 5cacfcbe492460183ff8901bf6eb022a24f6e21c
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Feb 27 10:47:50 2025 +0100
 
     Added camera
 
-commit b1e3bf6152dea0a1a7c1b8700413e86235b4d8ca
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Feb 27 10:46:03 2025 +0100
 
     Changed walllist
 
-commit 0c852d00aaf236735a2776d92aa7252e1f116da3
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Feb 27 10:45:03 2025 +0100
 
     Jump
 
-commit 3723b707d85b1a6c5aba240211076796efb44bbb
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Feb 27 10:43:11 2025 +0100
 
     Added physics
 
-commit 88dee45499ee56cc149991a29dbb03a5b804dadc
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Thu Feb 27 10:41:38 2025 +0100
 
     mouvement
 
-commit 3167330e6affe94fff36390ef30926197592e4a4
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Feb 27 10:38:56 2025 +0100
 
     Added walls
 
-commit 62aa0e7caa4644771171bd081adb7a4351c732aa
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Feb 27 10:32:26 2025 +0100
 
     Added spritelist
 
-commit 626f2b67a3a887c058258449a0c3b8a8927bd64d
+
 Merge: 31d3e75 a849cff
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Feb 27 10:30:36 2025 +0100
 
     Merge branch 'master' of https://github.com/Lygaen/icc-poo
 
-commit 31d3e752cf2a912862007154ebcbd4fdf4acb2ff
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Feb 27 10:29:14 2025 +0100
 
     Added sprite list
 
-commit a849cff810699db3a565f7188e73aa167f9f53ef
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Thu Feb 27 10:25:26 2025 +0100
 
     gameview setup
 
-commit 1e35aa5aa0903817134109711cba8d969d938249
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Feb 27 10:21:39 2025 +0100
 
     Added draw char
 
-commit 65942867e352bf6ed791a6bf1d3bf1d6bbd43620
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Feb 27 10:15:51 2025 +0100
 
     Added resource loading
 
-commit b0323ec80372f1d62fe676260f782b58968744d9
+
 Author: Martin Gremeaux-Bader <martin.gremeaux-bader@epfl.ch>
 Date:   Thu Feb 27 10:10:21 2025 +0100
 
     Create empty window
 
-commit 498e9302f64e9cec7961a5aadd20b7b3c0de01b3
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Thu Feb 27 10:05:57 2025 +0100
 
     Added arcade
 
-commit 97d2964c7c350bb09eb627b8a6b23df7d5222259
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Mon Feb 24 17:50:37 2025 +0100
 
     Skeleton design
 
-commit f663a93abbb5c817cc089ab9cadb499b6011050e
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Mon Feb 24 17:49:59 2025 +0100
 
     TODO for readme
 
-commit b89e76cd8b289c91acfb4ca38b94ebbf5e5fbad6
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Mon Feb 24 17:48:59 2025 +0100
 
     Added answers
 
-commit 8e185e9b68574c5b0dcbab19119a788d36f62c52
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Mon Feb 24 17:47:46 2025 +0100
 
     Removed Badge
 
-commit 67b654575006e6d6b3076d915f28e73988089222
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Mon Feb 24 17:46:02 2025 +0100
 
     Added LOG file
 
-commit 5dd9b201eee6285457358fe8f7e22684c1b8f4d6
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Mon Feb 24 17:42:31 2025 +0100
 
     Preparing for new project
 
-commit a11c689bc461ffeb202b3020940d06bece9a79dc
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Wed Feb 19 20:37:19 2025 +0100
 
     Perms Update and Badge
 
-commit 76fb144573dfde5bd50b6ded3d3090f179b6ad35
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Wed Feb 19 20:23:24 2025 +0100
 
     Coveralls Badge !
 
-commit cff0616050bc01da90580eef6faeae4370b279e5
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Wed Feb 19 20:15:17 2025 +0100
 
     Build Badge
 
-commit 8c582bd67b0f75bd238c441a65a6a034547fdeac
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Wed Feb 19 20:03:16 2025 +0100
 
     Added CI Tests :fire:
 
-commit f008d82c3a87152826552969651fbc86c3df30e9
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Wed Feb 19 19:52:41 2025 +0100
 
     NO PYTHON2 PLSS
 
-commit 454f04c860a6571e8e77c0b4f4446b636673a17c
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Wed Feb 19 19:52:10 2025 +0100
 
     README boiii
 
-commit 34e65e7ed7c8bc3a4efe404d78f10c0afb437c58
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Wed Feb 19 19:39:00 2025 +0100
 
     Added the TODOs
 
-commit d64d46da3c1b191e6771064a5fbca1cae0d4e343
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Wed Feb 19 19:24:00 2025 +0100
 
     Added derivatives
 
-commit e685540dd41d75d68088435c7bfb7c70ed5fc68d
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Wed Feb 19 19:23:50 2025 +0100
 
     Added rationals
 
-commit c1b88ce3cc2ddffbcca457ff3ec9120845578da3
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Wed Feb 19 19:23:07 2025 +0100
 
     Added test coverage
 
-commit 7e8bf168f99aa913fe79c9f580cf0aaa46142e54
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Mon Feb 17 17:52:24 2025 +0100
 
     Fixes for MyPy
 
-commit 6e3bb08d3cf20b07cb4198fe023c325aa02579ca
+
 Author: Mathieu Cayeux <mathieucayeux@gmail.com>
 Date:   Mon Feb 17 17:47:31 2025 +0100
 
