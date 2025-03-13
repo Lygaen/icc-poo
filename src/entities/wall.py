@@ -31,6 +31,8 @@ class Exit(GameObject):
     """Exit sign, allowing the player to move to the next stage on touch.
     """
     __next_map: str
+    """Path to the next map, passed to the map object.
+    """
 
     def __init__(self, map: list[Map], next_map: str, **kwargs: Any) -> None:
         """Initializes the wall using the map and representation.

@@ -12,6 +12,7 @@ import typing
 # EDIT : Yeah, be sorry >:(
 if typing.TYPE_CHECKING:
     from src.entities.gameobject import GameObject
+    from src.entities.player import Player
     from src.gameview import GameView
 
 arcade.resources.add_resource_handle("maps", Path("./assets/maps/").resolve())
@@ -44,7 +45,7 @@ class Map:
     """The physics engine that handles gravity and collisions
     for the player.
     """
-    player: GameObject
+    player: Player
     """The player gameobject. *SHOULD* only be modified internally.
     """
 
@@ -318,9 +319,18 @@ class Map:
 
     @dataclass(frozen=True)
     class Metadata:
+        """Metadata of the map, parsed from the header.
+        Only used internally to pass information functions to functions.
+        """
         width: int
+        """Width of the map in character
+        """
         height: int
+        """Height of the map in character
+        """
         next_map: str | None
+        """Relative path to the next map, None if none (lol)
+        """
 
     def __parse_header(self, header: str) -> Metadata:
         """Parses the header from the string, returning

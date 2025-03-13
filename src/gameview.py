@@ -40,9 +40,9 @@ class GameView(arcade.View):
         with self.camera.activate():
             self.map.draw()
 
-            color = arcade.types.Color((1 - (self.map.player.HP / self.map.player.base_HP)) * 255,
-                (self.map.player.HP / self.map.player.base_HP) * 255, 0,
-                0.5 * 255)
+            color = arcade.types.Color(int((1 - (self.map.player.HP / self.map.player.base_HP)) * 255),
+                int((self.map.player.HP / self.map.player.base_HP) * 255), 0,
+                int(0.5 * 255))
             arcade.draw_circle_filled(self.map.player.center_x, self.map.player.center_y, 10, color)
 
         with arcade.Camera2D().activate():
@@ -102,5 +102,16 @@ class GameView(arcade.View):
             listeners.on_mouse_release(x, y, button, modifiers)
 
     def on_mouse_motion(self, x: int, y: int, dx: int, dy: int) -> None:
+
+        """On Mouse Motion event
+
+        event_listener flag needs to be set for this function to be
+        called !
+        Args:
+            x (int): x position of mouse
+            y (int): y position of mouse
+            dx (int): delta position of mouse, x coordinate
+            dx (int): delta position of mouse, y coordinate
+        """
         for listeners in self.map.event_listeners:
             listeners.on_mouse_motion(x, y, dx, dy)

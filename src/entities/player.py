@@ -12,10 +12,18 @@ PLAYER_MOVEMENT_SPEED : int = 3
 PLAYER_JUMP_SPEED = 12
 """Instant vertical speed for jumping, in pixels per frame."""
 
+SWORD_SCALE = 0.5 * 0.7
+"""Sword scale in world.
+"""
+
+SWORD_DOT_DAMAGE = 50
+"""Sword damage-over-time.
+"""
+
 class Sword(GameObject):
     def __init__(self, map: list[Map], **kwargs: Any) -> None:
         super().__init__(map, "assets/sword_silver.png", **kwargs)
-        self.scale = (0.5 * 0.7, 0.5 * 0.7)
+        self.scale = (SWORD_SCALE, SWORD_SCALE)
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         super().update(delta_time, *args, **kwargs)
@@ -24,7 +32,7 @@ class Sword(GameObject):
             return
 
         for hits in self.map.check_for_collisions_all(self):
-            hits.on_damage(DamageSource.PLAYER, 50 * delta_time)
+            hits.on_damage(DamageSource.PLAYER, SWORD_DOT_DAMAGE * delta_time)
 
 class Player(GameObject):
     """The main player game object.
@@ -42,11 +50,19 @@ class Player(GameObject):
     """
 
     sword: Sword
+    """GameObject of the sword the player is using.
+    """
 
     HP: float
+    """Health-Point of the gameobject.
+    """
 
-    base_HP: float
+    base_HP: float = 20
+    """Base healtpoint of the player.
+    """
     __mouse_position: arcade.types.Point2
+    """Mouse position, used for calculating the sword position/rotation.
+    """
 
     def __init__(self, map: list[Map], **kwargs: Any) -> None:
         """Initializes the player tl;dr see GameObject#__init__
@@ -65,8 +81,7 @@ class Player(GameObject):
         self.sword = Sword(map)
         self.sword.visible = False
         self.__mouse_position = arcade.Vec2(0, 0)
-        self.HP = 20
-        self.base_HP = 20
+        self.HP = self.base_HP
 
         self.map.add_objects([self.sword])
 
@@ -124,7 +139,7 @@ class Player(GameObject):
         SCALE_FACTOR = 0.4
         start_pos = self.position
 
-        if dir.x < 0:
+        if dir.x < 0: # Move the sword next to the player's hand, depending on side
             start_pos = (self.left, self.center_y - self.size[1] // 3)
         else:
             start_pos = (self.right, self.center_y - self.size[1] // 3)
@@ -132,7 +147,7 @@ class Player(GameObject):
         self.sword.position = (start_pos[0] + dir[0] * self.sword.size[0] * SCALE_FACTOR,
             start_pos[1] + dir[1] * self.sword.size[1] * SCALE_FACTOR)
 
-        angle = math.asin(dir.x) - (math.pi / 4)
+        angle = math.asin(dir.x) - (math.pi / 4) # Rotate the sword
 
         if dir.y < 0:
             angle = -angle + (math.pi / 2)
@@ -141,5 +156,5 @@ class Player(GameObject):
         super().update(delta_time, *args, **kwargs)
 
     def destroy(self) -> None:
-        self.sword.destroy()
+        self.sword.destroy() # Destroy the sword as well
         super().destroy()

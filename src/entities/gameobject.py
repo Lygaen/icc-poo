@@ -132,6 +132,16 @@ class GameObject(arcade.Sprite):
         pass
 
     def on_mouse_motion(self, x: int, y: int, dx: int, dy: int) -> None:
+        """On Mouse Motion event
+
+        event_listener flag needs to be set for this function to be
+        called !
+        Args:
+            x (int): x position of mouse
+            y (int): y position of mouse
+            dx (int): delta position of mouse, x coordinate
+            dx (int): delta position of mouse, y coordinate
+        """
         pass
 
     def destroy(self) -> None:
