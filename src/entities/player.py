@@ -45,6 +45,7 @@ class Player(GameObject):
 
     HP: float
 
+    base_HP: float
     __mouse_position: arcade.types.Point2
 
     def __init__(self, map: list[Map], **kwargs: Any) -> None:
@@ -65,6 +66,7 @@ class Player(GameObject):
         self.sword.visible = False
         self.__mouse_position = arcade.Vec2(0, 0)
         self.HP = 20
+        self.base_HP = 20
 
         self.map.add_objects([self.sword])
 

@@ -40,6 +40,11 @@ class GameView(arcade.View):
         with self.camera.activate():
             self.map.draw()
 
+            color = arcade.types.Color((1 - (self.map.player.HP / self.map.player.base_HP)) * 255,
+                (self.map.player.HP / self.map.player.base_HP) * 255, 0,
+                0.5 * 255)
+            arcade.draw_circle_filled(self.map.player.center_x, self.map.player.center_y, 10, color)
+
         with arcade.Camera2D().activate():
             arcade.Text(f"Score : {self.score}", 0, 0).draw()
 
