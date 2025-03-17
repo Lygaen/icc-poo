@@ -18,7 +18,7 @@ justesse, d'horribles monstres et d'affreux problèmes qui, si provoqués ou ne 
 ces immondices nommées "Blob" que nous avions disposés sur la carte la semaine précédente. Bien sûr, afin de relever le défi, nous nous sommes vus dans l'obligation de faire en sorte d'empêcher ces atroces "Blob" de traverser les murs, de voler ou de sauter dans le vide, car même si nous avions
 pour projet de rendre l'aventure de notre héros des plus chevaleresque, à l'instar de la nôtre, elle n'en devait pas moins ne pas manquer de logique, et enfreindre certains principes physiques que nous considérons comme basique était
 pour nous encore moins concevable que de passer l'année avec 6 de moyenne. À l'aide d'ingénieux mécanismes sortis des recoins les plus obscurs de nos cerveaux surdopés, respectivement, à la caféine et au cacao, nous vainquîmes toutes les plus atroces des difficultés qui se présentèrent à
-nous. Ainsi s'acheva la deuxième étape de notre projet.
+nous. Ainsi s'acheva la seconde étape de notre projet.
 ### Semaine 4
 ### Semaine 5
 ### Semaine 6
