@@ -16,6 +16,14 @@ SWORD_SCALE = 0.5 * 0.7
 """Sword scale in world.
 """
 
+PLAYER_JUMP_BUFFER = 0.1
+"""Base timer buffer for jumping, in seconds.
+"""
+
+PLAYER_COYOTE_TIME = 0.07
+"""Base timer buffer for coyote time, in seconds.
+"""
+
 SWORD_DOT_DAMAGE = 50
 """Sword damage-over-time.
 """
@@ -64,6 +72,9 @@ class Player(GameObject):
     """Mouse position, used for calculating the sword position/rotation.
     """
 
+    __buffered_jump_timer: float = 0
+    __coyote_timer: float = 0
+
     def __init__(self, map: list[Map], **kwargs: Any) -> None:
         """Initializes the player tl;dr see GameObject#__init__
         """
@@ -81,6 +92,8 @@ class Player(GameObject):
         self.sword = Sword(map)
         self.sword.visible = False
         self.__mouse_position = arcade.Vec2(0, 0)
+        self.__buffered_jump_timer = 0
+        self.__coyote_timer = 0
         self.HP = self.base_HP
 
         self.map.add_objects([self.sword])
@@ -94,9 +107,7 @@ class Player(GameObject):
                 self.change_x -= PLAYER_MOVEMENT_SPEED
                 self.is_move_initiated = True
             case arcade.key.UP:
-                if self.map.physics_engine.can_jump():
-                    self.change_y = PLAYER_JUMP_SPEED
-                    arcade.play_sound(self.jump_sound)
+                self.__buffered_jump_timer = PLAYER_JUMP_BUFFER
 
     def on_key_release(self, symbol: int, modifiers: int) -> None:
         match symbol:
@@ -154,6 +165,22 @@ class Player(GameObject):
         self.sword.radians = angle
 
         super().update(delta_time, *args, **kwargs)
+
+        on_ground = self.map.physics_engine.can_jump()
+
+        if on_ground:
+            self.__coyote_timer = PLAYER_COYOTE_TIME
+
+        if not on_ground and self.__coyote_timer > 0:
+            self.__coyote_timer -= delta_time
+            on_ground = True
+
+        if on_ground and self.__buffered_jump_timer > 0:
+            self.change_y = PLAYER_JUMP_SPEED
+            arcade.play_sound(self.jump_sound)
+            self.__buffered_jump_timer = 0
+        elif self.__buffered_jump_timer > 0:
+            self.__buffered_jump_timer -= delta_time
 
     def destroy(self) -> None:
         self.sword.destroy() # Destroy the sword as well
