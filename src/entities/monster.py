@@ -80,13 +80,14 @@ class Monster(GameObject):
         )  # return true if there is at least one collider in collision with the little circle, false otherwise
 
     # if monstey hit something hurtful that belong to the player, monstey suffers (i.e. loses hp)
-    def on_damage(self, source: DamageSource, damage: float) -> None:
+    def on_damage(self, source: DamageSource, damage: float) -> bool:
         if source == DamageSource.PLAYER:
             # if monstey has no HP left, monstey dies in atrocious circumstances
             self.HP -= damage
             if self.HP <= 0:
                 self.destroy()
             return True
+        return False
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         for object in self.map.check_for_collisions_all(
@@ -108,29 +109,35 @@ class Bat(Monster):
         self.gameover_sound = arcade.Sound(":resources:sounds/gameover1.wav")
         self.v_ro: float = 1
         self.v_phi: float = m.pi
-        self.radius: int = 150
+        self.radius_movement: int = 150
         self.start: tuple[float, float] = (self.center_x, self.center_y)
 
     @property
     def dir(self) -> tuple[float, float]:
+        """To convert the polar coordinate of the speed to plain coordinates to interact with the game"""
         return (self.v_ro * m.cos(self.v_phi), self.v_ro * m.sin(self.v_phi))
 
     @property
     def canmove(self, delta_time: float = 1 / 60) -> bool:
+        """Test if the bat actual movement direction will bring it out of its radius movement"""
+        #calculate the norm of the future position of the bat relative to the center of its movement circle, and return if the distance is less than the maximum distance it can goes away from the center (i.e. self.radius_movement)
         relative_pos: tuple[float, float] = (
             self.center_x + self.dir[0] * delta_time - self.start[0],
             self.center_y + self.dir[1] * delta_time - self.start[1],
         )
         start_dis = m.sqrt(relative_pos[0] ** 2 + relative_pos[1] ** 2)
-        return start_dis <= self.radius
+        return start_dis <= self.radius_movement
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         variation_angle: float = random.randint(-10, 10) * m.pi/2 * delta_time
+        #the bat changes angle  by a random angle between -pi/12 and pi/12, by steps of pi/120
         self.v_phi += variation_angle
         if not self.canmove:
+            # if it is at the edge of the circle, go back inside
             self.v_phi += m.pi
         self.change_x, self.change_y = self.dir
         if self.change_x*self.scale_x > 0 and abs(self.change_x) > 15*delta_time:
+            #to keep the sprite loking in the direction the bat faces, but it has to move fast enough to turn so its not turning constantly when the speed is around 0
             self.scale_x*= -1
 
         super().update(delta_time, **kwargs)
