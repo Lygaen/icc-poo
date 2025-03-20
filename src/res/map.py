@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import itertools
-import arcade
-from pathlib import Path
-from enum import Enum
-from typing import Iterator, Self, cast
-from dataclasses import dataclass
 import typing
+from dataclasses import dataclass
+from enum import Enum
+from pathlib import Path
+from typing import Iterator, Self, cast
+
+import arcade
 
 # MyPy shenanigans for cycle deps, sorry future me ;(
 # EDIT : Yeah, be sorry >:(
@@ -16,6 +17,7 @@ if typing.TYPE_CHECKING:
     from src.gameview import GameView
 
 arcade.resources.add_resource_handle("maps", Path("./assets/maps/").resolve())
+
 
 class Map:
     """The main class handling :
@@ -63,7 +65,6 @@ class Map:
         """
         return self.__game_view_ref[0]
 
-
     class ObjectType(Enum):
         """The type of object to be added on the sprite list.
         Currently depends on the map format.
@@ -98,10 +99,10 @@ class Map:
             """
             match value:
                 case "=" | "-" | "x":
-                    return cast(Self, cls.WALL) # Ugly cast, mypy is eating my sanity
+                    return cast(Self, cls.WALL)  # Ugly cast, mypy is eating my sanity
                 case "*":
                     return cast(Self, cls.COIN)
-                case "o":
+                case "o" | "w":
                     return cast(Self, cls.MONSTER)
                 case "£":
                     return cast(Self, cls.NOGO)
@@ -137,8 +138,7 @@ class Map:
         self.reload()
 
     def draw(self) -> None:
-        """Draw the map and all sub-objects
-        """
+        """Draw the map and all sub-objects"""
         self.__physics_objects.draw()
         self.__passthrough_objects.draw()
 
@@ -186,7 +186,9 @@ class Map:
         Returns:
             list[GameObject]: A list of all colliding gameobjects
         """
-        return arcade.check_for_collision_with_lists(object, [self.__passthrough_objects, self.__physics_objects])
+        return arcade.check_for_collision_with_lists(
+            object, [self.__passthrough_objects, self.__physics_objects]
+        )
 
     def change_maps(self, path: str) -> None:
         self.__path = arcade.resources.resolve(":maps:" + path)
@@ -208,10 +210,10 @@ class Map:
         content: list[str]
         with self.__path.open("r", encoding="utf-8") as file:
             content = ["".join(file.readlines())]
-            content = content[0].split("---", 1) # Split between header (0), map (1)
+            content = content[0].split("---", 1)  # Split between header (0), map (1)
 
         self.physics_engine = arcade.PhysicsEnginePlatformer(
-            arcade.Sprite(), # Empty because we have yet to initialize the map
+            arcade.Sprite(),  # Empty because we have yet to initialize the map
             walls=self.__physics_objects,
             gravity_constant=self.__GRAVITY_CONSTANT,
         )
@@ -235,7 +237,9 @@ class Map:
         """
         return self.__physics_objects
 
-    def __parse_map(self, map: str, info: Metadata, start: arcade.Vec2 = arcade.Vec2(0,0)) -> None:
+    def __parse_map(
+        self, map: str, info: Metadata, start: arcade.Vec2 = arcade.Vec2(0, 0)
+    ) -> None:
         """Parses the map, initializing internals with the parsed data.
 
         Args:
@@ -250,25 +254,27 @@ class Map:
 
         # Once again, loooooove mypy for it forcing me
         # to use runtime imports !
-        from src.entities.player import Player
         from src.entities.coin import Coin
         from src.entities.lava import Lava
-        from src.entities.wall import Wall, Exit
-        from src.entities.monster import Slime
+        from src.entities.monster import Bat, Slime
+        from src.entities.player import Player
+        from src.entities.wall import Exit, Wall
 
-        lines = map.splitlines() # Lines includes "---"
+        lines = map.splitlines()  # Lines includes "---"
 
         if len(lines) - 2 > info.height:
             raise ValueError("Invalid map height")
 
-        lines = lines[1:-1] # Remove "---"
-        lines.reverse() # So that we loop bottom-up
+        lines = lines[1:-1]  # Remove "---"
+        lines.reverse()  # So that we loop bottom-up
 
         for y, line in enumerate(lines):
             if len(line) > info.width:
-                raise ValueError(f"Invalid map width at line {y}, for width {len(line)} (expected {info.width})")
+                raise ValueError(
+                    f"Invalid map width at line {y}, for width {len(line)} (expected {info.width})"
+                )
             for x, char in enumerate(line):
-                if char == " ": # ~void~
+                if char == " ":  # ~void~
                     continue
 
                 pos = start + (x * self.__GRID_SIZE, y * self.__GRID_SIZE)
@@ -283,45 +289,79 @@ class Map:
                 match objType:
                     case Map.ObjectType.START:
                         player = Player(
-                                [self],
-                                scale=self.__GRID_SCALE,
-                                center_x=pos.x,
-                                center_y=pos.y)
+                            [self],
+                            scale=self.__GRID_SCALE,
+                            center_x=pos.x,
+                            center_y=pos.y,
+                        )
                         self.__passthrough_objects.append(player)
                         self.player = player
                     case Map.ObjectType.MONSTER:
-                        self.__passthrough_objects.append(Slime([self],
-                                scale=self.__GRID_SCALE,
-                                center_x=pos.x,
-                                center_y=pos.y))
+                        if char == "o":
+                            self.__passthrough_objects.append(
+                                Slime(
+                                    [self],
+                                    scale=self.__GRID_SCALE,
+                                    center_x=pos.x,
+                                    center_y=pos.y,
+                                )
+                            )
+                        elif char == "w":
+                            self.__passthrough_objects.append(
+                                Bat(
+                                    [self],
+                                    scale=self.__GRID_SCALE,
+                                    center_x=pos.x,
+                                    center_y=pos.y,
+                                )
+                            )
                     case Map.ObjectType.COIN:
-                        self.__passthrough_objects.append(Coin([self],
+                        self.__passthrough_objects.append(
+                            Coin(
+                                [self],
                                 scale=self.__GRID_SCALE,
                                 center_x=pos.x,
-                                center_y=pos.y))
+                                center_y=pos.y,
+                            )
+                        )
                     case Map.ObjectType.NOGO:
-                        self.__passthrough_objects.append(Lava([self],
+                        self.__passthrough_objects.append(
+                            Lava(
+                                [self],
                                 scale=self.__GRID_SCALE,
                                 center_x=pos.x,
-                                center_y=pos.y))
+                                center_y=pos.y,
+                            )
+                        )
                     case Map.ObjectType.WALL:
-                        self.__physics_objects.append(Wall([self], char,
+                        self.__physics_objects.append(
+                            Wall(
+                                [self],
+                                char,
                                 scale=self.__GRID_SCALE,
                                 center_x=pos.x,
-                                center_y=pos.y))
+                                center_y=pos.y,
+                            )
+                        )
                     case Map.ObjectType.EXIT:
                         if info.next_map is None:
                             raise ValueError("Found exit but no next_map !")
-                        self.__passthrough_objects.append(Exit([self], info.next_map,
-                            scale=self.__GRID_SCALE,
-                            center_x=pos.x,
-                            center_y=pos.y))
+                        self.__passthrough_objects.append(
+                            Exit(
+                                [self],
+                                info.next_map,
+                                scale=self.__GRID_SCALE,
+                                center_x=pos.x,
+                                center_y=pos.y,
+                            )
+                        )
 
     @dataclass(frozen=True)
     class Metadata:
         """Metadata of the map, parsed from the header.
         Only used internally to pass information functions to functions.
         """
+
         width: int
         """Width of the map in character
         """
