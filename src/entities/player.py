@@ -28,12 +28,30 @@ SWORD_DOT_DAMAGE = 50
 """Sword damage-over-time.
 """
 
+ARROW_SPEED = 10
+"""The speed of the arrow, in units per second
+"""
+
+ARROW_WAIT_TIME = 0.25
+"""The time to not shoot arrows between arrows being shot
+"""
+
 
 class Weapon(GameObject):
+    """Class to have a general framework for adding weapons"""
+
     __scale_factor: float
+    """The scale factor of the sprite (aka. how far it is)
+    """
     __positive_angle: float
+    """The correction angle when dir.y > 0
+    """
     __negative_angle: float
+    """The correction angle when dir.y < 0
+    """
     dir: arcade.Vec2
+    """The current direction of the bow
+    """
 
     def __init__(
         self,
@@ -44,6 +62,10 @@ class Weapon(GameObject):
         negative_angle: float,
         **kwargs: Any,
     ) -> None:
+        """Creates a new weapon, giving its texture, the scale_factor as well
+        as the angles of the sprite on the texture.
+        """
+
         super().__init__(map, texture, **kwargs)
         self.scale = (WEAPON_SCALE, WEAPON_SCALE)
         self.event_listener = True
@@ -103,6 +125,9 @@ class Weapon(GameObject):
 
     @staticmethod
     def change_weapon(current_weapon: "Weapon") -> "Weapon":
+        """Change weapon, returning a new weapon
+        depending on the current weapon type.
+        """
         match current_weapon.__class__.__name__:
             case "Sword":
                 return Bow([current_weapon.map])
@@ -113,8 +138,14 @@ class Weapon(GameObject):
 
 
 class Bow(Weapon):
+    """The bow weapon class"""
+
     class Arrow(GameObject):
+        """The internal arrow gameobject that is shot from the bow"""
+
         time_to_live: float
+        """The time left to live of the arrow
+        """
 
         def __init__(
             self,
@@ -124,6 +155,9 @@ class Bow(Weapon):
             dir: arcade.Vec2,
             **kwargs: Any,
         ) -> None:
+            """Creates a new arrow, given the bow position, the bow angle
+            and the direction as a vec2"""
+
             super().__init__(map, "assets/arrow.png", **kwargs)
             self.scale = (WEAPON_SCALE, WEAPON_SCALE)
             self.position = bow_position
@@ -136,11 +170,11 @@ class Bow(Weapon):
             super().update(delta_time, *args, **kwargs)
             self.time_to_live -= delta_time
 
-            if self.time_to_live <= 0:
+            if self.time_to_live <= 0:  # Destroys the arrow
                 self.destroy()
 
-            if self.velocity != (0, 0):
-                self.change_y -= 10 * delta_time
+            if self.velocity != (0, 0):  # The velocity is non-null
+                self.change_y -= ARROW_SPEED * delta_time
 
                 dir = arcade.Vec2(self.velocity[0], self.velocity[1])
                 dir = dir.normalize()
@@ -156,16 +190,21 @@ class Bow(Weapon):
                     ob
                     for ob in objects
                     if ob.__class__.__name__ not in ["Bow", "Player", "Arrow"]
-                ]
+                ]  # Ignore collisions with the bow, player or other arrows
 
-                if len(filtered) > 0:
+                if len(filtered) > 0:  # We collided with something
                     self.velocity = (0, 0)
                     for hits in filtered:
                         if hits.on_damage(DamageSource.PLAYER, 25):
                             self.destroy()
 
     spawn_next_tick: bool
+    """Whether or not to spawn the arrow next tick
+    """
+
     last_shot: float
+    """Time in seconds since the last shot
+    """
 
     def __init__(self, map: list[Map], **kwargs: Any) -> None:
         super().__init__(
@@ -188,15 +227,18 @@ class Bow(Weapon):
     def on_mouse_press(self, x: int, y: int, button: int, modifiers: int) -> None:
         super().on_mouse_press(x, y, button, modifiers)
 
+        # Ignore the input if the last shot was not too far in time
         if button == arcade.MOUSE_BUTTON_LEFT and self.last_shot <= 0:
             self.spawn_next_tick = True
-            self.last_shot = 0.5
+            self.last_shot = ARROW_WAIT_TIME
 
     def destroy(self) -> None:
         super().destroy()
 
 
 class Sword(Weapon):
+    """The sword weapon"""
+
     def __init__(self, map: list[Map], **kwargs: Any) -> None:
         super().__init__(
             map,
@@ -245,7 +287,11 @@ class Player(GameObject):
     """
 
     __buffered_jump_timer: float = 0
+    """The timer whether a jump was buffered
+    """
     __coyote_timer: float = 0
+    """A timer for coyote time jumps.
+    """
 
     def __init__(self, map: list[Map], **kwargs: Any) -> None:
         """Initializes the player tl;dr see GameObject#__init__"""
@@ -319,14 +365,15 @@ class Player(GameObject):
 
         on_ground = self.map.physics_engine.can_jump()
 
-        if on_ground:
+        if on_ground:  # Reset coyote-timer
             self.__coyote_timer = PLAYER_COYOTE_TIME
-
-        if not on_ground and self.__coyote_timer > 0:
+        elif self.__coyote_timer > 0:  # Simulate being on ground
             self.__coyote_timer -= delta_time
             on_ground = True
 
-        if on_ground and self.__buffered_jump_timer > 0:
+        if (
+            on_ground and self.__buffered_jump_timer > 0
+        ):  # A jump was buffered and we're considered on ground
             self.change_y = PLAYER_JUMP_SPEED
             arcade.play_sound(self.jump_sound)
             self.__buffered_jump_timer = 0

@@ -87,6 +87,7 @@ class GameObject(arcade.Sprite):
     def on_damage(self, source: DamageSource, damage: float) -> bool:
         """On damage event - General Event
 
+        Returns whether the damage was taken into account or not.
         Args:
             source (DamageSource): The source of the damage
             damage (float): The amount of damage
