@@ -51,11 +51,12 @@ class Monster(GameObject):
     #if monstey hit something hurtful that belong to the player, monstey suffers (i.e. loses hp)
     def on_damage(self, source: DamageSource, damage: float) -> None:
         if source == DamageSource.PLAYER:
+            #if monstey has no HP left, monstey dies in atrocious circumstances
             self.HP -= damage
+            if self.HP <= 0:
+                self.destroy()
+            return True
 
-        #if monstey has no HP left, monstey dies in atrocious circumstances
-        if self.HP <= 0:
-            self.destroy()
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         for object in self.map.check_for_collisions_all(self):       #if monstey touches player, player suffer (i.e. loses HP)
@@ -79,7 +80,7 @@ class Bat(Monster):
     @property
     def dir(self) -> tuple[float, float]:
         return (self.v_ro*m.cos(self.v_phi), self.v_ro*m.sin(self.v_phi))
-    
+
     @property
     def canmove(self, delta_time: float = 1 / 60) -> bool:
         relative_pos : tuple[float, float] = (self.center_x + self.change_x*delta_time - self.start[0], self.center_y + self.change_y*delta_time - self.start[1])

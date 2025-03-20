@@ -160,6 +160,9 @@ class Bow(Weapon):
 
                 if len(filtered) > 0:
                     self.velocity = (0, 0)
+                    for hits in filtered:
+                        if hits.on_damage(DamageSource.PLAYER, 25):
+                            self.destroy()
 
     spawn_next_tick: bool
     arrows: list[Arrow]

@@ -1,4 +1,5 @@
 import enum
+
 import arcade
 from arcade.types import PathOrTexture, Point2
 
@@ -6,15 +7,18 @@ from src.gameview import GameView
 from src.res.camera import BetterCamera
 from src.res.map import Map
 
+
 class DamageSource(enum.Enum):
     """Damage source enum. From which type
     of entity does the damage come from ?
 
     Each field is pretty much self-explanatory.
     """
+
     PLAYER = 1
     MONSTER = 2
     LAVA = 3
+
 
 class GameObject(arcade.Sprite):
     """The GameObject superclass. Ideally should not
@@ -59,7 +63,14 @@ class GameObject(arcade.Sprite):
 
         return self.map.game_view.camera
 
-    def __init__(self, map: list[Map], path_or_texture: PathOrTexture | None = None, scale: Point2 | float = 1, center_x: float = 0, center_y: float = 0) -> None:
+    def __init__(
+        self,
+        map: list[Map],
+        path_or_texture: PathOrTexture | None = None,
+        scale: Point2 | float = 1,
+        center_x: float = 0,
+        center_y: float = 0,
+    ) -> None:
         """Initializes a gameobject given the parameters
 
         Args:
@@ -73,14 +84,14 @@ class GameObject(arcade.Sprite):
         self.__map_ref = map
         self.event_listener = False
 
-    def on_damage(self, source: DamageSource, damage: float) -> None:
+    def on_damage(self, source: DamageSource, damage: float) -> bool:
         """On damage event - General Event
 
         Args:
             source (DamageSource): The source of the damage
             damage (float): The amount of damage
         """
-        pass
+        return False
 
     def on_key_press(self, symbol: int, modifiers: int) -> None:
         """On Key Press event - Window Event
@@ -116,7 +127,6 @@ class GameObject(arcade.Sprite):
             modifiers (int): additional modifiers
         """
         pass
-
 
     def on_mouse_release(self, x: int, y: int, button: int, modifiers: int) -> None:
         """On Mouse Release event
