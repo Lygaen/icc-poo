@@ -86,14 +86,24 @@ class Weapon(GameObject):
 
     def on_mouse_press(self, x: int, y: int, button: int, modifiers: int) -> None:
         self.__mouse_position = (x, y)
-        self.visible = True
+        if button == arcade.MOUSE_BUTTON_LEFT:
+            self.visible = True
 
     def on_mouse_release(self, x: int, y: int, button: int, modifiers: int) -> None:
         self.__mouse_position = (x, y)
-        self.visible = False
+        if button == arcade.MOUSE_BUTTON_LEFT:
+            self.visible = False
 
     def on_mouse_motion(self, x: int, y: int, dx: int, dy: int) -> None:
         self.__mouse_position = (x, y)
+
+    @staticmethod
+    def change_weapon(current_weapon: "Weapon") -> "Weapon":
+        match current_weapon.__class__.__name__:
+            case "Sword":
+                return Bow([current_weapon.map])
+            case "Bow":
+                return Sword([current_weapon.map])
 
 
 class Bow(Weapon):
@@ -182,6 +192,12 @@ class Player(GameObject):
 
         self.map.add_objects([self.weapon])
 
+    def on_mouse_press(self, x: int, y: int, button: int, modifiers: int) -> None:
+        if button == arcade.MOUSE_BUTTON_RIGHT:
+            self.weapon.destroy()
+            self.weapon = Weapon.change_weapon(self.weapon)
+            self.map.add_objects([self.weapon])
+
     def on_key_press(self, symbol: int, modifiers: int) -> None:
         match symbol:
             case arcade.key.RIGHT:
@@ -238,5 +254,5 @@ class Player(GameObject):
             self.__buffered_jump_timer -= delta_time
 
     def destroy(self) -> None:
-        self.weapon.destroy()  # Destroy the sword as well
+        self.weapon.destroy()
         super().destroy()
