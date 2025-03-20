@@ -165,35 +165,34 @@ class Bow(Weapon):
                             self.destroy()
 
     spawn_next_tick: bool
-    arrows: list[Arrow]
+    last_shot: float
 
     def __init__(self, map: list[Map], **kwargs: Any) -> None:
         super().__init__(
             map, "assets/bow.png", 0.2, -(3 * math.pi / 4), -(math.pi / 2), **kwargs
         )
         self.spawn_next_tick = False
-        self.arrows = []
+        self.last_shot = 0
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         super().update(delta_time, *args, **kwargs)
+        self.last_shot -= delta_time
 
         if self.spawn_next_tick:
             arrow = self.Arrow([self.map], self.position, self.radians, self.dir)
 
             self.map.add_objects([arrow])
-            self.arrows.append(arrow)
 
             self.spawn_next_tick = False
 
     def on_mouse_press(self, x: int, y: int, button: int, modifiers: int) -> None:
         super().on_mouse_press(x, y, button, modifiers)
 
-        if button == arcade.MOUSE_BUTTON_LEFT:
+        if button == arcade.MOUSE_BUTTON_LEFT and self.last_shot <= 0:
             self.spawn_next_tick = True
+            self.last_shot = 0.5
 
     def destroy(self) -> None:
-        for arrow in self.arrows:
-            arrow.destroy()
         super().destroy()
 
 
