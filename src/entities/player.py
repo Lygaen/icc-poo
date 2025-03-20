@@ -59,7 +59,9 @@ class Weapon(GameObject):
             return
 
         mouse = self.camera.unproject(self.__mouse_position)
-        dir = arcade.Vec2(mouse.x - self.position[0], mouse.y - self.position[1])
+        dir = arcade.Vec2(
+            mouse.x - self.map.player.position[0], mouse.y - self.map.player.position[1]
+        )
         dir = dir.normalize()
 
         if dir.x < 0:
