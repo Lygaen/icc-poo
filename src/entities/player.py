@@ -12,8 +12,8 @@ PLAYER_MOVEMENT_SPEED: int = 3
 PLAYER_JUMP_SPEED = 12
 """Instant vertical speed for jumping, in pixels per frame."""
 
-SWORD_SCALE = 0.5 * 0.7
-"""Sword scale in world.
+WEAPON_SCALE = 0.5 * 0.7
+"""Weapon scale in world.
 """
 
 PLAYER_JUMP_BUFFER = 0.1
@@ -29,16 +29,28 @@ SWORD_DOT_DAMAGE = 50
 """
 
 
-class Bow(GameObject):
-    __mouse_position: arcade.types.Point2
-    """Mouse position, used for calculating the bow position/rotation.
-    """
+class Weapon(GameObject):
+    __scale_factor: float
+    __positive_angle: float
+    __negative_angle: float
 
-    def __init__(self, map: list[Map], **kwargs: Any) -> None:
-        super().__init__(map, "assets/bow.png", **kwargs)
-        self.scale = (SWORD_SCALE, SWORD_SCALE)
+    def __init__(
+        self,
+        map: list[Map],
+        texture: str,
+        scale_factor: float,
+        positive_angle: float,
+        negative_angle: float,
+        **kwargs: Any,
+    ) -> None:
+        super().__init__(map, texture, **kwargs)
+        self.scale = (WEAPON_SCALE, WEAPON_SCALE)
         self.event_listener = True
         self.visible = False
+
+        self.__scale_factor = scale_factor
+        self.__positive_angle = positive_angle
+        self.__negative_angle = negative_angle
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         super().update(delta_time, *args, **kwargs)
@@ -49,8 +61,6 @@ class Bow(GameObject):
         mouse = self.camera.unproject(self.__mouse_position)
         dir = arcade.Vec2(mouse.x - self.position[0], mouse.y - self.position[1])
         dir = dir.normalize()
-
-        SCALE_FACTOR = 0.2
 
         if dir.x < 0:
             start_pos = (
@@ -64,14 +74,14 @@ class Bow(GameObject):
             )
 
         self.position = (
-            start_pos[0] + dir[0] * self.size[0] * SCALE_FACTOR,
-            start_pos[1] + dir[1] * self.size[1] * SCALE_FACTOR,
+            start_pos[0] + dir[0] * self.size[0] * self.__scale_factor,
+            start_pos[1] + dir[1] * self.size[1] * self.__scale_factor,
         )
 
-        angle = math.asin(dir.x) - (3 * math.pi / 4)
+        angle = math.asin(dir.x) + self.__positive_angle
 
         if dir.y < 0:
-            angle = -angle - (math.pi / 2)
+            angle = -angle + self.__negative_angle
         self.radians = angle
 
     def on_mouse_press(self, x: int, y: int, button: int, modifiers: int) -> None:
@@ -86,16 +96,26 @@ class Bow(GameObject):
         self.__mouse_position = (x, y)
 
 
-class Sword(GameObject):
-    __mouse_position: arcade.types.Point2
-    """Mouse position, used for calculating the sword position/rotation.
-    """
-
+class Bow(Weapon):
     def __init__(self, map: list[Map], **kwargs: Any) -> None:
-        super().__init__(map, "assets/sword_silver.png", **kwargs)
-        self.scale = (SWORD_SCALE, SWORD_SCALE)
-        self.event_listener = True
-        self.visible = False
+        super().__init__(
+            map, "assets/bow.png", 0.2, -(3 * math.pi / 4), -(math.pi / 2), **kwargs
+        )
+
+    def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
+        super().update(delta_time, *args, **kwargs)
+
+
+class Sword(Weapon):
+    def __init__(self, map: list[Map], **kwargs: Any) -> None:
+        super().__init__(
+            map,
+            "assets/sword_silver.png",
+            0.4,
+            -(math.pi / 4),
+            (math.pi / 2),
+            **kwargs,
+        )
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         super().update(delta_time, *args, **kwargs)
@@ -105,44 +125,6 @@ class Sword(GameObject):
 
         for hits in self.map.check_for_collisions_all(self):
             hits.on_damage(DamageSource.PLAYER, SWORD_DOT_DAMAGE * delta_time)
-
-        mouse = self.camera.unproject(self.__mouse_position)
-        dir = arcade.Vec2(mouse.x - self.position[0], mouse.y - self.position[1])
-        dir = dir.normalize()
-
-        SCALE_FACTOR = 0.4
-        if dir.x < 0:
-            start_pos = (
-                self.map.player.left,
-                self.map.player.center_y - self.map.player.size[1] // 3,
-            )
-        else:
-            start_pos = (
-                self.map.player.right,
-                self.map.player.center_y - self.map.player.size[1] // 3,
-            )
-
-        self.position = (
-            start_pos[0] + dir[0] * self.size[0] * SCALE_FACTOR,
-            start_pos[1] + dir[1] * self.size[1] * SCALE_FACTOR,
-        )
-
-        angle = math.asin(dir.x) - (math.pi / 4)
-
-        if dir.y < 0:
-            angle = -angle + (math.pi / 2)
-        self.radians = angle
-
-    def on_mouse_press(self, x: int, y: int, button: int, modifiers: int) -> None:
-        self.__mouse_position = (x, y)
-        self.visible = True
-
-    def on_mouse_release(self, x: int, y: int, button: int, modifiers: int) -> None:
-        self.__mouse_position = (x, y)
-        self.visible = False
-
-    def on_mouse_motion(self, x: int, y: int, dx: int, dy: int) -> None:
-        self.__mouse_position = (x, y)
 
 
 class Player(GameObject):
@@ -160,8 +142,8 @@ class Player(GameObject):
     """SFX for when the player is jumping.
     """
 
-    sword: Sword
-    """GameObject of the sword the player is using.
+    weapon: Weapon
+    """GameObject of the weapon the player is using.
     """
 
     HP: float
@@ -192,13 +174,13 @@ class Player(GameObject):
         self.jump_sound = arcade.Sound(":resources:sounds/jump1.wav")
         self.gameover_sound = arcade.Sound(":resources:sounds/gameover1.wav")
         self.event_listener = True
-        self.sword = Sword(map)
+        self.weapon = Sword(map)
 
         self.__buffered_jump_timer = 0
         self.__coyote_timer = 0
         self.HP = self.base_HP
 
-        self.map.add_objects([self.sword])
+        self.map.add_objects([self.weapon])
 
     def on_key_press(self, symbol: int, modifiers: int) -> None:
         match symbol:
@@ -256,5 +238,5 @@ class Player(GameObject):
             self.__buffered_jump_timer -= delta_time
 
     def destroy(self) -> None:
-        self.sword.destroy()  # Destroy the sword as well
+        self.weapon.destroy()  # Destroy the sword as well
         super().destroy()
