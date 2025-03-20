@@ -127,12 +127,14 @@ class Bat(Monster):
         variation_angle: float = random.randint(-10, 10) * m.pi / 120
         self.v_phi += variation_angle
         if not self.canmove():
-            # while not self.canmove():
+            for _ in range(120):
             # si la direction prise conduit à une sortie de zone, on continu à tourner dans la même direction juste qu'à ce qu'on puisse avancer tout en restant dans la zone
-            if variation_angle == 0:
-                self.v_phi += m.pi / 12
-            else:
-                self.v_phi += m.pi / 12 * (abs(variation_angle) / variation_angle)
+                if variation_angle == 0:
+                    self.v_phi += m.pi / 120
+                else:
+                    self.v_phi += m.pi / 120 * (abs(variation_angle) / variation_angle)
+                if self.canmove():
+                    break
         self.change_x, self.change_y = self.dir
 
         super().update(delta_time, **kwargs)
