@@ -4,6 +4,8 @@ from enum import Enum
 
 from src.entities.gameobject import GameObject, DamageSource
 from src.res.map import Map
+import math as m
+import random
 
 class Dir(Enum):                #this is an enumeration type of cardinal directions, which will be used to check for hitboxes in the immediate neighborhood of the slime along the chosen direction
     """the direction which will be considered"""
@@ -60,6 +62,46 @@ class Monster(GameObject):
             object.on_damage(DamageSource.MONSTER, self.__base_damage * delta_time)
 
         super().update(delta_time, *args, **kwargs)
+
+class Bat(Monster):
+    direction: int
+    gameover_sound: arcade.Sound
+    """Sound for when player touches the slime
+    """
+
+    def __init__(self, map: list[Map], **kwargs: Any) -> None:
+        super().__init__(":resources:/images/enemies/slimeBlue.png", 50, 15, map, **kwargs)
+        self.gameover_sound = arcade.Sound(":resources:sounds/gameover1.wav")
+        self.v_ro: float = 1
+        self.v_phi : float = m.pi
+        self.radius : int = 150
+        self.start : tuple[float, float] = (self.center_x, self.center_y)
+    @property
+    def dir(self) -> tuple[float, float]:
+        return (self.v_ro*m.cos(self.v_phi), self.v_ro*m.sin(self.v_phi))
+    
+    @property
+    def canmove(self, delta_time: float = 1 / 60) -> bool:
+        relative_pos : tuple[float, float] = (self.center_x + self.change_x*delta_time - self.start[0], self.center_y + self.change_y*delta_time - self.start[1])
+        start_dis = m.sqrt(relative_pos[0]**2 + relative_pos[1]**2)
+        return start_dis <= self.radius
+
+    def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
+        variation_angle : float = random.randint(-10, 10)*m.pi/120
+        self.v_phi += variation_angle
+        if not self.canmove:
+            while not self.canmove:
+                #si la direction prise conduit à une sortie de zone, on continu à tourner dans la même direction juste qu'à ce qu'on puisse avancer tout en restant dans la zone
+                self.v_phi += m.pi/120*(abs(variation_angle)/variation_angle)
+
+
+        super().update(delta_time, **kwargs)
+
+
+
+
+
+
 
 class Slime(Monster):
     direction: int
