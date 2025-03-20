@@ -70,7 +70,7 @@ class Bat(Monster):
     """
 
     def __init__(self, map: list[Map], **kwargs: Any) -> None:
-        super().__init__(":resources:/images/enemies/slimeBlue.png", 50, 15, map, **kwargs)
+        super().__init__("assets/bat.png", 50, 15, map, **kwargs)
         self.gameover_sound = arcade.Sound(":resources:sounds/gameover1.wav")
         self.v_ro: float = 1
         self.v_phi : float = m.pi
