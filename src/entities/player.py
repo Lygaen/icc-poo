@@ -346,19 +346,20 @@ class Player(GameObject):
                 if self.is_move_initiated:
                     self.change_x += PLAYER_MOVEMENT_SPEED
 
-    def on_damage(self, source: DamageSource, damage: float) -> None:
+    def on_damage(self, source: DamageSource, damage: float) -> bool:
         match source:
             case DamageSource.LAVA:
                 self.HP = 0
             case DamageSource.MONSTER:
                 self.HP -= damage
             case _:
-                return
+                return False
 
         if self.HP <= 0:
             arcade.play_sound(self.gameover_sound)
             self.game_view.score = 0
             self.map.reload()
+        return True
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         super().update(delta_time, *args, **kwargs)

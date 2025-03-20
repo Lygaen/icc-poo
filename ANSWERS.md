@@ -102,3 +102,24 @@ Au moment de la construction de la map, si la map ne contient pas de `Metadata#n
 Cette erreur permet de régler les oublis accidentels des modifications de la map qui ont rajouté une sortie sans spécifier où est-ce qu'elle allait.
 
 Ce cas où la joueuse attendrait une sortie sans `next-map` est donc impossible par design.
+
+## Semaine 4
+> Quelles formules utilisez-vous exactement pour l’arc et les flèches ?
+L'arc fait apparaître une flèche au moment du clic, cette flèche est un `GameObject` à part entière. Cette flèche, à chaque `update`, se fait retirer de la vitesse verticale.
+
+Finalement, à partir d'un temps variable, la flèche disparait.
+
+Ainsi la formule en question est :
+```
+Vitesse_y -= GRAVITE * delta_time
+```
+
+Où `delta_time` est le temps entre deux frames, afin que le jeu soit consistant quelque soit les FPS.
+
+> Quelles formules utilisez-vous exactement pour le déplacement des chauves-souris (champ d’action, changements de direction, etc.) ?
+...
+
+> Comment avez-vous structuré votre programme pour que les flèches puissent poursuivre leur vol ?
+Grâce au système de `GameObject`, il suffit d'ajouter les flèches à la scène actuelle pour qu'elle deviennent indépendantes.
+
+Ensuite, lors d'une collision, la flèche nullifie sa vitesse et applique des dégâts si applicable. Ainsi le système de flèches devient indépendant de l'arc une fois apparût.

@@ -29,3 +29,5 @@ class Coin(GameObject):
             self.game_view.score += 1
             self.destroy()
             return True
+
+        return False
