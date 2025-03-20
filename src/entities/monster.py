@@ -115,6 +115,7 @@ class Bat(Monster):
     def dir(self) -> tuple[float, float]:
         return (self.v_ro * m.cos(self.v_phi), self.v_ro * m.sin(self.v_phi))
 
+    @property
     def canmove(self, delta_time: float = 1 / 60) -> bool:
         relative_pos: tuple[float, float] = (
             self.center_x + self.dir[0] * delta_time - self.start[0],
@@ -124,18 +125,13 @@ class Bat(Monster):
         return start_dis <= self.radius
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
-        variation_angle: float = random.randint(-10, 10) * m.pi / 120
+        variation_angle: float = random.randint(-10, 10) * m.pi/2 * delta_time
         self.v_phi += variation_angle
-        if not self.canmove():
-            for _ in range(120):
-            # si la direction prise conduit à une sortie de zone, on continu à tourner dans la même direction juste qu'à ce qu'on puisse avancer tout en restant dans la zone
-                if variation_angle == 0:
-                    self.v_phi += m.pi / 120
-                else:
-                    self.v_phi += m.pi / 120 * (abs(variation_angle) / variation_angle)
-                if self.canmove():
-                    break
+        if not self.canmove:
+            self.v_phi += m.pi
         self.change_x, self.change_y = self.dir
+        if self.change_x*self.scale_x > 0 and abs(self.change_x) > 15*delta_time:
+            self.scale_x*= -1
 
         super().update(delta_time, **kwargs)
 
