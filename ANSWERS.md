@@ -117,9 +117,23 @@ Vitesse_y -= GRAVITE * delta_time
 Où `delta_time` est le temps entre deux frames, afin que le jeu soit consistant quelque soit les FPS.
 
 > Quelles formules utilisez-vous exactement pour le déplacement des chauves-souris (champ d’action, changements de direction, etc.) ?
-...
+La chauve-souris se déplace librement dans un cercle centré autour de son point d'apparition.
+
+Elle a sa vitess en coordonées polaires. Ainsi, cela permet des petites corrections (en utilisant le module `random`) à l'angle sans que cela change radicalement son orientation. La norme de la vitesse, elle, reste inchangée.
+
+Lorsque la chauve-souris s'apprête à sortir du cercle, elle effectue un demi-tour afin de pouvoir re-rentrer dedans. Ainsi, les seules demi-tours que la chauve-souris effectue sont dans les cas limites où la chauve-souris pourrait partir trop loin de son point d'apparition.
+
+Ces 2 effets combinés permettent à la chauve-souris de se déplacer de façon plausible. Elle ne rentre pas en collision avec le reste de la map comme demandé.
 
 > Comment avez-vous structuré votre programme pour que les flèches puissent poursuivre leur vol ?
 Grâce au système de `GameObject`, il suffit d'ajouter les flèches à la scène actuelle pour qu'elle deviennent indépendantes.
 
 Ensuite, lors d'une collision, la flèche nullifie sa vitesse et applique des dégâts si applicable. Ainsi le système de flèches devient indépendant de l'arc une fois apparût.
+
+> Comment gérez-vous le fait que vous avez maintenant deux types de monstres, et deux types d’armes ? Comment faites-vous pour ne pas dupliquer du code entre ceux-ci ?
+En plus système de `GameObject`, les armes et les monstres héritent respectivement d'une classe `Weapon` et `Monster`.
+
+Cela permet, pour le premier, d'obtenir une abstraction pour les différentes armes qui est instantiable dans la classe `Player`. Elle permet aussi d'orienter automatiquement les armes aux côtés du joueur afin d'éviter la duplication de ce code là.
+
+Pour `Monster`, cela permet d'avoir des fonctions utiles telle que `check_collision`, gérer le système de PV, gérer les dégâts etc.
+Ainsi, le seul code présent dans les classe intantiant `Weapon` et `Monster` sont des fonctionnalités spécifiques aux-dites classes.
