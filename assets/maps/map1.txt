@@ -1,6 +1,6 @@
 width: 20
 height: 6
-next-map: map1.txt
+next-map: map2.txt
 ---
 *    -  -
 ---        -
