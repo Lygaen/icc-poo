@@ -33,6 +33,7 @@ class Weapon(GameObject):
     __scale_factor: float
     __positive_angle: float
     __negative_angle: float
+    dir: arcade.Vec2
 
     def __init__(
         self,
@@ -51,6 +52,7 @@ class Weapon(GameObject):
         self.__scale_factor = scale_factor
         self.__positive_angle = positive_angle
         self.__negative_angle = negative_angle
+        self.dir = arcade.Vec2(0, 0)
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         super().update(delta_time, *args, **kwargs)
@@ -59,12 +61,12 @@ class Weapon(GameObject):
             return
 
         mouse = self.camera.unproject(self.__mouse_position)
-        dir = arcade.Vec2(
+        self.dir = arcade.Vec2(
             mouse.x - self.map.player.position[0], mouse.y - self.map.player.position[1]
         )
-        dir = dir.normalize()
+        self.dir = self.dir.normalize()
 
-        if dir.x < 0:
+        if self.dir.x < 0:
             start_pos = (
                 self.map.player.left,
                 self.map.player.center_y - self.map.player.size[1] // 3,
@@ -76,13 +78,13 @@ class Weapon(GameObject):
             )
 
         self.position = (
-            start_pos[0] + dir[0] * self.size[0] * self.__scale_factor,
-            start_pos[1] + dir[1] * self.size[1] * self.__scale_factor,
+            start_pos[0] + self.dir[0] * self.size[0] * self.__scale_factor,
+            start_pos[1] + self.dir[1] * self.size[1] * self.__scale_factor,
         )
 
-        angle = math.asin(dir.x) + self.__positive_angle
+        angle = math.asin(self.dir.x) + self.__positive_angle
 
-        if dir.y < 0:
+        if self.dir.y < 0:
             angle = -angle + self.__negative_angle
         self.radians = angle
 
@@ -106,16 +108,66 @@ class Weapon(GameObject):
                 return Bow([current_weapon.map])
             case "Bow":
                 return Sword([current_weapon.map])
+            case _:
+                raise ValueError("Invalid weapon !")
 
 
 class Bow(Weapon):
+    class Arrow(GameObject):
+        def __init__(
+            self,
+            map: list[Map],
+            bow_position: arcade.types.Point2,
+            bow_angle: float,
+            dir: arcade.Vec2,
+            **kwargs: Any,
+        ) -> None:
+            super().__init__(map, "assets/arrow.png", **kwargs)
+            self.scale = (WEAPON_SCALE, WEAPON_SCALE)
+            self.position = bow_position
+            self.radians = bow_angle + (math.pi / 2)
+
+            self.velocity = dir.normalize() * 10
+
+        def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
+            super().update(delta_time, *args, **kwargs)
+            self.change_y -= 10 * delta_time
+
+            dir = arcade.Vec2(self.velocity[0], self.velocity[1])
+            dir = dir.normalize()
+
+            angle = math.asin(dir.x) - (3 * math.pi / 4) + (math.pi / 2)
+
+            if dir.y < 0:
+                angle = -angle - (math.pi / 2) + math.pi
+            self.radians = angle
+
+    spawn_next_tick: bool
+
     def __init__(self, map: list[Map], **kwargs: Any) -> None:
         super().__init__(
             map, "assets/bow.png", 0.2, -(3 * math.pi / 4), -(math.pi / 2), **kwargs
         )
+        self.spawn_next_tick = False
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         super().update(delta_time, *args, **kwargs)
+
+        if self.spawn_next_tick:
+            arrow = self.Arrow([self.map], self.position, self.radians, self.dir)
+
+            self.map.add_objects([arrow])
+
+            self.spawn_next_tick = False
+
+    def on_mouse_press(self, x: int, y: int, button: int, modifiers: int) -> None:
+        super().on_mouse_press(x, y, button, modifiers)
+
+        if button == arcade.MOUSE_BUTTON_LEFT:
+            self.spawn_next_tick = True
+
+    def destroy(self) -> None:
+        super().destroy()
 
 
 class Sword(Weapon):
