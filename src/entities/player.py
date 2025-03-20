@@ -114,6 +114,8 @@ class Weapon(GameObject):
 
 class Bow(Weapon):
     class Arrow(GameObject):
+        time_to_live: float
+
         def __init__(
             self,
             map: list[Map],
@@ -128,27 +130,46 @@ class Bow(Weapon):
             self.radians = bow_angle + (math.pi / 2)
 
             self.velocity = dir.normalize() * 10
+            self.time_to_live = 5
 
         def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
             super().update(delta_time, *args, **kwargs)
-            self.change_y -= 10 * delta_time
+            self.time_to_live -= delta_time
 
-            dir = arcade.Vec2(self.velocity[0], self.velocity[1])
-            dir = dir.normalize()
+            if self.time_to_live <= 0:
+                self.destroy()
 
-            angle = math.asin(dir.x) - (3 * math.pi / 4) + (math.pi / 2)
+            if self.velocity != (0, 0):
+                self.change_y -= 10 * delta_time
 
-            if dir.y < 0:
-                angle = -angle - (math.pi / 2) + math.pi
-            self.radians = angle
+                dir = arcade.Vec2(self.velocity[0], self.velocity[1])
+                dir = dir.normalize()
+
+                angle = math.asin(dir.x) - (3 * math.pi / 4) + (math.pi / 2)
+
+                if dir.y < 0:
+                    angle = -angle - (math.pi / 2) + math.pi
+                self.radians = angle
+                objects = self.map.check_for_collisions_all(self)
+
+                filtered = [
+                    ob
+                    for ob in objects
+                    if ob.__class__.__name__ not in ["Bow", "Player", "Arrow"]
+                ]
+
+                if len(filtered) > 0:
+                    self.velocity = (0, 0)
 
     spawn_next_tick: bool
+    arrows: list[Arrow]
 
     def __init__(self, map: list[Map], **kwargs: Any) -> None:
         super().__init__(
             map, "assets/bow.png", 0.2, -(3 * math.pi / 4), -(math.pi / 2), **kwargs
         )
         self.spawn_next_tick = False
+        self.arrows = []
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         super().update(delta_time, *args, **kwargs)
@@ -157,6 +178,7 @@ class Bow(Weapon):
             arrow = self.Arrow([self.map], self.position, self.radians, self.dir)
 
             self.map.add_objects([arrow])
+            self.arrows.append(arrow)
 
             self.spawn_next_tick = False
 
@@ -167,6 +189,8 @@ class Bow(Weapon):
             self.spawn_next_tick = True
 
     def destroy(self) -> None:
+        for arrow in self.arrows:
+            arrow.destroy()
         super().destroy()
 
 
