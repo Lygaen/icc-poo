@@ -194,6 +194,7 @@ class Map:
         )
 
     def change_maps(self, path: str) -> None:
+        """Change maps based on a path to the new map"""
         self.__path = arcade.resources.resolve(":maps:" + path)
         self.reload()
 
@@ -216,6 +217,9 @@ class Map:
             self.force_load_map(content)
 
     def force_load_map(self, full_map_str: str) -> None:
+        """Forces loading a map from a string instead of
+        from a map path.
+        """
         content = full_map_str.split("---", 1)
 
         self.physics_engine = arcade.PhysicsEnginePlatformer(
