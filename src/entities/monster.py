@@ -44,8 +44,8 @@ class Monster(GameObject):
         self.HP = base_HP
         self.__base_damage = base_damage
 
-    def check_collision(self, dir: Dir) -> bool:
-        """To check if there is a collider in the immediate neighborhood of the slime along a certain direction (in argument)"""
+    def check_collision(self, dir: Dir|float) -> bool:
+        """To check if there is a collider in the immediate neighborhood of the slime along a certain direction (in argument), with already set up directions with an enum or specific direction with an angle (in radians)"""
         circle = arcade.SpriteCircle(
             1, arcade.color.WHITE
         )  # create a little circle, which we will place in the zone where we want to check for collisions. this allows us to check collisions on more precise parts of the sprite, and not always the sprite in a whole
@@ -117,7 +117,7 @@ class Bat(Monster):
         """To convert the polar coordinate of the speed to plain coordinates to interact with the game"""
         return (self.v_ro * m.cos(self.v_phi), self.v_ro * m.sin(self.v_phi))
 
-    @property
+    
     def canmove(self, delta_time: float = 1 / 60) -> bool:
         """Test if the bat actual movement direction will bring it out of its radius movement"""
         #calculate the norm of the future position of the bat relative to the center of its movement circle, and return if the distance is less than the maximum distance it can goes away from the center (i.e. self.radius_movement)
@@ -128,11 +128,23 @@ class Bat(Monster):
         start_dis = m.sqrt(relative_pos[0] ** 2 + relative_pos[1] ** 2)
         return start_dis <= self.radius_movement
 
+    
+    def canmove_without_walls(self, delta_time: float = 1 / 60) -> bool:
+        old_pos : tuple[float, float] = self.position
+        self.position = (
+            self.center_x + self.dir[0] * delta_time,
+            self.center_y + self.dir[1] * delta_time,
+        )
+        isok : bool = len(arcade.check_for_collision_with_list(self, self.map.physics_colliders_list)) == 0
+        self.pos = old_pos
+        return isok
+            
+
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         variation_angle: float = random.randint(-10, 10) * m.pi/2 * delta_time
         #the bat changes angle  by a random angle between -pi/12 and pi/12, by steps of pi/120
         self.v_phi += variation_angle
-        if not self.canmove:
+        if not self.canmove(delta_time) or not self.canmove_without_walls(delta_time):
             # if it is at the edge of the circle, go back inside
             self.v_phi += m.pi
         self.change_x, self.change_y = self.dir
