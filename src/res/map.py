@@ -50,6 +50,9 @@ class Map:
     player: Player
     """The player gameobject. *SHOULD* only be modified internally.
     """
+    player_spawn_point: arcade.types.Point2
+    """The player spawn point as described in the map.
+    """
 
     __game_view_ref: list[GameView]
     """Using list to have a reference to the game view. *Should* only
@@ -137,6 +140,9 @@ class Map:
         """
         self.__path = arcade.resources.resolve(":maps:" + path)
         self.__game_view_ref = view
+
+        self.player = None
+        self.player_spawn_point = (0, 0)
         if first_load:
             self.reload()
 
@@ -208,18 +214,34 @@ class Map:
         if not self.__path.exists():
             raise ValueError(f"Map '{self.__path}' was not found on disk")
 
-        self.__physics_objects = arcade.SpriteList(use_spatial_hash=True)
-        self.__passthrough_objects = arcade.SpriteList(use_spatial_hash=True)
-
         content: str
         with self.__path.open("r", encoding="utf-8") as file:
-            content = ["".join(file.readlines())]
+            content = "".join(file.readlines())
             self.force_load_map(content)
+
+    def respawn_player(self) -> None:
+        """Respawns the player instead of full reloading the map."""
+        if self.player is not None:
+            self.destroy(self.player)
+
+        from src.entities.player import Player
+
+        self.player = Player(
+            [self],
+            scale=self.__GRID_SCALE,
+            center_x=self.player_spawn_point[0],
+            center_y=self.player_spawn_point[1],
+        )
+        self.__passthrough_objects.append(self.player)
+        self.physics_engine.player_sprite = self.player
 
     def force_load_map(self, full_map_str: str) -> None:
         """Forces loading a map from a string instead of
         from a map path.
         """
+        self.__physics_objects = arcade.SpriteList(use_spatial_hash=True)
+        self.__passthrough_objects = arcade.SpriteList(use_spatial_hash=True)
+
         content = full_map_str.split("---", 1)
 
         self.physics_engine = arcade.PhysicsEnginePlatformer(
@@ -231,7 +253,6 @@ class Map:
         info = self.__parse_header(content[0])
         self.__parse_map(content[1], info)
 
-        self.physics_engine.player_sprite = self.player
         self.physics_engine.walls.clear()
         self.physics_engine.walls.append(self.__physics_objects)
 
@@ -267,7 +288,6 @@ class Map:
         from src.entities.coin import Coin
         from src.entities.lava import Lava
         from src.entities.monster import Bat, Slime
-        from src.entities.player import Player
         from src.entities.wall import Exit, Wall
 
         lines = map.splitlines()  # Lines includes "---"
@@ -298,14 +318,8 @@ class Map:
                 # I may come back later to refactor it. maybe. might.
                 match objType:
                     case Map.ObjectType.START:
-                        player = Player(
-                            [self],
-                            scale=self.__GRID_SCALE,
-                            center_x=pos.x,
-                            center_y=pos.y,
-                        )
-                        self.__passthrough_objects.append(player)
-                        self.player = player
+                        self.player_spawn_point = (pos.x, pos.y)
+                        self.respawn_player()
                     case Map.ObjectType.MONSTER:
                         if char == "o":
                             self.__passthrough_objects.append(

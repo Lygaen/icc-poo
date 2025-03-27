@@ -358,7 +358,7 @@ class Player(GameObject):
         if self.HP <= 0:
             arcade.play_sound(self.gameover_sound)
             self.game_view.score = 0
-            self.map.reload()
+            self.map.respawn_player()
         return True
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
