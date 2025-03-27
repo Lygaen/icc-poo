@@ -219,7 +219,7 @@ class Map:
 
     def respawn_player(self) -> None:
         """Respawns the player instead of full reloading the map."""
-        if self.player is not None:
+        if hasattr(self, "player"):
             self.destroy(self.player)
 
         from src.entities.player import Player
