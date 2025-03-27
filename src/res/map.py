@@ -141,8 +141,6 @@ class Map:
         self.__path = arcade.resources.resolve(":maps:" + path)
         self.__game_view_ref = view
 
-        self.player = None
-        self.player_spawn_point = (0, 0)
         if first_load:
             self.reload()
 
