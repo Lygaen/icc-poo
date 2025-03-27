@@ -117,13 +117,30 @@ class Bat(Monster):
         """To convert the polar coordinate of the speed to plain coordinates to interact with the game"""
         return (self.v_ro * m.cos(self.v_phi), self.v_ro * m.sin(self.v_phi))
 
+    @property
+    def r_pos(self) -> tuple[float, float]:
+        return (self.center_x - self.start[0], self.center_y - self.start[1])
+    
+    @property
+    def go_back_angle(self) -> float:
+        
+        if self.r_pos[0] > 0:
+            return m.atan(self.r_pos[1]/self.r_pos[0]) + m.pi
+        elif self.r_pos[0] < 0:
+            return m.atan(self.r_pos[1]/self.r_pos[0])
+        else: #self.r_pos[0] = 0
+            if self.r_pos[1] > 0:
+                return -m.pi/2
+            else: #self.r_pos[1] < 0:
+                return m.pi/2
+        
     
     def canmove(self, delta_time: float = 1 / 60) -> bool:
         """Test if the bat actual movement direction will bring it out of its radius movement"""
         #calculate the norm of the future position of the bat relative to the center of its movement circle, and return if the distance is less than the maximum distance it can goes away from the center (i.e. self.radius_movement)
         relative_pos: tuple[float, float] = (
-            self.center_x + self.dir[0] * delta_time - self.start[0],
-            self.center_y + self.dir[1] * delta_time - self.start[1],
+            self.r_pos[0] + self.dir[0] * delta_time,
+            self.r_pos[1] + self.dir[1] * delta_time,
         )
         start_dis = m.sqrt(relative_pos[0] ** 2 + relative_pos[1] ** 2)
         return start_dis <= self.radius_movement
@@ -146,7 +163,8 @@ class Bat(Monster):
         self.v_phi += variation_angle
         if not self.canmove(delta_time) or not self.canmove_without_walls(delta_time):
             # if it is at the edge of the circle, go back inside
-            self.v_phi += m.pi
+            self.v_phi = self.go_back_angle
+            
         self.change_x, self.change_y = self.dir
         if self.change_x*self.scale_x > 0 and abs(self.change_x) > 15*delta_time:
             #to keep the sprite loking in the direction the bat faces, but it has to move fast enough to turn so its not turning constantly when the speed is around 0
