@@ -125,7 +125,9 @@ class Map:
     to be applied each and every update frame.
     """
 
-    def __init__(self, view: list[GameView], path: str) -> None:
+    def __init__(
+        self, view: list[GameView], path: str, first_load: bool = True
+    ) -> None:
         """Initializes the map with a given path
 
         Args:
@@ -135,7 +137,8 @@ class Map:
         """
         self.__path = arcade.resources.resolve(":maps:" + path)
         self.__game_view_ref = view
-        self.reload()
+        if first_load:
+            self.reload()
 
     def draw(self) -> None:
         """Draw the map and all sub-objects"""
