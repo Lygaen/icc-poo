@@ -163,7 +163,7 @@ class Bat(Monster):
         self.v_phi += variation_angle
         if not self.canmove(delta_time) or not self.canmove_without_walls(delta_time):
             # if it is at the edge of the circle, go back inside
-            self.v_phi = self.go_back_angle
+            self.v_phi = self.go_back_angle + variation_angle
             
         self.change_x, self.change_y = self.dir
         if self.change_x*self.scale_x > 0 and abs(self.change_x) > 15*delta_time:
