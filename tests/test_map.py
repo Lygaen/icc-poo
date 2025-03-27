@@ -2,6 +2,7 @@ import textwrap
 from typing import Any, Iterable, Iterator
 
 import arcade
+import pytest
 
 from src.gameview import GameView
 
@@ -67,3 +68,43 @@ def test_entities_spawn(window: arcade.Window) -> None:
     assert count_of_class_type(view.map.game_objects, "Wall") == 4 + 5 + 8
     assert count_of_class_type(view.map.game_objects, "Lava") == 6
     assert count_of_class_type(view.map.game_objects, "Slime") == 7
+
+
+def test_throws_errors(window: arcade.Window) -> None:
+    view = GameView()
+
+    # Invalid width
+    with pytest.raises(ValueError):
+        view.map.force_load_map(
+            textwrap.dedent("""
+            width: 1
+            height: 1
+            ---
+            S====
+            ---
+            """)
+        )
+
+    # Invalid height
+    with pytest.raises(ValueError):
+        view.map.force_load_map(
+            textwrap.dedent("""
+            width: 5
+            height: 0
+            ---
+            S====
+            ---
+            """)
+        )
+
+    # No next-map
+    with pytest.raises(ValueError):
+        view.map.force_load_map(
+            textwrap.dedent("""
+                width: 5
+                height: 1
+                ---
+                S===E
+                ---
+                """)
+        )
