@@ -24,7 +24,7 @@ PLAYER_COYOTE_TIME = 0.07
 """Base timer buffer for coyote time, in seconds.
 """
 
-SWORD_DOT_DAMAGE = 50
+SWORD_DOT_DAMAGE = 175
 """Sword damage-over-time.
 """
 
@@ -36,6 +36,9 @@ ARROW_WAIT_TIME = 0.25
 """The time to not shoot arrows between arrows being shot
 """
 
+ARROW_DAMAGE = 25
+"""Damage inflicted by one arrow, on hit
+"""
 
 class Weapon(GameObject):
     """Class to have a general framework for adding weapons"""
@@ -195,7 +198,7 @@ class Bow(Weapon):
                 if len(filtered) > 0:  # We collided with something
                     self.velocity = (0, 0)
                     for hits in filtered:
-                        if hits.on_damage(DamageSource.PLAYER, 25):
+                        if hits.on_damage(DamageSource.PLAYER, ARROW_DAMAGE):
                             self.destroy()
 
     spawn_next_tick: bool
