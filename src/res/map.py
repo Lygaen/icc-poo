@@ -207,13 +207,16 @@ class Map:
         self.__physics_objects = arcade.SpriteList(use_spatial_hash=True)
         self.__passthrough_objects = arcade.SpriteList(use_spatial_hash=True)
 
-        content: list[str]
+        content: str
         with self.__path.open("r", encoding="utf-8") as file:
             content = ["".join(file.readlines())]
-            content = content[0].split("---", 1)  # Split between header (0), map (1)
+            self.force_load_map(content)
+
+    def force_load_map(self, full_map_str: str) -> None:
+        content = full_map_str.split("---", 1)
 
         self.physics_engine = arcade.PhysicsEnginePlatformer(
-            arcade.Sprite(),  # Empty because we have yet to initialize the map
+            arcade.Sprite(),
             walls=self.__physics_objects,
             gravity_constant=self.__GRAVITY_CONSTANT,
         )
