@@ -7,6 +7,7 @@ import arcade
 
 from src.entities.gameobject import DamageSource, GameObject
 from src.res.map import Map
+from collections.abc import Callable
 
 
 class Dir(
@@ -194,11 +195,25 @@ class Bat(Monster):
         start_dis = m.sqrt(relative_pos[0] ** 2 + relative_pos[1] ** 2)
         return start_dis <= self.radius_movement
 
-            
+    
+
+    # def updatex(self, condition : Callable[[float], bool], delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
+    #     variation_angle: float = random.randint(-10, 10) * m.pi/2 * delta_time
+    #     #the bat changes angle  by a random angle between -pi/12 and pi/12, by steps of pi/120
+    #     self.v_phi += variation_angle
+    #     if condition(delta_time):
+    #         # if it is at the edge of the circle, go back in the direction of the center, with a small variation allowed
+    #         self.v_phi = self.go_back_angle + variation_angle
+    #     self.change_x, self.change_y = self.dir
+    #     if self.change_x*self.scale_x > 0 and abs(self.change_x) > 15*delta_time:
+    #         #to keep the sprite loking in the direction the bat faces, but it has to move fast enough to turn so its not turning constantly when the speed is around 0 on the x axis
+    #         self.scale_x*= -1
+
+        # super(Bat, self).update(delta_time, **kwargs)
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         variation_angle: float = random.randint(-10, 10) * m.pi/2 * delta_time
-        #the bat changes angle  by a random angle between -pi/12 and pi/12, by steps of pi/120
+        #the bat changes angle  by a random angle between -pi/12 and pi/12, by steps of pi/120 (when delta_time = 1/60)
         self.v_phi += variation_angle
         if not self.canmove(delta_time):
             # if it is at the edge of the circle, go back in the direction of the center, with a small variation allowed
@@ -207,7 +222,6 @@ class Bat(Monster):
         if self.change_x*self.scale_x > 0 and abs(self.change_x) > 15*delta_time:
             #to keep the sprite loking in the direction the bat faces, but it has to move fast enough to turn so its not turning constantly when the speed is around 0 on the x axis
             self.scale_x*= -1
-
         super().update(delta_time, **kwargs)
 
 
@@ -227,16 +241,30 @@ class DarkBat(Bat):
         self.pos = old_pos
         return isok
     
-    def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
-        variation_angle: float = random.randint(-10, 10) * m.pi/2 * delta_time
-        #the bat changes angle  by a random angle between -pi/12 and pi/12, by steps of pi/120
-        self.v_phi += variation_angle
-        if not self.canmove(delta_time) or not self.canmove_without_colliders(delta_time):
-            # if it is at the edge of the circle or in a collider, go back in the direction of the center, with a small variation allowed
-            self.v_phi = self.go_back_angle + variation_angle
-        self.change_x, self.change_y = self.dir
-        if self.change_x*self.scale_x > 0 and abs(self.change_x) > 15*delta_time:
-            #to keep the sprite loking in the direction the bat faces, but it has to move fast enough to turn so its not turning constantly when the speed is around 0 on the x axis
-            self.scale_x*= -1
+    def canmove(self, delta_time: float = 1 / 60) -> bool:
+        """Test if the bat actual movement direction will bring it outside of its radius or inside of a collider"""
+        #The Dark Bat will only be able to move if it staysin the circle AND is not going into a collider, so we change its canmove function to cover this.
+        #the code for update stay the same, so it's not defined in DarkBat. the only change is that self.canmove will not be the same function in both cases
+        return super().canmove(delta_time) and self.canmove_without_colliders(delta_time)
+    
 
-        super().update(delta_time, **kwargs)
+# Comme j'ai expliqué normalement y'a pas besoin de définir update si ça marche comme je pense
+
+
+
+    # def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
+    #     self.updatex(self.canmove, delta_time, *args, **kwargs)
+
+        # variation_angle: float = random.randint(-10, 10) * m.pi/2 * delta_time
+        # #the bat changes angle  by a random angle between -pi/12 and pi/12, by steps of pi/120
+        # self.v_phi += variation_angle
+        # if not self.canmove(delta_time) or not self.canmove_without_colliders(delta_time):
+        #     # if it is at the edge of the circle or in a collider, go back in the direction of the center, with a small variation allowed
+        #     self.v_phi = self.go_back_angle + variation_angle
+        # self.change_x, self.change_y = self.dir
+        # if self.change_x*self.scale_x > 0 and abs(self.change_x) > 15*delta_time:
+        #     #to keep the sprite loking in the direction the bat faces, but it has to move fast enough to turn so its not turning constantly when the speed is around 0 on the x axis
+        #     self.scale_x*= -1
+
+        #pour faire en sorte que le update de Monster et des classes supérieures soit appelé, mais pas celui de Bat, car il gère le mouvement qui est déjà géré ici, et différemment
+        #super(Bat, self).update(delta_time, **kwargs)
