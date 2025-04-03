@@ -9,9 +9,9 @@ next-map: map1.txt
      w    w     =
   w          w  =
         w       =
-   w        w   =
- w      w       =
-                =
+   w        w ===
+ w      w    ---=
+       ---- o * =
     w     w   o*=
 w o  ---      ===
   -   * w    w  =

@@ -98,8 +98,55 @@ class Monster(GameObject):
         super().update(delta_time, *args, **kwargs)
 
 
-class Bat(Monster):
+class Slime(Monster):
     direction: int
+    gameover_sound: arcade.Sound
+    """Sound for when player touches the slime
+    """
+
+    def __init__(self, map: list[Map], **kwargs: Any) -> None:
+        super().__init__(
+            ":resources:/images/enemies/slimeBlue.png", 100, 10, map, **kwargs
+        )
+        self.gameover_sound = arcade.Sound(":resources:sounds/gameover1.wav")
+        self.change_x = -1
+        self.direction = -1
+
+    def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
+        if not self.check_collision(
+            Dir.down
+        ):  # if there is no ground under slimey, slimey cannot change direction and keep its inertia (little to no friction in this world)
+            super().update(delta_time, **kwargs)
+            return
+        if (
+            self.check_collision(Dir.face) or not self.check_collision(Dir.facedown)
+        ):  # if there is a collider or no ground in front of slimey, it cannot go further and must turn over
+            self.change_x *= -1
+            self.direction *= -1
+            if (
+                self.change_x != 0
+            ):  # if slimey is not moving cause it's stuck, we don't want it to change direction every frames (i.e. making it unnoticeable for the player)
+                self.scale_x *= -1
+            if (
+                self.check_collision(Dir.face) or not self.check_collision(Dir.facedown)
+            ):  # if there is also a collider or no ground to the other side of slimey, it cannot move anymore, thus starting a depression
+                self.change_x *= 0
+            super().update(delta_time, **kwargs)
+            return
+        elif (
+            self.change_x == 0
+        ):  # if slimey was in depression (i.e. not moving) and the space in front of it or at its back is freed, it goes out of its depression and starts moving again
+            self.change_x = self.direction  # N.B. when we arrive at this part of the code (if we reach it), we already make sure that slimey can move in the direction he his looking (stocked with self.direction)
+            if (
+                self.scale_x * self.direction < 0
+            ):  # when slimey was stuck, self.direction kept its directions changes, but the sprite was frozen to prevent it to change orientation every frames. now we accord the sprite orientation to self.direction so it's not gonna start moonwalking
+                self.scale_x *= -1
+            super().update(delta_time, **kwargs)
+            return
+        super().update(delta_time, **kwargs)
+
+
+class Bat(Monster):
     gameover_sound: arcade.Sound
     """Sound for when player touches the slime
     """
@@ -147,6 +194,26 @@ class Bat(Monster):
         start_dis = m.sqrt(relative_pos[0] ** 2 + relative_pos[1] ** 2)
         return start_dis <= self.radius_movement
 
+            
+
+    def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
+        variation_angle: float = random.randint(-10, 10) * m.pi/2 * delta_time
+        #the bat changes angle  by a random angle between -pi/12 and pi/12, by steps of pi/120
+        self.v_phi += variation_angle
+        if not self.canmove(delta_time):
+            # if it is at the edge of the circle, go back in the direction of the center, with a small variation allowed
+            self.v_phi = self.go_back_angle + variation_angle
+        self.change_x, self.change_y = self.dir
+        if self.change_x*self.scale_x > 0 and abs(self.change_x) > 15*delta_time:
+            #to keep the sprite loking in the direction the bat faces, but it has to move fast enough to turn so its not turning constantly when the speed is around 0 on the x axis
+            self.scale_x*= -1
+
+        super().update(delta_time, **kwargs)
+
+
+class DarkBat(Bat):
+    def __init__(self, map: list[Map], **kwargs: Any) -> None:
+        super().__init__(map, **kwargs)
     
     def canmove_without_colliders(self, delta_time: float = 1 / 60) -> bool:
         """Test if the bat actual movement direction will bring it inside of a collider"""
@@ -155,12 +222,11 @@ class Bat(Monster):
             self.center_x + self.dir[0] * delta_time,
             self.center_y + self.dir[1] * delta_time,
         )
-        #check if the furture position of the bat will bring it into at least one collider
+        #check if the future position of the bat will bring it into at least one collider
         isok : bool = len(arcade.check_for_collision_with_list(self, self.map.physics_colliders_list)) == 0
         self.pos = old_pos
         return isok
-            
-
+    
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         variation_angle: float = random.randint(-10, 10) * m.pi/2 * delta_time
         #the bat changes angle  by a random angle between -pi/12 and pi/12, by steps of pi/120
@@ -170,55 +236,7 @@ class Bat(Monster):
             self.v_phi = self.go_back_angle + variation_angle
         self.change_x, self.change_y = self.dir
         if self.change_x*self.scale_x > 0 and abs(self.change_x) > 15*delta_time:
-            #to keep the sprite loking in the direction the bat faces, but it has to move fast enough to turn so its not turning constantly when the speed is around 0
+            #to keep the sprite loking in the direction the bat faces, but it has to move fast enough to turn so its not turning constantly when the speed is around 0 on the x axis
             self.scale_x*= -1
 
-        super().update(delta_time, **kwargs)
-
-
-class Slime(Monster):
-    direction: int
-    gameover_sound: arcade.Sound
-    """Sound for when player touches the slime
-    """
-
-    def __init__(self, map: list[Map], **kwargs: Any) -> None:
-        super().__init__(
-            ":resources:/images/enemies/slimeBlue.png", 100, 10, map, **kwargs
-        )
-        self.gameover_sound = arcade.Sound(":resources:sounds/gameover1.wav")
-        self.change_x = -1
-        self.direction = -1
-
-    def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
-        if not self.check_collision(
-            Dir.down
-        ):  # if there is no ground under slimey, slimey cannot change direction and keep its inertia (little to no friction in this world)
-            super().update(delta_time, **kwargs)
-            return
-        if (
-            self.check_collision(Dir.face) or not self.check_collision(Dir.facedown)
-        ):  # if there is a collider or no ground in front of slimey, it cannot go further and must turn over
-            self.change_x *= -1
-            self.direction *= -1
-            if (
-                self.change_x != 0
-            ):  # if slimey is not moving cause it's stuck, we don't want it to change direction every frames (i.e. making it unnoticeable for the player)
-                self.scale_x *= -1
-            if (
-                self.check_collision(Dir.face) or not self.check_collision(Dir.facedown)
-            ):  # if there is also a collider or no ground to the other side of slimey, it cannot move anymore, thus starting a depression
-                self.change_x *= 0
-            super().update(delta_time, **kwargs)
-            return
-        elif (
-            self.change_x == 0
-        ):  # if slimey was in depression (i.e. not moving) and the space in front of it or at its back is freed, it goes out of its depression and starts moving again
-            self.change_x = self.direction  # N.B. when we arrive at this part of the code (if we reach it), we already make sure that slimey can move in the direction he his looking (stocked with self.direction)
-            if (
-                self.scale_x * self.direction < 0
-            ):  # when slimey was stuck, self.direction kept its directions changes, but the sprite was frozen to prevent it to change orientation every frames. now we accord the sprite orientation to self.direction so it's not gonna start moonwalking
-                self.scale_x *= -1
-            super().update(delta_time, **kwargs)
-            return
         super().update(delta_time, **kwargs)
