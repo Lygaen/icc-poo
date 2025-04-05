@@ -107,7 +107,7 @@ class Slime(Monster):
 
     def __init__(self, map: list[Map], **kwargs: Any) -> None:
         super().__init__(
-            ":resources:/images/enemies/slimeBlue.png", 100, 10, map, **kwargs
+            ":resources:/images/enemies/slimeBlue.png", 150, 10, map, **kwargs
         )
         self.gameover_sound = arcade.Sound(":resources:sounds/gameover1.wav")
         self.change_x = -1
@@ -230,7 +230,7 @@ class DarkBat(Bat):
     
     def canmove(self, delta_time: float = 1 / 60) -> bool:
         """Test if the bat actual movement direction will bring it outside of its radius or inside of a collider"""
-        #The Dark Bat will only be able to move if it staysin the circle AND is not going into a collider, so we change its canmove function to cover this.
+        #The Dark Bat will only be able to move if it stays in the circle AND is not going into a collider, so we change its canmove function to cover this.
         #the code for update stay the same, so it's not defined in DarkBat. the only change is that self.canmove will not be the same function in both cases
         return super().canmove(delta_time) and self.canmove_without_colliders(delta_time)
     
