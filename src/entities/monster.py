@@ -1,7 +1,7 @@
 import math as m
 import random
-from enum import Enum
-from typing import Any
+from enum import Enum, auto
+from typing import Any, Final
 
 import arcade
 
@@ -15,14 +15,14 @@ class Dir(
 ):  # this is an enumeration type of cardinal directions, which will be used to check for hitboxes in the immediate neighborhood of the slime along the chosen direction
     """the direction which will be considered"""
 
-    down = 0
-    up = 1
-    face = 2
-    facedown = 3
-    faceup = 4
-    back = 5
-    backdown = 6
-    backup = 7
+    down = auto()
+    up = auto()
+    face = auto()
+    facedown = auto()
+    faceup = auto()
+    back = auto()
+    backdown = auto()
+    backup = auto()
 
 
 class Monster(GameObject):
@@ -158,7 +158,7 @@ class Bat(Monster):
         self.v_ro: float = 1
         self.v_phi: float = m.pi
         self.radius_movement: int = 150
-        self.start: tuple[float, float] = (self.center_x, self.center_y)
+        self.start: Final[tuple[float, float]] = (self.center_x, self.center_y)
 
     @property
     def dir(self) -> tuple[float, float]:
