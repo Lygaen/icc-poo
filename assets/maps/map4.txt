@@ -1,7 +1,7 @@
 width: 65
 height: 20
 next-map: map1.txt
----
+---    
     w        w  =
         w       =
    w       w    =
@@ -9,10 +9,10 @@ next-map: map1.txt
      w    w     =
   w          w  =
         w       =
-   w        w   =
- w      w       =
-                =
-    w     w   o*=
+   w        w ===
+ w      w    ---=
+       ----   * =
+    w     w o o*=
 w o  ---      ===
   -   * w    w  =
       -         =                                            -
