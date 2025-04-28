@@ -1,6 +1,6 @@
 width: 65
 height: 7
-next-map: map4.txt
+next_map: map4.txt
 ---
                                                              -
                                                       w   -  w  E

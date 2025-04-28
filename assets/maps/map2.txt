@@ -1,12 +1,12 @@
 width: 27
 height: 12
-next-map: map3.txt
+next_map: map3.txt
 ---
             *     w
       S       --     *o
       ===££=        --
       =££=o=x    w
-     =£££=---     
+     =£££=---
                  o*o
           w      -----
       **           *

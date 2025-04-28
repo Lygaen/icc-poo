@@ -3,11 +3,12 @@ from __future__ import annotations
 import itertools
 import typing
 from dataclasses import dataclass
-from enum import Enum
+from enum import Enum, StrEnum
 from pathlib import Path
 from typing import Iterator, Self, cast
 
 import arcade
+import yaml
 
 # MyPy shenanigans for cycle deps, sorry future me ;(
 # EDIT : Yeah, be sorry >:(
@@ -394,6 +395,45 @@ class Map:
         """Relative path to the next map, None if none (lol)
         """
 
+        @dataclass(frozen=True)
+        class GatePosition:
+            x: int
+            y: int
+
+            class State(StrEnum):
+                open = "open"
+                closed = "closed"
+
+            state: State
+
+        gates: list[GatePosition] | None = None
+
+        @dataclass(frozen=True)
+        class SwitchPosition:
+            x: int
+            y: int
+
+            class State(StrEnum):
+                on = "on"
+                off = "off"
+
+            state: State = State.off
+
+            @dataclass(frozen=True)
+            class Action:
+                class Kind(StrEnum):
+                    open_gate = "open-gate"
+                    close_gate = "close-gate"
+                    disable = "disable"
+
+                x: int
+                y: int
+
+            switch_on: list[Action] | None = None
+            switch_off: list[Action] | None = None
+
+        switches: list[SwitchPosition] | None = None
+
     def __parse_header(self, header: str) -> Metadata:
         """Parses the header from the string, returning
         the metadata of the parsed header.
@@ -407,26 +447,8 @@ class Map:
         Returns:
             arcade.Vec2: The size of the header
         """
-        width: int = 0
-        height: int = 0
-        next_map: str | None = None
-        for line in header.splitlines():
-            if line.lstrip() == "":
-                continue
-            vname = line.split(":", 1)[0]
-            vvalue = line.split(":", 1)[1]
-
-            match vname:
-                case "width":
-                    width = int(vvalue)
-                case "height":
-                    height = int(vvalue)
-                case "next-map":
-                    next_map = vvalue.replace(" ", "")
-                case _:
-                    raise ValueError(f"Unkown variable field name '{vname}' in map")
-
-        return self.Metadata(width, height, next_map)
+        d = yaml.safe_load(header)
+        return Map.Metadata(**d)
 
     def destroy(self, object: GameObject) -> None:
         """Destroys a given gameobject from the map
