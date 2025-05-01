@@ -65,6 +65,8 @@ class Path:
             self.__direction = 0
         else:
             self.__direction = 1
+        if len(self.__positions) == 1:
+            self.other(pos, map)
         
     @property
     def current(self) -> int:
@@ -80,11 +82,16 @@ class Path:
         """vérifie que le chemin n'ait pas de mouvement à la fois horizontal et vertical assigné"""
         # dict des directions cardinales avec un bool qui dit si on a la bonne flèche dans cette direction là
         directions : dict[Array2D.Direction, bool] = {dir : (map.at_position_with_direction(pos, dir) == CARDINAUX[dir]) for dir in CARDINAUX}
+        # si la position initiale n'est pas dans la map, le chemin n'est pas valide
+        # on a cru bon ici de séparer les deux conditions mêmes si elles return False les deux pour faciliter
+        # un tant soit peu la lecture déjà relativement ardue de la deuxième condition
+        if not map.in_bounds(pos):
+            return False
         # les bools se comportent comme des ints et du coup si le membre de gauche est non nul, alors il y a au moins
         # une direction verticale assignée, si le membre de droite est non nul, alors il y a au moins une direction
         # horizontale assignée, et donc si la multiplication des deux est non nulle on a assigné au moins une direction
         # horizontale et une verticale assignée -> le chemin est invalide
-        # (si ce n'est pas le cas, alors le chamin est valide)
+        # (si ce n'est pas le cas, alors le chemin est valide)
         if (directions[Array2D.Direction.N]+directions[Array2D.Direction.S])*(directions[Array2D.Direction.E]+directions[Array2D.Direction.W]) != 0:
             return False
         return True
@@ -108,4 +115,60 @@ class Path:
         current = self.next_idx()
         return self.positions[current]
 
+
+    def other(self, pos : tuple[int, int], map : Array2D[str]) -> None:
+        adjacents : set[tuple[int, int]] = {pos}
+        old : set[tuple[int, int]] = set()
+        paths : set[Path] = set()
+        while old != adjacents:
+            temp : set[tuple[int, int]] = adjacents
+            for pos in adjacents:
+                if pos not in old:
+                    for dir in CARDINAUX:
+                        if map.at((pos[0] + dir.value[0], pos[1] + dir.value[1])) in {"=","-","X","E"}:
+                            adjacents.add((pos[0] + dir.value[0], pos[1] + dir.value[1]))
+                            path : Path = Path(map, (pos[0] + dir.value[0], pos[1] + dir.value[1]))
+                            if len(path.positions) > 1:
+                                paths.add(path)
+
+            old = temp
+        if len(paths) == 1:
+            self.__positions = list(paths)[0].positions
+            self.__direction = list(paths)[0].direction
+            self.__current = list(paths)[0].current
+
+        elif len(paths) > 1:
+            raise ValueError
+        
+        
+
+
+
+
+# class block:
+
+#     path: Path
+
+#     def __init__(self, map : Array2D[str], pos : tuple[int, int]) -> None:
+#         self.pos : tuple[int, int] = pos
+#         self.char : str | None = map.at(pos)
+#         self.map : Array2D[str] = map
+
+
+
+#     def moving(self) -> list[tuple[int, int]]:
+#         li : set[tuple[int, int]] = {self.pos}
+#         cool : dict[tuple[int, int], list[tuple[int, int]]] = {}
+#         for pos in li:
+#             for dir in CARDINAUX:
+#                 if  self.map.in_bounds((pos[0] + dir.value[0], pos[1] + dir.value[1])):
+#                     li.add((pos[0] + dir.value[0], pos[1] + dir.value[1]))
+#             path : Path = Path(self.map, pos)
+#             if len(path.positions) > 1:
+#                 cool[pos] = path.positions
+#         if len(cool) > 1:
+#             raise ValueError
+
+
+#         return []
 
