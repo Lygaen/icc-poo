@@ -1,7 +1,9 @@
 from typing import Any
+
 import arcade
 
 from src.entities.gameobject import GameObject
+from src.res.array2d import Array2D, Path
 from src.res.map import Map
 
 CHAR_INFO: dict[str, str] = {
@@ -13,9 +15,9 @@ CHAR_INFO: dict[str, str] = {
 representations.
 """
 
+
 class Wall(GameObject):
-    """Generic wall object. Wall that does NOTHING. NADA. ZERO.
-    """
+    """Generic wall object. Wall that does NOTHING. NADA. ZERO."""
 
     def __init__(self, map: list[Map], representation: str, **kwargs: Any) -> None:
         """Initializes the wall using the map and representation.
@@ -27,9 +29,34 @@ class Wall(GameObject):
         """
         super().__init__(map, CHAR_INFO.get(representation), **kwargs)
 
+
+class MovingPlatform(GameObject):
+    path: Path
+    old: tuple[int, int]
+    target: tuple[int, int]
+    time: float
+
+    def __init__(
+        self, map: list[Map], data: Array2D[str], pos: tuple[int, int], **kwargs: Any
+    ) -> None:
+        super().__init__(map, CHAR_INFO.get("x"), **kwargs)
+        self.time = 0
+        self.path = Path(data, pos)
+        self.old = self.map.map_to_world(pos)
+        self.target = self.map.map_to_world(self.path.next())
+
+    def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
+        self.time += delta_time
+        pos = arcade.Vec2(self.old[0], self.old[1]).lerp(
+            arcade.Vec2(self.target[0], self.target[1]), self.time
+        )
+        self.position = (pos.x, pos.y)
+        super().update(delta_time, *args, **kwargs)
+
+
 class Exit(GameObject):
-    """Exit sign, allowing the player to move to the next stage on touch.
-    """
+    """Exit sign, allowing the player to move to the next stage on touch."""
+
     __next_map: str
     """Path to the next map, passed to the map object.
     """

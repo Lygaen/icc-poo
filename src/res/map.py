@@ -10,6 +10,7 @@ from typing import Iterator
 import arcade
 import yaml
 
+from src.entities.wall import MovingPlatform
 from src.res.array2d import Array2D
 
 # MyPy shenanigans for cycle deps, sorry future me ;(
@@ -221,6 +222,9 @@ class Map:
         """
         return self.__physics_objects
 
+    def map_to_world(self, pos: tuple[int, int]) -> tuple[int, int]:
+        return (pos[0] * self.__GRID_SIZE, pos[1] * self.__GRID_SIZE)
+
     def __parse_map(
         self, map: str, info: Metadata, start: arcade.Vec2 = arcade.Vec2(0, 0)
     ) -> None:
@@ -263,7 +267,7 @@ class Map:
                 array.data[y][x] = char
 
         for char, x, y in array.items():
-            pos = start + (x * self.__GRID_SIZE, y * self.__GRID_SIZE)
+            pos = start + self.map_to_world((x, y))
 
             # The following is *pretty* ugly. Because arcade
             # doesn't have a proper way to store dynamic values
@@ -338,6 +342,17 @@ class Map:
                     self.__passthrough_objects.append(
                         Lava(
                             [self],
+                            scale=self.__GRID_SCALE,
+                            center_x=pos.x,
+                            center_y=pos.y,
+                        )
+                    )
+                case "x":
+                    self.__physics_objects.append(
+                        MovingPlatform(
+                            [self],
+                            array,
+                            (x, y),
                             scale=self.__GRID_SCALE,
                             center_x=pos.x,
                             center_y=pos.y,
