@@ -78,7 +78,13 @@ class Path:
 
     def is_valid(self, map : Array2D[str], pos : tuple[int, int]) -> bool:
         """vérifie que le chemin n'ait pas de mouvement à la fois horizontal et vertical assigné"""
+        # dict des directions cardinales avec un bool qui dit si on a la bonne flèche dans cette direction là
         directions : dict[Array2D.Direction, bool] = {dir : (map.at_position_with_direction(pos, dir) == CARDINAUX[dir]) for dir in CARDINAUX}
+        # les bools se comportent comme des ints et du coup si le membre de gauche est non nul, alors il y a au moins
+        # une direction verticale assignée, si le membre de droite est non nul, alors il y a au moins une direction
+        # horizontale assignée, et donc si la multiplication des deux est non nulle on a assigné au moins une direction
+        # horizontale et une verticale assignée -> le chemin est invalide
+        # (si ce n'est pas le cas, alors le chamin est valide)
         if (directions[Array2D.Direction.N]+directions[Array2D.Direction.S])*(directions[Array2D.Direction.E]+directions[Array2D.Direction.W]) != 0:
             return False
         return True
