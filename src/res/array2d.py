@@ -57,7 +57,7 @@ class Path:
         down.reverse()
         self.__positions = down + [pos] + up
         self.__current = len(down)
-        if len(self.__positions) == 0:
+        if len(self.__positions) == 1:
             self.__direction = 0
         else:
             self.__direction = 1
