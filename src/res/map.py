@@ -5,12 +5,12 @@ import typing
 from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import Path
-from typing import Iterator
+from typing import Iterator, cast
 
 import arcade
 import yaml
+from munch import munchify
 
-from src.entities.wall import MovingPlatform
 from src.res.array2d import Array2D
 
 # MyPy shenanigans for cycle deps, sorry future me ;(
@@ -246,7 +246,7 @@ class Map:
         from src.entities.gates_lever import Gate, Switch
         from src.entities.lava import Lava
         from src.entities.monster import Bat, DarkBat, Slime
-        from src.entities.wall import Exit, Wall
+        from src.entities.wall import Exit, MovingPlatform, Wall
 
         lines = map.splitlines()  # Lines includes "---"
 
@@ -292,7 +292,7 @@ class Map:
                         )
                     )
                 case "|":
-                    self.__passthrough_objects.append(
+                    self.__physics_objects.append(
                         Gate(
                             [self],
                             info,
@@ -410,7 +410,6 @@ class Map:
 
         gates: list[GatePosition] | None = None
 
-        @dataclass(frozen=True)
         class SwitchPosition:
             x: int
             y: int
@@ -451,7 +450,7 @@ class Map:
             arcade.Vec2: The size of the header
         """
         d = yaml.safe_load(header)
-        return Map.Metadata(**d)
+        return cast(Map.Metadata, munchify(d))
 
     def destroy(self, object: GameObject) -> None:
         """Destroys a given gameobject from the map

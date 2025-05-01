@@ -14,7 +14,7 @@ GateData = Map.Metadata.GatePosition
 
 class Gate(GameObject):
     isOpen: bool
-    data: GateData
+    data: GateData | None
 
     def __init__(
         self, map: list[Map], meta: Map.Metadata, pos: tuple[int, int], **kwargs: Any
@@ -22,19 +22,18 @@ class Gate(GameObject):
         super().__init__(
             map, ":resources:/images/tiles/stoneCenter_rounded.png", **kwargs
         )
+
         self.isOpen = False
+        self.data = None
         for gate in meta.gates or []:
             if gate.x == pos[0] and gate.y == pos[1]:
                 if gate.state == GateData.State.open:
-                    self.isOpen = True
-                    self.update_gate(self.isOpen)
+                    self.update_gate(True)
                 self.data = gate
                 break
 
         if self.data is None:
-            raise ValueError(
-                f"Gate at position x:'{pos[0]}' y'{pos[1]}' is not defined in the header !"
-            )
+            self.data = GateData(pos[0], pos[1], GateData.State.closed)
 
     def update_gate(self, open: bool) -> None:
         if open == self.isOpen:
@@ -73,6 +72,9 @@ class Switch(GameObject):
                 f"Switch at position x:'{pos[0]}' y'{pos[1]}' is not defined in the header !"
             )
 
+        if not hasattr(self.data, "state"):
+            self.data.state = SwitchData.State.off
+
         if self.data.state == SwitchData.State.on:
             self.isOn = True
             self.set_texture(1)
@@ -89,7 +91,7 @@ class Switch(GameObject):
 
     def do_switch_action(self, action: SwitchData.Action) -> None:
         ActionKind = SwitchData.Action.Kind
-        match action.Kind:
+        match action.action:
             case ActionKind.open_gate:
                 g = self.gate_from_action(action)
                 if g is None:
