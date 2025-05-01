@@ -3,12 +3,14 @@ from __future__ import annotations
 import itertools
 import typing
 from dataclasses import dataclass
-from enum import Enum, StrEnum
+from enum import StrEnum
 from pathlib import Path
-from typing import Iterator, Self, cast
+from typing import Iterator
 
 import arcade
 import yaml
+
+from src.res.array2d import Array2D
 
 # MyPy shenanigans for cycle deps, sorry future me ;(
 # EDIT : Yeah, be sorry >:(
@@ -68,54 +70,6 @@ class Map:
             GameView: The parent game view
         """
         return self.__game_view_ref[0]
-
-    class ObjectType(Enum):
-        """The type of object to be added on the sprite list.
-        Currently depends on the map format.
-
-        Types are pretty self-explanatory, with the details of :
-        - NOGO is currently only lava
-        - START is the starting point of the player
-        """
-
-        WALL = 1
-        COIN = 2
-        MONSTER = 3
-        NOGO = 4
-        START = 5
-        EXIT = 6
-
-        @classmethod
-        def from_representation(cls, value: str) -> Self:
-            """Returns the ObjectType from the string representation
-
-            Args:
-                value (str): The string representation of the object type,
-                See implementation details for which type are returned for
-                which string.
-
-            Raises:
-                ValueError: If and only if the given representation is not
-                defined for any type
-
-            Returns:
-                Self: The ObjectType in question
-            """
-            match value:
-                case "=" | "-" | "x":
-                    return cast(Self, cls.WALL)  # Ugly cast, mypy is eating my sanity
-                case "*":
-                    return cast(Self, cls.COIN)
-                case "o" | "w":
-                    return cast(Self, cls.MONSTER)
-                case "£":
-                    return cast(Self, cls.NOGO)
-                case "S":
-                    return cast(Self, cls.START)
-                case "E":
-                    return cast(Self, cls.EXIT)
-                case _:
-                    raise ValueError(f"Invalid '{value}' for ObjectType enum")
 
     __GRID_SIZE = 64
     """The size of the grid in pixels.
@@ -285,8 +239,9 @@ class Map:
         # Once again, loooooove mypy for it forcing me
         # to use runtime imports !
         from src.entities.coin import Coin
+        from src.entities.gates_lever import Gate, Switch
         from src.entities.lava import Lava
-        from src.entities.monster import Bat, Slime
+        from src.entities.monster import Bat, DarkBat, Slime
         from src.entities.wall import Exit, Wall
 
         lines = map.splitlines()  # Lines includes "---"
@@ -296,88 +251,120 @@ class Map:
 
         lines = lines[1:-1]  # Remove "---"
         lines.reverse()  # So that we loop bottom-up
+        array = Array2D.from_size(info.width, info.height, " ")
 
         for y, line in enumerate(lines):
             if len(line) > info.width:
                 raise ValueError(
                     f"Invalid map width at line {y}, for width {len(line)} (expected {info.width})"
                 )
+
             for x, char in enumerate(line):
-                if char == " ":  # ~void~
-                    continue
+                array.data[y][x] = char
 
-                pos = start + (x * self.__GRID_SIZE, y * self.__GRID_SIZE)
-                objType = Map.ObjectType.from_representation(char)
+        for char, x, y in array.items():
+            pos = start + (x * self.__GRID_SIZE, y * self.__GRID_SIZE)
 
-                # The following is *pretty* ugly. Because arcade
-                # doesn't have a proper way to store dynamic values
-                # at runtime, I wanted to create a Gameobject system.
-                # So the following needs to be that way until I find
-                # a better way to handle things.
-                # I may come back later to refactor it. maybe. might.
-                match objType:
-                    case Map.ObjectType.START:
-                        self.player_spawn_point = (pos.x, pos.y)
-                        self.respawn_player()
-                    case Map.ObjectType.MONSTER:
-                        if char == "o":
-                            self.__passthrough_objects.append(
-                                Slime(
-                                    [self],
-                                    scale=self.__GRID_SCALE,
-                                    center_x=pos.x,
-                                    center_y=pos.y,
-                                )
-                            )
-                        elif char == "w":
-                            self.__passthrough_objects.append(
-                                Bat(
-                                    [self],
-                                    scale=self.__GRID_SCALE,
-                                    center_x=pos.x,
-                                    center_y=pos.y,
-                                )
-                            )
-                    case Map.ObjectType.COIN:
-                        self.__passthrough_objects.append(
-                            Coin(
-                                [self],
-                                scale=self.__GRID_SCALE,
-                                center_x=pos.x,
-                                center_y=pos.y,
-                            )
+            # The following is *pretty* ugly. Because arcade
+            # doesn't have a proper way to store dynamic values
+            # at runtime, I wanted to create a Gameobject system.
+            # So the following needs to be that way until I find
+            # a better way to handle things.
+            # I may come back later to refactor it. maybe. might.
+
+            match char:
+                case "S":
+                    self.player_spawn_point = (pos.x, pos.y)
+                    self.respawn_player()
+                case "^":
+                    self.__passthrough_objects.append(
+                        Switch(
+                            [self],
+                            info,
+                            (x, y),
+                            scale=self.__GRID_SCALE,
+                            center_x=pos.x,
+                            center_y=pos.y,
                         )
-                    case Map.ObjectType.NOGO:
-                        self.__passthrough_objects.append(
-                            Lava(
-                                [self],
-                                scale=self.__GRID_SCALE,
-                                center_x=pos.x,
-                                center_y=pos.y,
-                            )
+                    )
+                case "|":
+                    self.__passthrough_objects.append(
+                        Gate(
+                            [self],
+                            info,
+                            (x, y),
+                            scale=self.__GRID_SCALE,
+                            center_x=pos.x,
+                            center_y=pos.y,
                         )
-                    case Map.ObjectType.WALL:
-                        self.__physics_objects.append(
-                            Wall(
-                                [self],
-                                char,
-                                scale=self.__GRID_SCALE,
-                                center_x=pos.x,
-                                center_y=pos.y,
-                            )
+                    )
+                case "o":
+                    self.__passthrough_objects.append(
+                        Slime(
+                            [self],
+                            scale=self.__GRID_SCALE,
+                            center_x=pos.x,
+                            center_y=pos.y,
                         )
-                    case Map.ObjectType.EXIT:
-                        if info.next_map is None:
-                            raise ValueError("Found exit but no next_map !")
-                        self.__passthrough_objects.append(
-                            Exit(
-                                [self],
-                                info.next_map,
-                                scale=self.__GRID_SCALE,
-                                center_x=pos.x,
-                                center_y=pos.y,
-                            )
+                    )
+                case "w":
+                    self.__passthrough_objects.append(
+                        Bat(
+                            [self],
+                            scale=self.__GRID_SCALE,
+                            center_x=pos.x,
+                            center_y=pos.y,
                         )
+                    )
+                case "W":
+                    self.__passthrough_objects.append(
+                        DarkBat(
+                            [self],
+                            scale=self.__GRID_SCALE,
+                            center_x=pos.x,
+                            center_y=pos.y,
+                        )
+                    )
+                case "*":
+                    self.__passthrough_objects.append(
+                        Coin(
+                            [self],
+                            scale=self.__GRID_SCALE,
+                            center_x=pos.x,
+                            center_y=pos.y,
+                        )
+                    )
+                case "£":
+                    self.__passthrough_objects.append(
+                        Lava(
+                            [self],
+                            scale=self.__GRID_SCALE,
+                            center_x=pos.x,
+                            center_y=pos.y,
+                        )
+                    )
+                case "=" | "-":
+                    self.__physics_objects.append(
+                        Wall(
+                            [self],
+                            char,
+                            scale=self.__GRID_SCALE,
+                            center_x=pos.x,
+                            center_y=pos.y,
+                        )
+                    )
+                case "E":
+                    if info.next_map is None:
+                        raise ValueError("Found exit but no next_map !")
+                    self.__passthrough_objects.append(
+                        Exit(
+                            [self],
+                            info.next_map,
+                            scale=self.__GRID_SCALE,
+                            center_x=pos.x,
+                            center_y=pos.y,
+                        )
+                    )
 
     @dataclass(frozen=True)
     class Metadata:
@@ -426,6 +413,7 @@ class Map:
                     close_gate = "close-gate"
                     disable = "disable"
 
+                action: Kind
                 x: int
                 y: int
 
