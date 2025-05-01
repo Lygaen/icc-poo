@@ -24,6 +24,7 @@ chauve souris ++ et tests
 ### Semaine 7
 ### Semaine 8
 ### Semaine 9
+plateformes mouvantes + portails et interrupteurs
 ### Semaine 10
 ### Semaine 11
 ### Semaine 12
