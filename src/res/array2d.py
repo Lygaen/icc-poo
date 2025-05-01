@@ -50,10 +50,14 @@ class Path:
 
 
     def __init__(self, map : Array2D[str], pos : tuple[int, int]) -> None:
+        #vérifie que le chemin ne suit qu'une direction
         if not self.is_valid(map, pos):
             raise ValueError("Block has non-valid movement (incorrect nearby arrows on map)")
-        up : list[tuple[int, int]] = self.dir_path(map, pos, Array2D.Direction.N) + self.dir_path(map, pos, Array2D.Direction.E) 
+        # comme le chemin est valide, au moins une des deux listes est vide. on obtient donc la liste des flèches de la direction dominante, nommée up ici pour plus de clarté
+        up : list[tuple[int, int]] = self.dir_path(map, pos, Array2D.Direction.N) + self.dir_path(map, pos, Array2D.Direction.E)
+        # comme le chemin est valide, au moins une des deux listes est vide. on obtient donc la liste des flèches de la direction secondaire, nommée down ici pour plus de clarté
         down : list[tuple[int, int]] = self.dir_path(map, pos, Array2D.Direction.S) + self.dir_path(map, pos, Array2D.Direction.W)
+        # down part de la position et descend, alors que nous on veut un mouvement uniforme, donc une liste qui va de la position la plus "basse" à la position la plus "haute"
         down.reverse()
         self.__positions = down + [pos] + up
         self.__current = len(down)
@@ -73,24 +77,28 @@ class Path:
         return self.__direction 
 
     def is_valid(self, map : Array2D[str], pos : tuple[int, int]) -> bool:
+        """vérifie que le chemin n'ait pas de mouvement à la fois horizontal et vertical assigné"""
         directions : dict[Array2D.Direction, bool] = {dir : (map.at_position_with_direction(pos, dir) == CARDINAUX[dir]) for dir in CARDINAUX}
         if (directions[Array2D.Direction.N]+directions[Array2D.Direction.S])*(directions[Array2D.Direction.E]+directions[Array2D.Direction.W]) != 0:
             return False
         return True
 
     def dir_path(self, map : Array2D[str], pos : tuple[int, int], dir : Array2D.Direction) -> list[tuple[int, int]]:
+        """calcule et retourne le chemin total du block dans une direction"""
         next : tuple[int, int] = (pos[0] + dir.value[0], pos[1] + dir.value[1])
-        if map.at_position_with_direction(next, dir) is CARDINAUX[dir]:
+        if map.at_position_with_direction(next, dir) == CARDINAUX[dir]:
             return [next] + self.dir_path(map, next, dir)
         else:
             return []
 
     def next_idx(self) -> int:
+        """calcule l'index suivant auquel se trouvera le block'"""
         if not (len(self.positions) > self.current + self.direction >= 0):
             self.__direction *= -1
         return self.current + self.direction
     
     def next(self) -> tuple[int, int]:
+        """avance le current au prochain index et retourne la nouvelle position"""
         current = self.next_idx()
         return self.positions[current]
 
