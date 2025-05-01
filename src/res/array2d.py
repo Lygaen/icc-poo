@@ -74,7 +74,6 @@ class Path:
 
     def is_valid(self, map : Array2D[str], pos : tuple[int, int]) -> bool:
         directions : dict[Array2D.Direction, bool] = {dir : (map.at_position_with_direction(pos, dir) == CARDINAUX[dir]) for dir in CARDINAUX}
-        pos_dir : dict[Array2D.Direction, bool] = {dir : directions[dir] for dir in directions if directions[dir]}
         if (directions[Array2D.Direction.N]+directions[Array2D.Direction.S])*(directions[Array2D.Direction.E]+directions[Array2D.Direction.W]) != 0:
             return False
         return True
