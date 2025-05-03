@@ -83,6 +83,10 @@ class Path:
         return self.current + self.direction
     
     def next(self) -> Position:
+            """retourne la prochaine position"""
+            return self.positions[self.next_idx()]
+
+    def go_next(self) -> Position:
         """avance le current au prochain index et retourne la nouvelle position"""
         self.__current = self.next_idx()
         return self.positions[self.current]
