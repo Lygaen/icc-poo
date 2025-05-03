@@ -77,7 +77,7 @@ class Path:
 
 
     def next_idx(self) -> int:
-        """calcule l'index suivant auquel se trouvera le block'"""
+        """calcule l'index suivant auquel se trouvera le block"""
         if not (len(self.positions) > self.current + self.direction >= 0):
             self.__direction *= -1
         return self.current + self.direction
