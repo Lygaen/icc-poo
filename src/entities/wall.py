@@ -51,6 +51,12 @@ class MovingPlatform(GameObject):
             arcade.Vec2(self.target[0], self.target[1]), self.time
         )
         self.position = (pos.x, pos.y)
+
+        if self.time >= 1:
+            self.time = 0
+            self.old = self.target
+            self.target = self.map.map_to_world(self.path.next())
+
         super().update(delta_time, *args, **kwargs)
 
 
