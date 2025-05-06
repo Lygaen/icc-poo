@@ -110,7 +110,7 @@ class Path:
         ) * (
             directions.get(Array2D.Direction.E, False)
             + directions.get(Array2D.Direction.W, False)
-        ) != 0
+        ) == 0
 
     @staticmethod
     def dir_path(
