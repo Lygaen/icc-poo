@@ -18,6 +18,7 @@ def test_map_loads(window: arcade.Window) -> None:
         textwrap.dedent("""
         width: 4
         height: 2
+        next_map: map1.txt
         ---
         S  o
         ====
@@ -40,7 +41,7 @@ def test_entities_spawn(window: arcade.Window) -> None:
         textwrap.dedent("""
         width: 8
         height: 8
-        next-map: lol.txt
+        next_map: map1.txt
         ---
         S
         **
@@ -65,7 +66,8 @@ def test_entities_spawn(window: arcade.Window) -> None:
     assert count_of_class_type(view.map.game_objects, "Player") == 1
     assert count_of_class_type(view.map.game_objects, "Coin") == 2
     assert count_of_class_type(view.map.game_objects, "Bat") == 3
-    assert count_of_class_type(view.map.game_objects, "Wall") == 4 + 5 + 8
+    assert count_of_class_type(view.map.game_objects, "Wall") == 4 + 5
+    assert count_of_class_type(view.map.game_objects, "MovingPlatform") == 8
     assert count_of_class_type(view.map.game_objects, "Lava") == 6
     assert count_of_class_type(view.map.game_objects, "Slime") == 7
 
@@ -79,6 +81,7 @@ def test_throws_errors(window: arcade.Window) -> None:
             textwrap.dedent("""
             width: 1
             height: 1
+            next_map: map1.txt
             ---
             S====
             ---
@@ -91,6 +94,7 @@ def test_throws_errors(window: arcade.Window) -> None:
             textwrap.dedent("""
             width: 5
             height: 0
+            next_map: map1.txt
             ---
             S====
             ---
@@ -98,7 +102,7 @@ def test_throws_errors(window: arcade.Window) -> None:
         )
 
     # No next-map
-    with pytest.raises(ValueError):
+    with pytest.raises(AttributeError):
         view.map.force_load_map(
             textwrap.dedent("""
                 width: 5

@@ -75,7 +75,7 @@ def test_next_map(window: arcade.Window) -> None:
         textwrap.dedent("""
         width: 1
         height: 2
-        next-map: map1.txt
+        next_map: map1.txt
         ---
         S
         E
