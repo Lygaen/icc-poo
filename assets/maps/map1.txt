@@ -38,12 +38,12 @@ gates:
   # the other gates start closed
 next_map: map2.txt
 ---
-^    ←x→          x
---    x ^         x
-      x-----      |
-   ---x           =
-      x   -----   =
----   x   x   |  x=
- S    |  xx * x  x=  E
-========================
+^    ←x→           
+--    x ^          
+       -----      |
+   ---            =
+S         -----   =
+---           |   =
+      |     *     =  E
+
 ---

@@ -43,7 +43,7 @@ class MovingPlatform(GameObject):
         self.time = 0
         self.path = Path(data, pos)
         self.old = self.map.map_to_world(pos)
-        self.target = self.map.map_to_world(self.path.next())
+        self.target = self.map.map_to_world(self.path.go_next())
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         self.time += delta_time
@@ -55,7 +55,7 @@ class MovingPlatform(GameObject):
         if self.time >= 1:
             self.time = 0
             self.old = self.target
-            self.target = self.map.map_to_world(self.path.next())
+            self.target = self.map.map_to_world(self.path.go_next())
 
         super().update(delta_time, *args, **kwargs)
 

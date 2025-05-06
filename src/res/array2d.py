@@ -118,7 +118,7 @@ class Path:
     ) -> list[Position]:
         """calcule et retourne le chemin total du block dans une direction, à partir des flèches qui lui sont directement connectées"""
         next: Position = (pos[0] + dir.value[0], pos[1] + dir.value[1])
-        if map.at_position_with_direction(next, dir) == CARDINAUX[dir]:
+        if map.at_position_with_direction(pos, dir) == CARDINAUX[dir]:
             return [next] + Path.dir_path(map, next, dir)
         else:
             return []
@@ -177,7 +177,7 @@ class Path:
                     directions[dir][0][i][0] + directions[dir][1][0] - pos[0],
                     directions[dir][0][i][1] + directions[dir][1][1] - pos[1],
                 )
-                for i in range(len(directions[Array2D.Direction.N][0]))
+                for i in range(len(directions[dir][0]))
             ]
             for dir in CARDINAUX
         }
