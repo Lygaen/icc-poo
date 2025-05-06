@@ -54,10 +54,15 @@ class Switch(GameObject):
     isOn: bool
     isDisabled: bool
 
+    last_hit: float
+
+    HIT_INVULNERABILITY: float = 1.0
+
     def __init__(
         self, map: list[Map], meta: Map.Metadata, pos: tuple[int, int], **kwargs: Any
     ) -> None:
         super().__init__(map, LEVER_OFF, **kwargs)
+        self.last_hit = 0
         self.isOn = False
         self.isDisabled = False
         self.append_texture(arcade.load_texture(LEVER_ON))
@@ -80,10 +85,12 @@ class Switch(GameObject):
             self.set_texture(1)
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
+        self.last_hit = max(0, self.last_hit - delta_time)
         super().update(delta_time, **kwargs)
 
     def on_damage(self, source: DamageSource, damage: float) -> bool:
-        if source == DamageSource.PLAYER:
+        if source == DamageSource.PLAYER and self.last_hit <= 0:
+            self.last_hit = self.HIT_INVULNERABILITY
             self.on_switch_change()
             return True
 
