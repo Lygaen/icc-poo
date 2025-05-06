@@ -18,8 +18,9 @@ reportUnknownMemberType = false
 
 [dependency-groups]
 dev = [
+    "munch-stubs>=0.1.2",
     "mypy>=1.15.0",
- "pytest>=8.3.4",
- "pytest-cov>=6.0.0",
- "types-pyyaml>=6.0.12.20250402",
+    "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
+    "types-pyyaml>=6.0.12.20250402",
 ]

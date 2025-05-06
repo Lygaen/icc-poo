@@ -107,7 +107,7 @@ class Switch(GameObject):
 
     def gate_from_action(self, action: SwitchData.Action) -> Gate | None:
         for obj in self.map.game_objects:
-            if isinstance(obj, Gate):
+            if isinstance(obj, Gate) and obj.data is not None:
                 if obj.data.x == action.x and obj.data.y == action.y:
                     return obj
         return None

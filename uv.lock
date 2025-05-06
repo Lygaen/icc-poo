@@ -98,6 +98,7 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "munch-stubs" },
     { name = "mypy" },
     { name = "pytest" },
     { name = "pytest-cov" },
@@ -113,6 +114,7 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "munch-stubs", specifier = ">=0.1.2" },
     { name = "mypy", specifier = ">=1.15.0" },
     { name = "pytest", specifier = ">=8.3.4" },
     { name = "pytest-cov", specifier = ">=6.0.0" },
@@ -135,6 +137,20 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/e7/2b/45098135b5f9f13221820d90f9e0516e11a2a0f55012c13b081d202b782a/munch-4.0.0.tar.gz", hash = "sha256:542cb151461263216a4e37c3fd9afc425feeaf38aaa3025cd2a981fadb422235", size = 19089, upload-time = "2023-07-01T09:49:35.98Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/56/b3/7c69b37f03260a061883bec0e7b05be7117c1b1c85f5212c72c8c2bc3c8c/munch-4.0.0-py2.py3-none-any.whl", hash = "sha256:71033c45db9fb677a0b7eb517a4ce70ae09258490e419b0e7f00d1e386ecb1b4", size = 9950, upload-time = "2023-07-01T09:49:34.472Z" },
+]
+
+[[package]]
+name = "munch-stubs"
+version = "0.1.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "munch" },
+    { name = "mypy" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/a2/fd/bbe5772a7e0d92bd2f953e75759de6e6ca8e4d592da56aa7404a42abd2cc/munch-stubs-0.1.2.tar.gz", hash = "sha256:da9346cdbe9ab7b7b7fb99844588c5ac6289c8225ff11f1479e95fcea3bec32c", size = 3410, upload-time = "2022-10-16T07:55:52.204Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ee/bc/8acd19d0f4a1e97408667381d7e972f6f324174fda9449f270cd7eeb2e45/munch_stubs-0.1.2-py3-none-any.whl", hash = "sha256:06338441663b4e1fbe33ac0a3911977d3ff63e9714e5c356f61910be623393ac", size = 3241, upload-time = "2022-10-16T07:55:50.65Z" },
 ]
 
 [[package]]
