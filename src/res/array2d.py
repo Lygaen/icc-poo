@@ -19,8 +19,8 @@ class Array2D[T]:
 
     def in_bounds(self: Self, position: tuple[int, int]) -> bool:
         return (
-            position[0] > 0
-            and position[1] > 0
+            position[0] >= 0
+            and position[1] >= 0
             and len(self.data) > position[1]
             and len(self.data[position[1]]) > position[0]
         )
