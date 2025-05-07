@@ -66,6 +66,7 @@ class Exit(MovingPlatform):
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         super().update(delta_time, *args, **kwargs)
+        super(GameObject, self).update(delta_time, **kwargs)
 
         if arcade.check_for_collision(self, self.map.player):
             self.map.change_maps(self.__next_map)
@@ -78,6 +79,7 @@ class Lava(MovingPlatform):
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         super().update(delta_time, **kwargs)
+        super(GameObject, self).update(delta_time, **kwargs)
 
         for item in self.map.check_for_collisions_all(self):
             item.on_damage(DamageSource.LAVA, 1.0)
