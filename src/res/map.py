@@ -113,8 +113,8 @@ class Map:
             delta_time (float): the delta in time between this frame
             and the last
         """
-        self.physics_engine.update()
         self.__physics_objects.update(delta_time)
+        self.physics_engine.update()
         self.__passthrough_objects.update(delta_time)
 
     @property
@@ -208,6 +208,7 @@ class Map:
         self.__parse_map(content[1], info)
 
         self.physics_engine.walls.clear()
+        self.physics_engine.platforms.clear()
         self.physics_engine.walls.append(self.__physics_objects)
 
     @property

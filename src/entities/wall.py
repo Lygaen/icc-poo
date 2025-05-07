@@ -57,8 +57,6 @@ class MovingPlatform(GameObject):
             self.old = self.target
             self.target = self.map.map_to_world(self.path.go_next())
 
-        super().update(delta_time, *args, **kwargs)
-
 
 class Exit(GameObject):
     """Exit sign, allowing the player to move to the next stage on touch."""

@@ -174,8 +174,8 @@ class Path:
         paths: dict[Array2D.Direction, list[Position]] = {
             dir: [
                 (
-                    directions[dir][0][i][0] + directions[dir][1][0] - pos[0],
-                    directions[dir][0][i][1] + directions[dir][1][1] - pos[1],
+                    directions[dir][0][i][0] - directions[dir][1][0] + pos[0],
+                    directions[dir][0][i][1] - directions[dir][1][1] + pos[1],
                 )
                 for i in range(len(directions[dir][0]))
             ]
