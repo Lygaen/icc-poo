@@ -245,9 +245,8 @@ class Map:
         # to use runtime imports !
         from src.entities.coin import Coin
         from src.entities.gates_lever import Gate, Switch
-        from src.entities.lava import Lava
         from src.entities.monster import Bat, DarkBat, Slime
-        from src.entities.wall import Exit, MovingPlatform, Wall
+        from src.entities.wall import Exit, MovingPlatform, Lava
 
         lines = map.splitlines()  # Lines includes "---"
 
@@ -343,15 +342,6 @@ class Map:
                     self.__passthrough_objects.append(
                         Lava(
                             [self],
-                            scale=self.__GRID_SCALE,
-                            center_x=pos.x,
-                            center_y=pos.y,
-                        )
-                    )
-                case "x":
-                    self.__physics_objects.append(
-                        MovingPlatform(
-                            [self],
                             array,
                             (x, y),
                             scale=self.__GRID_SCALE,
@@ -359,11 +349,13 @@ class Map:
                             center_y=pos.y,
                         )
                     )
-                case "=" | "-":
+                case "x" | "=" | "-":
                     self.__physics_objects.append(
-                        Wall(
+                        MovingPlatform(
                             [self],
                             char,
+                            array,
+                            (x, y),
                             scale=self.__GRID_SCALE,
                             center_x=pos.x,
                             center_y=pos.y,
@@ -376,6 +368,8 @@ class Map:
                         Exit(
                             [self],
                             info.next_map,
+                            array,
+                            (x, y),
                             scale=self.__GRID_SCALE,
                             center_x=pos.x,
                             center_y=pos.y,
