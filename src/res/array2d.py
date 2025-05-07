@@ -125,7 +125,7 @@ class Path:
 
     @staticmethod
     def group(
-        map: Array2D[str], pos: Position, visited: set[Position] = set()
+        map: Array2D[str], pos: Position, visited: set[Position]
     ) -> set[Position]:
         """renvoie tous les blocs dans le même groupe que celui à la position pos"""
         visited.add(pos)
@@ -147,7 +147,8 @@ class Path:
         pos: Position,
     ) -> tuple[list[Position], int]:
         """renvoie la listes des positions que le bloc à la position pos prendra au cours du temps, ainsi que l'index de sa position initiale sur cette liste"""
-        group: set[Position] = Path.group(map, pos)
+        group: set[Position] = set()
+        group = Path.group(map, pos, group)
         # pour garder en mémoire à la fois la liste de déplacement que subit le groupe dans une direction, mais aussi où,
         # pour pouvoir calculer les déplacements relatifs des autres blocs
         directions: dict[Array2D.Direction, tuple[list[Position], Position]] = {
