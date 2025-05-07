@@ -133,12 +133,12 @@ class Path:
         for dir in CARDINAUX:
             newpos: Position = (pos[0] + dir.value[0], pos[1] + dir.value[1])
             if (
-                map.at_position_with_direction(pos, dir) in {"=", "-", "x"} # TODO: £,E,^
+                map.at_position_with_direction(pos, dir) in {"=", "-", "x", "£", "E", "^"} # TODO: £,E,^
                 and newpos not in visited
             ):
                 visited.add(newpos)
-                neighbour = neighbour | {newpos} | Path.group(map, newpos, visited)
-        return neighbour
+                visited = visited | Path.group(map, newpos, visited)
+        return visited
 
     @staticmethod  # pour obtenir la liste des positions et l'index de départ
     def truc(

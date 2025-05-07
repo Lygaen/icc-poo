@@ -39,7 +39,7 @@ gates:
 next_map: map2.txt
 ---
 ^    ←x→           
---    x ^          
+--    xx^          
        -----      |
    ---            =
 S         -----   =
