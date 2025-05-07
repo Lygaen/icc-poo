@@ -5,11 +5,11 @@ import typing
 from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import Path
-from typing import Iterator, cast
+from typing import Iterator, cast, Any
 
 import arcade
 import yaml
-from munch import munchify
+import json
 
 from src.res.array2d import Array2D
 
@@ -377,7 +377,6 @@ class Map:
                         )
                     )
 
-    @dataclass(frozen=True)
     class Metadata:
         """Metadata of the map, parsed from the header.
         Only used internally to pass information functions to functions.
@@ -393,7 +392,9 @@ class Map:
         """Relative path to the next map, None if none (lol)
         """
 
-        @dataclass(frozen=True)
+        def __init__(self, dict_: dict[str, Any]):
+            self.__dict__.update(dict_)
+
         class GatePosition:
             x: int
             y: int
@@ -416,7 +417,6 @@ class Map:
 
             state: State = State.off
 
-            @dataclass(frozen=True)
             class Action:
                 class Kind(StrEnum):
                     open_gate = "open-gate"
@@ -446,7 +446,7 @@ class Map:
             arcade.Vec2: The size of the header
         """
         d = yaml.safe_load(header)
-        return cast(Map.Metadata, munchify(d))
+        return cast(Map.Metadata, json.loads(json.dumps(d), object_hook=Map.Metadata))
 
     def destroy(self, object: GameObject) -> None:
         """Destroys a given gameobject from the map

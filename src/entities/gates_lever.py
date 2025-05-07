@@ -34,7 +34,11 @@ class Gate(GameObject):
                 break
 
         if self.data is None:
-            self.data = GateData(pos[0], pos[1], GateData.State.closed)
+            self.data = GateData()
+
+            self.data.x = pos[0]
+            self.data.y = pos[1]
+            self.data.state = GateData.State.closed
 
     def update_gate(self, open: bool) -> None:
         if open == self.isOpen:
