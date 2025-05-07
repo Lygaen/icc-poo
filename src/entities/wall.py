@@ -36,6 +36,8 @@ class MovingPlatform(GameObject):
     target: tuple[int, int]
     time: float
 
+    __IS_MOVING = True
+
     def __init__(
         self, map: list[Map], data: Array2D[str], pos: tuple[int, int], **kwargs: Any
     ) -> None:
@@ -50,7 +52,8 @@ class MovingPlatform(GameObject):
         pos = arcade.Vec2(self.old[0], self.old[1]).lerp(
             arcade.Vec2(self.target[0], self.target[1]), self.time
         )
-        self.position = (pos.x, pos.y)
+        self.change_x = pos.x - self.position[0]
+        self.change_y = pos.y - self.position[1]
 
         if self.time >= 1:
             self.time = 0

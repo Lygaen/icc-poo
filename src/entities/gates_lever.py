@@ -79,8 +79,9 @@ class Switch(GameObject):
 
         if not hasattr(self.data, "state"):
             self.data.state = SwitchData.State.off
+            return
 
-        if self.data.state == SwitchData.State.on:
+        if self.data.state == SwitchData.State.on or self.data.state:
             self.isOn = True
             self.set_texture(1)
 

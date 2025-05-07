@@ -209,7 +209,7 @@ class Map:
 
         self.physics_engine.walls.clear()
         self.physics_engine.platforms.clear()
-        self.physics_engine.walls.append(self.__physics_objects)
+        self.physics_engine.platforms.append(self.__physics_objects)
 
     @property
     def physics_colliders_list(self) -> arcade.SpriteList[GameObject]:
