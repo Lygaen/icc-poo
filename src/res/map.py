@@ -285,6 +285,7 @@ class Map:
                         Switch(
                             [self],
                             info,
+                            array,
                             (x, y),
                             scale=self.__GRID_SCALE,
                             center_x=pos.x,

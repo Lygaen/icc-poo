@@ -12,6 +12,7 @@ CHAR_INFO: dict[str, str] = {
     "x": ":resources:/images/tiles/boxCrate_double.png",
     "E": ":resources:/images/tiles/signExit.png",
     "£": ":resources:/images/tiles/lava.png",
+    "^": ":resources:/images/tiles/leverLeft.png",
 }
 """The char to resource dictionary for the different
 representations.

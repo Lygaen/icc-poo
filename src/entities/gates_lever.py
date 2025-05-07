@@ -4,8 +4,9 @@ import arcade
 
 from src.entities.gameobject import DamageSource, GameObject
 from src.res.map import Map
+from src.entities.wall import MovingPlatform
+from src.res.array2d import Array2D
 
-LEVER_OFF = ":resources:/images/tiles/leverLeft.png"
 LEVER_ON = ":resources:/images/tiles/leverRight.png"
 
 SwitchData = Map.Metadata.SwitchPosition
@@ -49,7 +50,7 @@ class Gate(GameObject):
         )
 
 
-class Switch(GameObject):
+class Switch(MovingPlatform):
     data: SwitchData
     isOn: bool
     isDisabled: bool
@@ -59,9 +60,9 @@ class Switch(GameObject):
     HIT_INVULNERABILITY: float = 1.0
 
     def __init__(
-        self, map: list[Map], meta: Map.Metadata, pos: tuple[int, int], **kwargs: Any
+        self, map: list[Map], meta: Map.Metadata, data: Array2D[str], pos: tuple[int, int], **kwargs: Any
     ) -> None:
-        super().__init__(map, LEVER_OFF, **kwargs)
+        super().__init__(map, "^", data, pos, **kwargs)
         self.last_hit = 0
         self.isOn = False
         self.isDisabled = False
