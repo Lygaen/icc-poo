@@ -93,6 +93,7 @@ class Switch(MovingPlatform):
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         self.last_hit = max(0, self.last_hit - delta_time)
         super().update(delta_time, **kwargs)
+        super(GameObject, self).update(delta_time, **kwargs)
 
     def on_damage(self, source: DamageSource, damage: float) -> bool:
         if source == DamageSource.PLAYER and self.last_hit <= 0:
