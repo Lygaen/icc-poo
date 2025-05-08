@@ -5,10 +5,10 @@ next_map: map1.txt
     w        w  =
         w       =
    w       w    =
-                =
-     w    w     =
-  w          w  =
-        w       =
+           ↑    =
+     w    w↑    =
+  w        ↑ w  =
+        w  -    =
    w        w ===
  w      w    ---=
        ----   * =
