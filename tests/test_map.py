@@ -66,8 +66,7 @@ def test_entities_spawn(window: arcade.Window) -> None:
     assert count_of_class_type(view.map.game_objects, "Player") == 1
     assert count_of_class_type(view.map.game_objects, "Coin") == 2
     assert count_of_class_type(view.map.game_objects, "Bat") == 3
-    assert count_of_class_type(view.map.game_objects, "Wall") == 4 + 5
-    assert count_of_class_type(view.map.game_objects, "MovingPlatform") == 8
+    assert count_of_class_type(view.map.game_objects, "MovingPlatform") == 8 + 4 + 5
     assert count_of_class_type(view.map.game_objects, "Lava") == 6
     assert count_of_class_type(view.map.game_objects, "Slime") == 7
 
