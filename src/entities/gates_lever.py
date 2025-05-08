@@ -162,7 +162,10 @@ class Switch(MovingPlatform):
         self.set_texture(0 if self.isOn else 1)
         self.isOn = not self.isOn
 
-        actions = self.data.switch_on if self.isOn else self.data.switch_off
+        if self.isOn and hasattr(self.data, "switch_on"):
+            for action in self.data.switch_on or []:
+                self.do_switch_action(action)
+        elif not self.isOn and hasattr(self.data, "switch_off"):
+            for action in self.data.switch_off or []:
+                self.do_switch_action(action)
 
-        for action in actions or []:
-            self.do_switch_action(action)
