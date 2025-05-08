@@ -14,8 +14,14 @@ GateData = Map.Metadata.GatePosition
 
 
 class Gate(GameObject):
+    """The gate that can open and close
+    """
     isOpen: bool
+    """Whether the gate is opened or not
+    """
     data: GateData | None
+    """Internal metadata of the gate
+    """
 
     def __init__(
         self, map: list[Map], meta: Map.Metadata, pos: tuple[int, int], **kwargs: Any
@@ -41,6 +47,11 @@ class Gate(GameObject):
             self.data.state = GateData.State.closed
 
     def update_gate(self, open: bool) -> None:
+        """Updates the gate with open or closed
+
+        Args:
+            open (bool): whether to open or close the gate
+        """
         if open == self.isOpen:
             return
         self.isOpen = open
@@ -55,13 +66,25 @@ class Gate(GameObject):
 
 
 class Switch(MovingPlatform):
+    """The switch object
+    """
     data: SwitchData
+    """The switch metadata
+    """
     isOn: bool
+    """Whether the switch is on or off
+    """
     isDisabled: bool
+    """Whether the switch is disabled
+    """
 
     last_hit: float
+    """The time of the last hit
+    """
 
     HIT_INVULNERABILITY: float = 1.0
+    """Max number of invulnerability frames
+    """
 
     def __init__(
         self, map: list[Map], meta: Map.Metadata, data: Array2D[str], pos: tuple[int, int], **kwargs: Any
@@ -104,6 +127,8 @@ class Switch(MovingPlatform):
         return False
 
     def do_switch_action(self, action: SwitchData.Action) -> None:
+        """Effectuate a specific switch action
+        """
         ActionKind = SwitchData.Action.Kind
         match action.action:
             case ActionKind.open_gate:
@@ -120,6 +145,8 @@ class Switch(MovingPlatform):
                 self.isDisabled = True
 
     def gate_from_action(self, action: SwitchData.Action) -> Gate | None:
+        """Fetch the gate from a specified action
+        """
         for obj in self.map.game_objects:
             if isinstance(obj, Gate) and obj.data is not None:
                 if obj.data.x == action.x and obj.data.y == action.y:
@@ -127,6 +154,8 @@ class Switch(MovingPlatform):
         return None
 
     def on_switch_change(self) -> None:
+        """On switch change event handler
+        """
         if self.isDisabled:
             return
 

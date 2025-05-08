@@ -10,14 +10,34 @@ Position = tuple[int, int]
 
 @dataclass
 class Array2D[T]:
+    """A type representing a 2-dimensional array
+    """
     data: list[list[T]]
+    """The internal representaion of the array 2D.
+    Is a nested list because each row can have a variable
+    width.
+    """
 
     def items(self: Self) -> Iterator[tuple[T, int, int]]:
+        """Lists all items in the array 2D, withs its corresponding
+        position in it.
+
+        Yields:
+            Iterator[tuple[T, int, int]]: Order is (Type, x position, y position)
+        """
         for y, row in enumerate(self.data):
             for x, item in enumerate(row):
                 yield (item, x, y)
 
     def in_bounds(self: Self, position: tuple[int, int]) -> bool:
+        """Whether a specified coordinate is in bound for the row of the selected array.
+
+        Args:
+            position (tuple[int, int]): Position to the element
+
+        Returns:
+            bool: true -> inside, false -> outside
+        """
         return (
             position[0] >= 0
             and position[1] >= 0
@@ -26,9 +46,20 @@ class Array2D[T]:
         )
 
     def at(self: Self, position: tuple[int, int]) -> T | None:
+        """Returns the element present at the specified position, or None
+        if outside of bounds.
+
+        Args:
+            position (tuple[int, int]): the position to inspect
+
+        Returns:
+            T | None: element at position
+        """
         return self.data[position[1]][position[0]] if self.in_bounds(position) else None
 
     class Direction(Enum):
+        """Possible directions (utility for Path)
+        """
         N = (0, 1)
         NE = (1, 1)
         E = (1, 0)
@@ -41,10 +72,26 @@ class Array2D[T]:
     def at_position_with_direction(
         self: Self, position: tuple[int, int], dir: Direction
     ) -> T | None:
+        """Returns an element if present at a specified position
+        with an additional direction
+
+        Args:
+            position (tuple[int, int]): the position to inspect
+            dir (Direction): the direction to move to
+
+        Returns:
+            T | None: element at (position + dir)
+        """
         return self.at((position[0] + dir.value[0], position[1] + dir.value[1]))
 
     @staticmethod
     def from_size[V](width: int, height: int, val: V) -> Array2D[V]:
+        """Returns a map with a specified width and height, with all values
+        initialized to val
+
+        Returns:
+            Array2D[V]: the 2D array
+        """
         return Array2D([[val for i in range(width)] for y in range(height)])
 
 

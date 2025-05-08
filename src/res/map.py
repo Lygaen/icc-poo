@@ -223,6 +223,7 @@ class Map:
         return self.__physics_objects
 
     def map_to_world(self, pos: tuple[int, int]) -> tuple[int, int]:
+        """Converts from a coordinate in map-space to world space"""
         return (pos[0] * self.__GRID_SIZE, pos[1] * self.__GRID_SIZE)
 
     def __parse_map(
@@ -395,41 +396,80 @@ class Map:
             self.__dict__.update(dict_)
 
         class GatePosition:
+            """The gate metadata
+            """
             x: int
+            """The gate x position in world coordinate
+            """
             y: int
+            """The gate y position in world coordinate
+            """
 
             class State(StrEnum):
+                """Whether a gate is opened or closed
+                """
                 open = "open"
                 closed = "closed"
 
             state: State
+            """The default state of a gate
+            """
 
         gates: list[GatePosition] | None = None
+        """The list of gates represented in the header
+        """
 
         class SwitchPosition:
+            """The switch metadata
+            """
             x: int
+            """The x position of the switch
+            """
             y: int
+            """The y position of the switch
+            """
 
             class State(StrEnum):
+                """State of the lever (on/off)
+                """
                 on = "on"
                 off = "off"
 
             state: State = State.off
+            """Default state of the lever, defaults to off if not
+            specified
+            """
 
             class Action:
+                """Action of a lever
+                """
                 class Kind(StrEnum):
+                    """The action kind of a lever
+                    """
                     open_gate = "open-gate"
                     close_gate = "close-gate"
                     disable = "disable"
 
                 action: Kind
+                """What the lever does in kind
+                """
                 x: int
+                """The gate affected if specified, in map x coordinate
+                """
                 y: int
+                """The gate affected if specified, in map y coordinate
+                """
 
             switch_on: list[Action] | None = None
+            """The action to act on when the lever is turned on
+            """
             switch_off: list[Action] | None = None
+            """The action to act on when the lever is turned off
+            """
 
         switches: list[SwitchPosition] | None = None
+        """The list of switches in the map
+        """
 
     def __parse_header(self, header: str) -> Metadata:
         """Parses the header from the string, returning
@@ -464,6 +504,12 @@ class Map:
                 return
 
     def add_objects(self, objects: list[GameObject], is_physics: bool = False) -> None:
+        """Adds an object to the map
+
+        Args:
+            objects (list[GameObject]): the objects to add
+            is_physics (bool, optional): whether the object should have collisions. Defaults to False.
+        """
         if is_physics:
             for obj in objects:
                 self.__physics_objects.append(obj)
