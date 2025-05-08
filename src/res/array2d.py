@@ -129,16 +129,13 @@ class Path:
     ) -> set[Position]:
         """renvoie tous les blocs dans le même groupe que celui à la position pos"""
         visited.add(pos)
-        neighbour: set[Position] = set()
         for dir in CARDINAUX:
             newpos: Position = (pos[0] + dir.value[0], pos[1] + dir.value[1])
             if (
                 map.at_position_with_direction(pos, dir) in {"=", "-", "x", "£", "E", "^"}
                 and newpos not in visited
             ):
-                visited.add(newpos)
-                neighbour = Path.group(map, newpos, visited)
-                visited = visited | neighbour
+                visited = visited | {newpos} | Path.group(map, newpos, visited)
         return visited
 
     @staticmethod  # pour obtenir la liste des positions et l'index de départ
