@@ -137,3 +137,43 @@ Cela permet, pour le premier, d'obtenir une abstraction pour les différentes ar
 
 Pour `Monster`, cela permet d'avoir des fonctions utiles telle que `check_collision`, gérer le système de PV, gérer les dégâts etc.
 Ainsi, le seul code présent dans les classe intantiant `Weapon` et `Monster` sont des fonctionnalités spécifiques aux-dites classes.
+
+## Semaine 8
+> Quel algorithme utilisez-vous pour identifier tous les blocs d'une plateformes, et leurs limites de déplacement ?
+Nous utilisons un algorithme qui "visite" chaque bloc individuellement. C'est-à-dire, un bloc va "visité" une seule fois ses voisins pour voir s'ils contiennent des directions pour des chemins.
+
+De cette façon, cela nous permet de créer des groupes de blocs ésotérique, qui n'ont pas la forme habituelle ou qui n'ont pas les directions placées au même endroit.
+
+Les limites de déplacement sont ensuite formés à partir des chemins totaux calculés. C'est-à-dire, on vérifie si les chemins sont valides avant de les réunir dans un seul grand chemin. Ensuite, les positions pour les blocs sont calculées individuellement par blocs à partir de la position relative du bloc au début du chemin.
+
+Les blocs ainsi parcourent chacun leurs chemins individuellement, donnant l'impression qu'ils bougent d'un seul groupe. Cela permet aussi de donner de la fonctionnalité supplémentaire à certains blocs tel que la lave ou les panneaux de sortie.
+
+> Sur quelle structure travaille cet algorithme ? Quels sont les avantages et inconvénients de votre choix ?
+Cette algorithme travaille sur une classe utilitaire créée pour l'occasion qui est un `Array2D`. Celui-ci permet d'avoir des fonction utilitaires comme accéder une donnée à une certaine coordonnée.
+
+Ce `Array2D` est initialisé sur la `map`, afin de représenter, charactère par charactère celle-ci.
+
+Les avantages de cette méthode et que celle-ci est robuste, il nous suffit de changer l'interface de `Array2D` si il y a des changements internes sur la façon dont on lit la map, ou même si on la lirait d'un type autre que des strings (eg. des bytes).
+Cela permet de séparer aussi les calculs des positions relatives par rapport aux directions et positions qui nous a facilité la mise en place de l'algorithme.
+
+Les inconvénients d'une telle mise en place serait le "boilerplate" qui a été ajouté par dessus. A terme, cela peut rendre la codebase plus dure à déchiffrer. Cela peut aussi augmenter le runtime total pour le calcul de la map.
+
+> Quelle bibliothèque utilisez-vous pour lire les instructions des interrupteurs ? Dites en une ou deux phrases pourquoi vous avez choisi celle-là.
+Au final, nous avons choisi d'utiliser `PyYAML` comme librairie. Celle-ci semblait celle qui serait la plus robuste, dans le sens où si une erreur parvenait à nous, elle ne viendrait probablement pas de la librairie.
+
+`PyYAML` offre aussi une interface simpliste qui nous permet de seulement faire :
+
+```py
+import yaml
+
+// -- snip --
+
+parsed = yaml.safe_load(header)
+```
+
+Ces deux raisons sont principalement les raisons pour lesquelles nous avons choisi cette librairie.
+
+> Comment votre design général évolue-t-il pour tenir compte des interrupteurs et des portails ?
+Heureusement pour nous, notre désign général évolue peu pour accomoder les interrupteurs et portails.
+
+En effet, notre système de GOs permet d'accomoder correctement ces nouvelles demandes car les interrupteurs peuvent accéder au portails at runtime ce qui nous permet d'appeler sur eux une fonctions `#update_gate(open: bool) -> None` qui s'occupe en interne d'ouvrir ou fermer le portail.

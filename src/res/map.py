@@ -1,15 +1,14 @@
 from __future__ import annotations
 
 import itertools
+import json
 import typing
-from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import Path
-from typing import Iterator, cast, Any
+from typing import Any, Iterator, cast
 
 import arcade
 import yaml
-import json
 
 from src.res.array2d import Array2D
 
@@ -246,7 +245,7 @@ class Map:
         from src.entities.coin import Coin
         from src.entities.gates_lever import Gate, Switch
         from src.entities.monster import Bat, DarkBat, Slime
-        from src.entities.wall import Exit, MovingPlatform, Lava
+        from src.entities.wall import Exit, Lava, MovingPlatform
 
         lines = map.splitlines()  # Lines includes "---"
 
@@ -443,7 +442,7 @@ class Map:
             ValueError: An unkown variable was found
 
         Returns:
-            arcade.Vec2: The size of the header
+            Metadata: The header
         """
         d = yaml.safe_load(header)
         return cast(Map.Metadata, json.loads(json.dumps(d), object_hook=Map.Metadata))
