@@ -19,10 +19,20 @@ representations.
 """
 
 class MovingPlatform(GameObject):
+    """All moving platforms encapsulating type
+    """
     path: Path
+    """The internal path of a block
+    """
     old: tuple[int, int]
+    """The old coordinate that it lerps from
+    """
     target: tuple[int, int]
+    """The target coordinate that it lerps to
+    """
     time: float
+    """The current lerping time 0 < time < 1
+    """
 
     def __init__(
         self, map: list[Map], representation: str, data: Array2D[str], pos: tuple[int, int], **kwargs: Any
