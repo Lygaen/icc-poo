@@ -26,6 +26,9 @@ chauve souris ++ et tests
 ### Semaine 9
 plateformes mouvantes + portails et interrupteurs
 ### Semaine 10
+tests plateformes, portails et interrupteurs
+à faire : barre de vie
+à faire : blocs invisibles
 ### Semaine 11
 ### Semaine 12
 ### Semaine 13
