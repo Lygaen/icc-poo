@@ -176,7 +176,16 @@ class Bow(Weapon):
             if self.time_to_live <= 0:  # Destroys the arrow
                 self.destroy()
 
-            if self.velocity != (0, 0):  # The velocity is non-null
+
+            objects = self.map.check_for_collisions_all(self)
+
+            filtered = [
+                ob
+                for ob in objects
+                if ob.__class__.__name__ not in ["Bow", "Player", "Arrow"]
+            ]  # Ignore collisions with the bow, player or other arrows
+
+            if len(filtered) == 0: # Free arroooooww
                 self.change_y -= ARROW_SPEED * delta_time
 
                 dir = arcade.Vec2(self.velocity[0], self.velocity[1])
@@ -187,19 +196,11 @@ class Bow(Weapon):
                 if dir.y < 0:
                     angle = -angle - (math.pi / 2) + math.pi
                 self.radians = angle
-                objects = self.map.check_for_collisions_all(self)
-
-                filtered = [
-                    ob
-                    for ob in objects
-                    if ob.__class__.__name__ not in ["Bow", "Player", "Arrow"]
-                ]  # Ignore collisions with the bow, player or other arrows
-
-                if len(filtered) > 0:  # We collided with something
-                    self.velocity = (0, 0)
-                    for hits in filtered:
-                        if hits.on_damage(DamageSource.PLAYER, ARROW_DAMAGE):
-                            self.destroy()
+            else: # We collided with something
+                self.velocity = (0, 0)
+                for hits in filtered:
+                    if hits.on_damage(DamageSource.PLAYER, ARROW_DAMAGE):
+                        self.destroy()
 
     spawn_next_tick: bool
     """Whether or not to spawn the arrow next tick
