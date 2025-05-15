@@ -50,6 +50,25 @@ def prepare_window(window: arcade.Window, caption: str) -> None:
     ctx.gc_mode = "context_gc"
     ctx.gc()
 
+# From https://docs.pytest.org/en/latest/example/simple.html#control-skipping-of-tests-according-to-command-line-option
+def pytest_addoption(parser: pytest.Parser) -> None:
+    parser.addoption(
+        "--runslow", action="store_true", default=False, help="run slow tests"
+    )
+
+def pytest_configure(config: pytest.Config) -> None:
+    config.addinivalue_line("markers", "slow: mark test as slow to run")
+
+
+def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
+    if config.getoption("--runslow"):
+        # --runslow given in cli: do not skip slow tests
+        return
+    skip_slow = pytest.mark.skip(reason="need --runslow option to run")
+    for item in items:
+        if "slow" in item.keywords:
+            item.add_marker(skip_slow)
+
 @pytest.fixture
 def test_name(request: pytest.FixtureRequest) -> str:
     return f"Testing - {request.node.name}"

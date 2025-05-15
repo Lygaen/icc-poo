@@ -7,6 +7,7 @@ import arcade
 from src.gameview import GameView
 from src.res.map import Map
 
+import pytest
 
 def generate_map(width: int, height: int, char: str) -> str:
     s = [(char + " ") * (width // 2) for i in range(height)]
@@ -41,6 +42,7 @@ def time_update(view: list[GameView], w: int, h: int, char: str) -> float:
     return timeit(lambda: view[0].on_update(1 / 60), number=100) / 100
 
 
+@pytest.mark.slow
 def test_map_size(
     window: arcade.Window, record_testsuite_property: Callable[[str, object], None]
 ) -> None:
@@ -56,7 +58,7 @@ def test_map_size(
 
     print("-----------")
 
-
+@pytest.mark.slow
 def test_on_update(
     window: arcade.Window, record_testsuite_property: Callable[[str, object], None]
 ) -> None:
