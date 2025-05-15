@@ -362,6 +362,9 @@ class Map:
                             center_y=pos.y,
                         )
                     )
+                
+                case "#":
+                    pass
                 case "E":
                     if info.next_map is None:
                         raise ValueError("Found exit but no next_map !")
