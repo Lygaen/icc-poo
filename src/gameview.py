@@ -1,6 +1,8 @@
 import arcade
+
 from src.res.camera import BetterCamera
 from src.res.map import Map
+
 
 class GameView(arcade.View):
     """Main in-game view."""
@@ -19,8 +21,7 @@ class GameView(arcade.View):
     """
 
     def __init__(self) -> None:
-        """Initializes the game view and other arcade stuff.
-        """
+        """Initializes the game view and other arcade stuff."""
         super().__init__()
 
         self.background_color = arcade.csscolor.CORNFLOWER_BLUE
@@ -40,10 +41,8 @@ class GameView(arcade.View):
         with self.camera.activate():
             self.map.draw()
 
-            color = arcade.types.Color(int((1 - (self.map.player.HP / self.map.player.base_HP)) * 255),
-                int((self.map.player.HP / self.map.player.base_HP) * 255), 0,
-                int(0.5 * 255))
-            arcade.draw_circle_filled(self.map.player.center_x, self.map.player.center_y, 10, color)
+            for object in self.map.game_objects:
+                object.draw_ui()
 
         with arcade.Camera2D().activate():
             arcade.Text(f"Score : {self.score}", 0, 0).draw()
@@ -102,7 +101,6 @@ class GameView(arcade.View):
             listeners.on_mouse_release(x, y, button, modifiers)
 
     def on_mouse_motion(self, x: int, y: int, dx: int, dy: int) -> None:
-
         """On Mouse Motion event
 
         event_listener flag needs to be set for this function to be

@@ -3,9 +3,9 @@ from typing import Any
 import arcade
 
 from src.entities.gameobject import DamageSource, GameObject
-from src.res.map import Map
 from src.entities.wall import MovingPlatform
 from src.res.array2d import Array2D
+from src.res.map import Map
 
 LEVER_ON = ":resources:/images/tiles/leverRight.png"
 
@@ -14,8 +14,8 @@ GateData = Map.Metadata.GatePosition
 
 
 class Gate(GameObject):
-    """The gate that can open and close
-    """
+    """The gate that can open and close"""
+
     isOpen: bool
     """Whether the gate is opened or not
     """
@@ -27,7 +27,10 @@ class Gate(GameObject):
         self, map: list[Map], meta: Map.Metadata, pos: tuple[int, int], **kwargs: Any
     ) -> None:
         super().__init__(
-            map, ":resources:/images/tiles/stoneCenter_rounded.png", **kwargs
+            map,
+            float("inf"),
+            ":resources:/images/tiles/stoneCenter_rounded.png",
+            **kwargs,
         )
 
         self.isOpen = False
@@ -66,8 +69,8 @@ class Gate(GameObject):
 
 
 class Switch(MovingPlatform):
-    """The switch object
-    """
+    """The switch object"""
+
     data: SwitchData
     """The switch metadata
     """
@@ -78,19 +81,15 @@ class Switch(MovingPlatform):
     """Whether the switch is disabled
     """
 
-    last_hit: float
-    """The time of the last hit
-    """
-
-    HIT_INVULNERABILITY: float = 1.0
-    """Max number of invulnerability frames
-    """
-
     def __init__(
-        self, map: list[Map], meta: Map.Metadata, data: Array2D[str], pos: tuple[int, int], **kwargs: Any
+        self,
+        map: list[Map],
+        meta: Map.Metadata,
+        data: Array2D[str],
+        pos: tuple[int, int],
+        **kwargs: Any,
     ) -> None:
         super().__init__(map, "^", data, pos, **kwargs)
-        self.last_hit = 0
         self.isOn = False
         self.isDisabled = False
         self.append_texture(arcade.load_texture(LEVER_ON))
@@ -114,21 +113,18 @@ class Switch(MovingPlatform):
             self.set_texture(1)
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
-        self.last_hit = max(0, self.last_hit - delta_time)
         super().update(delta_time, **kwargs)
-        super(GameObject, self).update(delta_time, **kwargs)
+        GameObject.update(self, delta_time, **kwargs)
 
-    def on_damage(self, source: DamageSource, damage: float) -> bool:
-        if source == DamageSource.PLAYER and self.last_hit <= 0:
-            self.last_hit = self.HIT_INVULNERABILITY
+    def _on_damage(self, other: GameObject | None, source: DamageSource) -> bool:
+        if source == DamageSource.PLAYER:
             self.on_switch_change()
             return True
 
         return False
 
     def do_switch_action(self, action: SwitchData.Action) -> None:
-        """Effectuate a specific switch action
-        """
+        """Effectuate a specific switch action"""
         ActionKind = SwitchData.Action.Kind
         match action.action:
             case ActionKind.open_gate:
@@ -145,8 +141,7 @@ class Switch(MovingPlatform):
                 self.isDisabled = True
 
     def gate_from_action(self, action: SwitchData.Action) -> Gate | None:
-        """Fetch the gate from a specified action
-        """
+        """Fetch the gate from a specified action"""
         for obj in self.map.game_objects:
             if isinstance(obj, Gate) and obj.data is not None:
                 if obj.data.x == action.x and obj.data.y == action.y:
@@ -154,8 +149,7 @@ class Switch(MovingPlatform):
         return None
 
     def on_switch_change(self) -> None:
-        """On switch change event handler
-        """
+        """On switch change event handler"""
         if self.isDisabled:
             return
 
@@ -168,4 +162,3 @@ class Switch(MovingPlatform):
         elif not self.isOn and hasattr(self.data, "switch_off"):
             for action in self.data.switch_off or []:
                 self.do_switch_action(action)
-

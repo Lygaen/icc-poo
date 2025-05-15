@@ -36,11 +36,11 @@ gates:
     y: 5
     state: open # this gate is open when the game starts
   # the other gates start closed
-next_map: map1.txt # → ← ↓ ↑ 
+next_map: map2.txt # → ← ↓ ↑
 ---
 
-^    ←x→           
---    xx^          
+^    ←x→
+--    xx^
       x-----     o|
    ---          ===
 S         -----  ←=

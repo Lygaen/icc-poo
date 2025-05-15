@@ -50,7 +50,7 @@ def test_player_death(window: arcade.Window) -> None:
         """)
     )
     window.show_view(view)
-    assert view.map.player.HP == view.map.player.base_HP
+    maxHP = view.map.player.health_points
 
     view.on_key_press(arcade.key.UP, 0)
     view.on_key_press(arcade.key.RIGHT, 0)
@@ -59,7 +59,7 @@ def test_player_death(window: arcade.Window) -> None:
     view.on_key_release(arcade.key.RIGHT, 0)
 
     window.test(20)
-    assert view.map.player.HP < view.map.player.base_HP
+    assert view.map.player.health_points < maxHP
     view.on_key_press(arcade.key.LEFT, 0)
     window.test(20)
     view.on_key_release(arcade.key.LEFT, 0)

@@ -18,9 +18,10 @@ CHAR_INFO: dict[str, str] = {
 representations.
 """
 
+
 class MovingPlatform(GameObject):
-    """All moving platforms encapsulating type
-    """
+    """All moving platforms encapsulating type"""
+
     path: Path
     """The internal path of a block
     """
@@ -35,9 +36,14 @@ class MovingPlatform(GameObject):
     """
 
     def __init__(
-        self, map: list[Map], representation: str, data: Array2D[str], pos: tuple[int, int], **kwargs: Any
+        self,
+        map: list[Map],
+        representation: str,
+        data: Array2D[str],
+        pos: tuple[int, int],
+        **kwargs: Any,
     ) -> None:
-        super().__init__(map, CHAR_INFO.get(representation), **kwargs)
+        super().__init__(map, float("inf"), CHAR_INFO.get(representation), **kwargs)
         self.time = 0
         self.path = Path(data, pos)
         self.old = self.map.map_to_world(pos)
@@ -64,7 +70,14 @@ class Exit(MovingPlatform):
     """Path to the next map, passed to the map object.
     """
 
-    def __init__(self, map: list[Map], next_map: str,data: Array2D[str], pos: tuple[int, int], **kwargs: Any) -> None:
+    def __init__(
+        self,
+        map: list[Map],
+        next_map: str,
+        data: Array2D[str],
+        pos: tuple[int, int],
+        **kwargs: Any,
+    ) -> None:
         """Initializes the wall using the map and representation.
 
         Args:
@@ -81,10 +94,13 @@ class Exit(MovingPlatform):
         if arcade.check_for_collision(self, self.map.player):
             self.map.change_maps(self.__next_map)
 
+
 class Lava(MovingPlatform):
     """The lava object, currently only resets the map"""
 
-    def __init__(self, map: list[Map], data: Array2D[str], pos: tuple[int, int], **kwargs: Any) -> None:
+    def __init__(
+        self, map: list[Map], data: Array2D[str], pos: tuple[int, int], **kwargs: Any
+    ) -> None:
         super().__init__(map, "£", data, pos, **kwargs)
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
@@ -92,4 +108,4 @@ class Lava(MovingPlatform):
         super(GameObject, self).update(delta_time, **kwargs)
 
         for item in self.map.check_for_collisions_all(self):
-            item.on_damage(DamageSource.LAVA, 1.0)
+            item.damage(self, DamageSource.LAVA, float("inf"))

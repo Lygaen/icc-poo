@@ -14,20 +14,20 @@ class Coin(GameObject):
     """
 
     def __init__(self, map: list[Map], **kwargs: Any) -> None:
-        super().__init__(map, ":resources:/images/items/coinGold.png", **kwargs)
+        super().__init__(map, 1.0, ":resources:/images/items/coinGold.png", **kwargs)
         self.coin_sound = arcade.Sound(":resources:sounds/coin1.wav")
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         super().update(delta_time, **kwargs)
 
         if arcade.check_for_collision(self.map.player, self):
-            self.on_damage(DamageSource.PLAYER, 10)
+            self.damage(None, DamageSource.PLAYER, 10)
 
-    def on_damage(self, source: DamageSource, damage: float) -> bool:
-        if source == DamageSource.PLAYER:
+    def _on_damage(self, other: GameObject | None, source: DamageSource) -> bool:
+        return source in {DamageSource.PLAYER}
+
+    def destroy(self, is_health_death: bool = False) -> None:
+        if is_health_death:
             arcade.play_sound(self.coin_sound)
             self.game_view.score += 1
-            self.destroy()
-            return True
-
-        return False
+        super().destroy()

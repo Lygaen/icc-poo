@@ -40,6 +40,7 @@ ARROW_DAMAGE = 25
 """Damage inflicted by one arrow, on hit
 """
 
+
 class Weapon(GameObject):
     """Class to have a general framework for adding weapons"""
 
@@ -69,7 +70,7 @@ class Weapon(GameObject):
         as the angles of the sprite on the texture.
         """
 
-        super().__init__(map, texture, **kwargs)
+        super().__init__(map, float("inf"), texture, **kwargs)
         self.scale = (WEAPON_SCALE, WEAPON_SCALE)
         self.event_listener = True
         self.visible = False
@@ -161,7 +162,7 @@ class Bow(Weapon):
             """Creates a new arrow, given the bow position, the bow angle
             and the direction as a vec2"""
 
-            super().__init__(map, "assets/arrow.png", **kwargs)
+            super().__init__(map, float("inf"), "assets/arrow.png", **kwargs)
             self.scale = (WEAPON_SCALE, WEAPON_SCALE)
             self.position = bow_position
             self.radians = bow_angle + (math.pi / 2)
@@ -176,7 +177,6 @@ class Bow(Weapon):
             if self.time_to_live <= 0:  # Destroys the arrow
                 self.destroy()
 
-
             objects = self.map.check_for_collisions_all(self)
 
             filtered = [
@@ -185,7 +185,7 @@ class Bow(Weapon):
                 if ob.__class__.__name__ not in ["Bow", "Player", "Arrow"]
             ]  # Ignore collisions with the bow, player or other arrows
 
-            if len(filtered) == 0: # Free arroooooww
+            if len(filtered) == 0:  # Free arroooooww
                 self.change_y -= ARROW_SPEED * delta_time
 
                 dir = arcade.Vec2(self.velocity[0], self.velocity[1])
@@ -196,10 +196,10 @@ class Bow(Weapon):
                 if dir.y < 0:
                     angle = -angle - (math.pi / 2) + math.pi
                 self.radians = angle
-            else: # We collided with something
+            else:  # We collided with something
                 self.velocity = (0, 0)
                 for hits in filtered:
-                    if hits.on_damage(DamageSource.PLAYER, ARROW_DAMAGE):
+                    if hits.damage(self, DamageSource.PLAYER, ARROW_DAMAGE):
                         self.destroy()
 
     spawn_next_tick: bool
@@ -236,7 +236,7 @@ class Bow(Weapon):
             self.spawn_next_tick = True
             self.last_shot = ARROW_WAIT_TIME
 
-    def destroy(self) -> None:
+    def destroy(self, is_health_death: bool = False) -> None:
         super().destroy()
 
 
@@ -260,7 +260,7 @@ class Sword(Weapon):
             return
 
         for hits in self.map.check_for_collisions_all(self):
-            hits.on_damage(DamageSource.PLAYER, SWORD_DOT_DAMAGE * delta_time)
+            hits.damage(self, DamageSource.PLAYER, SWORD_DOT_DAMAGE)
 
 
 class Player(GameObject):
@@ -274,20 +274,14 @@ class Player(GameObject):
     """Sound for when player touches lava
     """
 
+    hurt_sound: arcade.Sound
+
     jump_sound: arcade.Sound
     """SFX for when the player is jumping.
     """
 
     weapon: Weapon
     """GameObject of the weapon the player is using.
-    """
-
-    HP: float
-    """Health-Point of the gameobject.
-    """
-
-    base_HP: float = 20
-    """Base healtpoint of the player.
     """
 
     __buffered_jump_timer: float = 0
@@ -302,6 +296,7 @@ class Player(GameObject):
 
         super().__init__(
             map,
+            100,
             ":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png",
             **kwargs,
         )
@@ -315,10 +310,10 @@ class Player(GameObject):
         self.gameover_sound = arcade.Sound(":resources:sounds/gameover1.wav")
         self.event_listener = True
         self.weapon = Sword(map)
+        self.hurt_sound = arcade.Sound(":resources:/sounds/hurt3.wav")
 
         self.__buffered_jump_timer = 0
         self.__coyote_timer = 0
-        self.HP = self.base_HP
 
         self.map.add_objects([self.weapon])
 
@@ -350,26 +345,17 @@ class Player(GameObject):
                 if self.is_move_initiated:
                     self.change_x += PLAYER_MOVEMENT_SPEED
 
-    def on_damage(self, source: DamageSource, damage: float) -> bool:
-        match source:
-            case DamageSource.LAVA | DamageSource.VOID:
-                self.HP = 0
-            case DamageSource.MONSTER:
-                self.HP -= damage
-            case _:
-                return False
-
-        if self.HP <= 0:
-            arcade.play_sound(self.gameover_sound)
-            self.game_view.score = 0
-            self.map.respawn_player()
-        return True
+    def _on_damage(self, other: GameObject | None, source: DamageSource) -> bool:
+        damaged = source in {DamageSource.LAVA, DamageSource.VOID, DamageSource.MONSTER}
+        if damaged:
+            arcade.play_sound(self.hurt_sound)
+        return damaged
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         super().update(delta_time, *args, **kwargs)
 
-        if self.center_y < -500 :
-            self.on_damage(DamageSource.VOID, self.HP)
+        if self.center_y < -500:
+            self.damage(None, DamageSource.VOID, float("inf"))
 
         on_ground = self.map.physics_engine.can_jump()
 
@@ -388,6 +374,11 @@ class Player(GameObject):
         elif self.__buffered_jump_timer > 0:
             self.__buffered_jump_timer -= delta_time
 
-    def destroy(self) -> None:
-        self.weapon.destroy()
-        super().destroy()
+    def destroy(self, is_health_death: bool = False) -> None:
+        if is_health_death:
+            arcade.play_sound(self.gameover_sound)
+            self.game_view.score = 0
+            self.map.respawn_player()
+        else:
+            self.weapon.destroy()
+            super().destroy()

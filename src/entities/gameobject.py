@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import enum
 
 import arcade
@@ -21,6 +23,9 @@ class DamageSource(enum.Enum):
     VOID = 4
 
 
+DEFAULT_INVULNERABILITY_TIME = 0.5
+
+
 class GameObject(arcade.Sprite):
     """The GameObject superclass. Ideally should not
     be instantiated but only implemented in a subclass
@@ -34,6 +39,13 @@ class GameObject(arcade.Sprite):
     event_listener: bool
     """Whether this game object should be called for windows events
     """
+
+    health_points: float
+    """The HP of the current gameobject"""
+
+    max_hp: float
+
+    invulnerability_time: float
 
     @property
     def map(self) -> Map:
@@ -67,6 +79,7 @@ class GameObject(arcade.Sprite):
     def __init__(
         self,
         map: list[Map],
+        max_hp: float,
         path_or_texture: PathOrTexture | None = None,
         scale: Point2 | float = 1,
         center_x: float = 0,
@@ -84,8 +97,11 @@ class GameObject(arcade.Sprite):
         super().__init__(path_or_texture, scale, center_x, center_y)
         self.__map_ref = map
         self.event_listener = False
+        self.health_points = max_hp
+        self.max_hp = max_hp
+        self.invulnerability_time = 0.0
 
-    def on_damage(self, source: DamageSource, damage: float) -> bool:
+    def _on_damage(self, other: GameObject | None, source: DamageSource) -> bool:
         """On damage event - General Event
 
         Returns whether the damage was taken into account or not.
@@ -94,6 +110,20 @@ class GameObject(arcade.Sprite):
             damage (float): The amount of damage
         """
         return False
+
+    def damage(
+        self, other: GameObject | None, source: DamageSource, damage: float
+    ) -> bool:
+        if self.invulnerability_time > 0 or not self._on_damage(other, source):
+            return False
+
+        self.health_points -= damage
+        self.invulnerability_time = DEFAULT_INVULNERABILITY_TIME
+
+        if self.health_points <= 0:
+            self.destroy(True)
+
+        return True
 
     def on_key_press(self, symbol: int, modifiers: int) -> None:
         """On Key Press event - Window Event
@@ -156,7 +186,30 @@ class GameObject(arcade.Sprite):
         """
         pass
 
-    def destroy(self) -> None:
+    def draw_ui(self) -> None:
+        if self.health_points == self.max_hp:
+            return
+        arcade.draw_lrbt_rectangle_filled(
+            self.left,
+            self.right,
+            self.top + 10,
+            self.top + 15,
+            (255, 0, 0),
+        )
+        d = self.left + (self.right - self.left) * (self.health_points / self.max_hp)
+        arcade.draw_lrbt_rectangle_filled(
+            self.left,
+            d,
+            self.top + 10,
+            self.top + 15,
+            (0, 255, 0),
+        )
+
+    def update(self, delta_time: float = 1 / 60, *args, **kwargs) -> None:
+        self.invulnerability_time = max(0, self.invulnerability_time - delta_time)
+        super().update(delta_time, *args, **kwargs)
+
+    def destroy(self, is_health_death: bool = False) -> None:
         """Destroys the current object on the map.
         Next tick, neither #draw or #update will be called.
 
