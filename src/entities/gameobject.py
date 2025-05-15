@@ -18,6 +18,7 @@ class DamageSource(enum.Enum):
     PLAYER = 1
     MONSTER = 2
     LAVA = 3
+    VOID = 4
 
 
 class GameObject(arcade.Sprite):

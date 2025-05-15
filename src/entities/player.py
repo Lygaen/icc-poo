@@ -352,7 +352,7 @@ class Player(GameObject):
 
     def on_damage(self, source: DamageSource, damage: float) -> bool:
         match source:
-            case DamageSource.LAVA:
+            case DamageSource.LAVA | DamageSource.VOID:
                 self.HP = 0
             case DamageSource.MONSTER:
                 self.HP -= damage
@@ -367,6 +367,9 @@ class Player(GameObject):
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         super().update(delta_time, *args, **kwargs)
+
+        if self.center_y < -500 :
+            self.on_damage(DamageSource.VOID, self.HP)
 
         on_ground = self.map.physics_engine.can_jump()
 
