@@ -367,6 +367,9 @@ class Player(GameObject):
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         super().update(delta_time, *args, **kwargs)
 
+        if self.center_y < -10 :
+            self.on_damage(DamageSource.VOID, self.HP)
+
         on_ground = self.map.physics_engine.can_jump()
 
         if on_ground:  # Reset coyote-timer
