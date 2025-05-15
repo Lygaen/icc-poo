@@ -1,5 +1,5 @@
 import math
-from typing import Any
+from typing import Any, Final
 
 import arcade
 
@@ -291,12 +291,16 @@ class Player(GameObject):
     """A timer for coyote time jumps.
     """
 
+    __knockback : Final[list[float]]
+    """The knockback the player takes when hit, a list to modify it without being able to change its length
+    """
+
     def __init__(self, map: list[Map], **kwargs: Any) -> None:
         """Initializes the player tl;dr see GameObject#__init__"""
 
         super().__init__(
             map,
-            100,
+            10000000,
             ":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png",
             **kwargs,
         )
@@ -314,6 +318,7 @@ class Player(GameObject):
 
         self.__buffered_jump_timer = 0
         self.__coyote_timer = 0
+        self.__knockback = [0, 0]
 
         self.map.add_objects([self.weapon])
 
@@ -349,10 +354,26 @@ class Player(GameObject):
         damaged = source in {DamageSource.LAVA, DamageSource.VOID, DamageSource.MONSTER}
         if damaged:
             arcade.play_sound(self.hurt_sound)
+        if source == DamageSource.MONSTER and other is not None:
+            knockback : arcade.Vec2 = arcade.Vec2(self.center_x - other.center_x, self.center_y - other.center_y)
+            knockback = knockback.normalize()
+            self.__knockback[0] = 1000*knockback.normalize()[0]
+            self.__knockback[1] = 1000*(knockback.normalize()[1] + 0.5)
         return damaged
+    
+    def knock(self, delta_time: float = 1 / 60) -> None:
+        """applies the knockback to the player"""
+        self.center_x += self.__knockback[0]*delta_time
+        self.center_y += self.__knockback[1]*delta_time
+        for i in range(len(self.__knockback)):
+            self.__knockback[i] *= 0.7
+            if self.__knockback[i] < 0.01:
+                self.__knockback[i] = 0
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         super().update(delta_time, *args, **kwargs)
+
+        self.knock()
 
         if self.center_y < -500:
             self.damage(None, DamageSource.VOID, float("inf"))
