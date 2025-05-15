@@ -114,7 +114,11 @@ class GameObject(arcade.Sprite):
     def damage(
         self, other: GameObject | None, source: DamageSource, damage: float
     ) -> bool:
-        if self.invulnerability_time > 0 or not self._on_damage(other, source):
+        # Vulnerable if damage from void or lava
+        invulnerable = self.invulnerability_time > 0 and (
+            source not in {DamageSource.LAVA, DamageSource.VOID}
+        )
+        if invulnerable or not self._on_damage(other, source):
             return False
 
         self.health_points -= damage
