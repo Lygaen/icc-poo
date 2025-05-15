@@ -30,6 +30,11 @@ tests plateformes, portails et interrupteurs
 à faire : barre de vie
 à faire : blocs invisibles
 ### Semaine 11
+barre de vie
+blocs invisibles
+flèches sur blocs qui bougent
+mort en dessous de la map
+blocs de terre
 ### Semaine 12
 ### Semaine 13
 ### Semaine 14

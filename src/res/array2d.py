@@ -182,7 +182,7 @@ class Path:
                 map.at_position_with_direction(pos, dir) in {"=", "-", "x", "£", "E", "^", "#"}
                 and newpos not in visited
             ):
-                visited = visited | {newpos} | Path.group(map, newpos, visited)
+                visited |= {newpos} | Path.group(map, newpos, visited)
         return visited
 
     @staticmethod  # pour obtenir la liste des positions et l'index de départ
