@@ -15,6 +15,8 @@ class GameView(arcade.View):
     Will be changed to a proper camera handling
     """
 
+    ui_camera: arcade.Camera2D
+
     score: int
     """The current score of the player, saved
     between maps.
@@ -33,6 +35,7 @@ class GameView(arcade.View):
         """Set up the game, loading the map, ..."""
         self.map = Map([self], "map1.txt")
         self.camera = BetterCamera()
+        self.ui_camera = arcade.Camera2D()
 
     def on_draw(self) -> None:
         """Render the screen."""
@@ -44,8 +47,12 @@ class GameView(arcade.View):
             for object in self.map.game_objects:
                 object.draw_ui()
 
-        with arcade.Camera2D().activate():
-            arcade.Text(f"Score : {self.score}", 0, 0).draw()
+        with self.ui_camera.activate():
+            self.draw_ui()
+
+    def draw_ui(self) -> None:
+        top = self.window.size[1]
+        arcade.Text(f"Score : {self.score}", 50, top - 50, (255, 255, 255), 18).draw()
 
     def on_update(self, delta_time: float) -> None:
         """Updates all related internals
