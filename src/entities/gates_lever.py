@@ -101,7 +101,7 @@ class Switch(MovingPlatform):
 
         if self.data is None:
             raise ValueError(
-                f"Switch at position x:'{pos[0]}' y'{pos[1]}' is not defined in the header !"
+                f"Switch at position x:'{pos[0]}' y: '{pos[1]}' is not defined in the header !"
             )
 
         if not hasattr(self.data, "state"):
