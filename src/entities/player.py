@@ -367,7 +367,7 @@ class Player(GameObject):
         self.center_y += self.__knockback[1]*delta_time
         for i in range(len(self.__knockback)):
             self.__knockback[i] *= 0.7
-            if self.__knockback[i] < 0.01:
+            if abs(self.__knockback[i]) < 0.01:
                 self.__knockback[i] = 0
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
