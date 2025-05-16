@@ -300,7 +300,7 @@ class Player(GameObject):
 
         super().__init__(
             map,
-            10000000,
+            100,
             ":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png",
             **kwargs,
         )
