@@ -59,13 +59,8 @@ class Gate(GameObject):
             return
         self.isOpen = open
         self.visible = not self.isOpen
-
-        self.hit_box = arcade.hitbox.RotatableHitBox(
-            self.texture.hit_box_points,
-            position=self._position,
-            angle=self.angle,
-            scale=(0, 0) if self.isOpen else self._scale,
-        )
+        self.destroy()
+        self.map.add_objects([self], not self.isOpen)
 
 
 class Switch(MovingPlatform):

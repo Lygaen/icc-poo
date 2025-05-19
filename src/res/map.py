@@ -362,7 +362,7 @@ class Map:
                             center_y=pos.y,
                         )
                     )
-                
+
                 case "#":
                     pass
                 case "E":
@@ -399,8 +399,8 @@ class Map:
             self.__dict__.update(dict_)
 
         class GatePosition:
-            """The gate metadata
-            """
+            """The gate metadata"""
+
             x: int
             """The gate x position in world coordinate
             """
@@ -409,8 +409,8 @@ class Map:
             """
 
             class State(StrEnum):
-                """Whether a gate is opened or closed
-                """
+                """Whether a gate is opened or closed"""
+
                 open = "open"
                 closed = "closed"
 
@@ -423,8 +423,8 @@ class Map:
         """
 
         class SwitchPosition:
-            """The switch metadata
-            """
+            """The switch metadata"""
+
             x: int
             """The x position of the switch
             """
@@ -433,8 +433,8 @@ class Map:
             """
 
             class State(StrEnum):
-                """State of the lever (on/off)
-                """
+                """State of the lever (on/off)"""
+
                 on = "on"
                 off = "off"
 
@@ -444,11 +444,11 @@ class Map:
             """
 
             class Action:
-                """Action of a lever
-                """
+                """Action of a lever"""
+
                 class Kind(StrEnum):
-                    """The action kind of a lever
-                    """
+                    """The action kind of a lever"""
+
                     open_gate = "open-gate"
                     close_gate = "close-gate"
                     disable = "disable"
@@ -496,15 +496,10 @@ class Map:
         Args:
             object (GameObject): The object to destroy
         """
-        for obj in self.__passthrough_objects:
-            if obj == object:
-                self.__passthrough_objects.remove(object)
-                return
-
-        for obj in self.__physics_objects:
-            if obj == object:
-                self.__physics_objects.remove(object)
-                return
+        if object in self.__passthrough_objects:
+            self.__passthrough_objects.remove(object)
+        if object in self.__physics_objects:
+            self.__physics_objects.remove(object)
 
     def add_objects(self, objects: list[GameObject], is_physics: bool = False) -> None:
         """Adds an object to the map
