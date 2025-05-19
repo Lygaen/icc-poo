@@ -42,10 +42,11 @@ def test_player_death(window: arcade.Window) -> None:
     view.map.force_load_map(
         textwrap.dedent("""
         width: 4
-        height: 2
+        height: 3
         ---
         S o
-        =£==
+        = ==
+         £
         ---
         """)
     )
@@ -60,9 +61,9 @@ def test_player_death(window: arcade.Window) -> None:
 
     window.test(20)
     assert view.map.player.health_points < maxHP
-    view.on_key_press(arcade.key.LEFT, 0)
-    window.test(20)
-    view.on_key_release(arcade.key.LEFT, 0)
+
+    view.map.player.health_points = 1
+    window.test(40)
 
     assert view.map.player.center_x == view.map.player_spawn_point[0]
     assert view.map.player.center_y == view.map.player_spawn_point[1]
