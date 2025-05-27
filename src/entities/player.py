@@ -266,9 +266,10 @@ class Sword(Weapon):
 class Player(GameObject):
     """The main player game object."""
 
-    is_move_initiated: bool
+    is_move_initiated: tuple[bool, bool]
     """Whether the move was initiated (the key was pressed)
-    on a frame where the player was present.
+    on a frame where the player was present. First element is
+    for left, second for right.
     """
     gameover_sound: arcade.Sound
     """Sound for when player touches lava
@@ -291,7 +292,7 @@ class Player(GameObject):
     """A timer for coyote time jumps.
     """
 
-    __knockback : Final[list[float]]
+    __knockback: Final[list[float]]
     """The knockback the player takes when hit, a list to modify it without being able to change its length
     """
 
@@ -309,7 +310,11 @@ class Player(GameObject):
         # when a key was pressed on specific frames but registered
         # the release when the map was just reloaded.
         # Very specific. Very annoying.
-        self.is_move_initiated = False
+        # It needs to be a tuple depending on the direction
+        # because of course arcade doesn't have a way of checking
+        # the currently pressed keys! Yay.
+        self.is_move_initiated = (False, False)
+
         self.jump_sound = arcade.Sound(":resources:sounds/jump1.wav")
         self.gameover_sound = arcade.Sound(":resources:sounds/gameover1.wav")
         self.event_listener = True
@@ -332,22 +337,22 @@ class Player(GameObject):
         match symbol:
             case arcade.key.RIGHT:
                 self.change_x += PLAYER_MOVEMENT_SPEED
-                self.is_move_initiated = True
+                self.is_move_initiated = (self.is_move_initiated[0], True)
             case arcade.key.LEFT:
                 self.change_x -= PLAYER_MOVEMENT_SPEED
-                self.is_move_initiated = True
+                self.is_move_initiated = (True, self.is_move_initiated[1])
             case arcade.key.UP:
                 self.__buffered_jump_timer = PLAYER_JUMP_BUFFER
 
     def on_key_release(self, symbol: int, modifiers: int) -> None:
         match symbol:
             case arcade.key.RIGHT:
-                if (
-                    self.is_move_initiated
-                ):  # See in __init__ for explanation (yes, there is one)
+                if self.is_move_initiated[
+                    1
+                ]:  # See in __init__ for explanation (yes, there is one)
                     self.change_x -= PLAYER_MOVEMENT_SPEED
             case arcade.key.LEFT:
-                if self.is_move_initiated:
+                if self.is_move_initiated[0]:
                     self.change_x += PLAYER_MOVEMENT_SPEED
 
     def _on_damage(self, other: GameObject | None, source: DamageSource) -> bool:
@@ -355,16 +360,18 @@ class Player(GameObject):
         if damaged:
             arcade.play_sound(self.hurt_sound)
         if source == DamageSource.MONSTER and other is not None:
-            knockback : arcade.Vec2 = arcade.Vec2(self.center_x - other.center_x, self.center_y - other.center_y)
+            knockback: arcade.Vec2 = arcade.Vec2(
+                self.center_x - other.center_x, self.center_y - other.center_y
+            )
             knockback = knockback.normalize()
-            self.__knockback[0] = 1000*knockback.normalize()[0]
-            self.__knockback[1] = 1000*(knockback.normalize()[1] + 0.5)
+            self.__knockback[0] = 1000 * knockback.normalize()[0]
+            self.__knockback[1] = 1000 * (knockback.normalize()[1] + 0.5)
         return damaged
-    
+
     def knock(self, delta_time: float = 1 / 60) -> None:
         """applies the knockback to the player"""
-        self.center_x += self.__knockback[0]*delta_time
-        self.center_y += self.__knockback[1]*delta_time
+        self.center_x += self.__knockback[0] * delta_time
+        self.center_y += self.__knockback[1] * delta_time
         for i in range(len(self.__knockback)):
             self.__knockback[i] *= 0.7
             if abs(self.__knockback[i]) < 0.01:
@@ -373,7 +380,7 @@ class Player(GameObject):
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         super().update(delta_time, *args, **kwargs)
 
-        self.knock()
+        self.knock(delta_time)
 
         if self.center_y < -500:
             self.damage(None, DamageSource.VOID, float("inf"))
