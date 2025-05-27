@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import enum
+from typing import Any
 
 import arcade
 from arcade.types import PathOrTexture, Point2
@@ -209,7 +210,7 @@ class GameObject(arcade.Sprite):
             (0, 255, 0),
         )
 
-    def update(self, delta_time: float = 1 / 60, *args, **kwargs) -> None:
+    def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         self.invulnerability_time = max(0, self.invulnerability_time - delta_time)
         super().update(delta_time, *args, **kwargs)
 

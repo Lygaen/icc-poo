@@ -39,6 +39,9 @@ def test_gate_def_open(window: arcade.Window) -> None:
     )
     window.show_view(view)
 
+    # Manually do the first tick of the gate
+    get_first_of_type(Gate, view.map.game_objects).update(1 / 60)
+
     assert get_first_of_type(Gate, view.map.game_objects).isOpen
 
 

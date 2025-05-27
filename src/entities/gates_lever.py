@@ -44,7 +44,7 @@ class Gate(GameObject):
         # If not specified, the door is closed, shown
         self.isOpen = False
         self.visible = True
-        self.__open_first_tick = False # See above
+        self.__open_first_tick = False  # See above
 
         self.data = None
 
@@ -61,10 +61,10 @@ class Gate(GameObject):
             self.data.x = pos[0]
             self.data.y = pos[1]
             self.data.state = GateData.State.closed
-    
 
     def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
         super().update(delta_time, **kwargs)
+
         if self.__open_first_tick:
             self.update_gate(not self.isOpen)
             self.visible = False
@@ -77,7 +77,7 @@ class Gate(GameObject):
         """
         if open == self.isOpen:
             return
-        
+
         self.isOpen = open
         self.visible = not open
         self.destroy()
