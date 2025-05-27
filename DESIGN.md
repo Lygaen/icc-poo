@@ -1,4 +1,71 @@
 # DESIGN
+## Diagramme d'Inhéritance
+![](.github/inheritance.svg)
+
+<details>
+    <summary>Mermaid code for the graph</summary>
+
+```mermaid
+---
+title: Inheritance graph
+config:
+    class:
+        hideEmptyMembersBox: true
+---
+classDiagram
+    class arcade.Sprite {
+    }
+
+    arcade.Sprite --> GameObject
+    namespace gameobject.py {
+        class GameObject
+    }
+
+    GameObject --> Coin
+    namespace coin.py {
+        class Coin
+    }
+
+    GameObject --> Monster
+    Monster --> Slime
+    Monster --> Bat
+    Bat --> DarkBat
+    namespace monster.py {
+        class Monster
+        class Slime
+        class Bat
+        class DarkBat
+    }
+
+
+    GameObject --> Player
+    GameObject --> Weapon
+    Weapon --> Bow
+    Weapon --> Sword
+    namespace player.py {
+        class Weapon
+        class Bow
+        class Sword
+        class Player
+    }
+
+    GameObject --> MovingPlatform
+    MovingPlatform --> Exit
+    MovingPlatform --> Lava
+    namespace wall.py {
+        class MovingPlatform
+        class Lava
+        class Exit
+    }
+
+    GameObject --> Gate
+    MovingPlatform --> Switch
+    namespace gates_lever.py {
+        class Gate
+        class Switch
+    }
+```
+</details>
 
 ## Analyse des performances :
 ### Génération d'une carte en fonction de n, la taille de la carte en nombre de "cellules":
