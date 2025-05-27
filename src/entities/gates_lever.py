@@ -19,6 +19,14 @@ class Gate(GameObject):
     isOpen: bool
     """Whether the gate is opened or not
     """
+    __open_first_tick: bool
+    """Because the __init__ is called before
+    an object is initialized inside a list,
+    the changing the gate from the passthrough
+    objects to objects with collisions
+    needs to happen on the next tick.
+    """
+
     data: GateData | None
     """Internal metadata of the gate
     """
@@ -33,12 +41,17 @@ class Gate(GameObject):
             **kwargs,
         )
 
+        # If not specified, the door is closed, shown
         self.isOpen = False
+        self.visible = True
+        self.__open_first_tick = False # See above
+
         self.data = None
+
         for gate in meta.gates or []:
             if gate.x == pos[0] and gate.y == pos[1]:
                 if gate.state == GateData.State.open:
-                    self.update_gate(True)
+                    self.__open_first_tick = True
                 self.data = gate
                 break
 
@@ -48,6 +61,13 @@ class Gate(GameObject):
             self.data.x = pos[0]
             self.data.y = pos[1]
             self.data.state = GateData.State.closed
+    
+
+    def update(self, delta_time: float = 1 / 60, *args: Any, **kwargs: Any) -> None:
+        super().update(delta_time, **kwargs)
+        if self.__open_first_tick:
+            self.update_gate(not self.isOpen)
+            self.visible = False
 
     def update_gate(self, open: bool) -> None:
         """Updates the gate with open or closed
@@ -57,14 +77,15 @@ class Gate(GameObject):
         """
         if open == self.isOpen:
             return
+        
         self.isOpen = open
-        self.visible = not self.isOpen
+        self.visible = not open
         self.destroy()
         self.map.add_objects([self], not self.isOpen)
 
 
 class Switch(MovingPlatform):
-    """The switch object"""
+    """The switch oobject"""
 
     data: SwitchData
     """The switch metadata
