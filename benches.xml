@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<testsuites><testsuite
+<testsuites>
+    <testsuite
         name="pytest"
         errors="0"
         failures="0"
@@ -8,332 +9,142 @@
         time="4325.751"
         timestamp="2025-05-11T09:53:12.855892+02:00"
         hostname="archy"
-    ><properties><property
-                name="map_1_1"
-                value="0.000686207499984448"
-            /><property name="map_1_3" value="0.000758863900000506" /><property
-                name="map_1_5"
-                value="0.0008335591000104614"
-            /><property
-                name="map_1_10"
-                value="0.0006564468000078705"
-            /><property
-                name="map_1_50"
-                value="0.0007122776999949565"
-            /><property
-                name="map_1_100"
-                value="0.000824575100000402"
-            /><property
-                name="map_1_500"
-                value="0.0012073327000052814"
-            /><property
-                name="map_1_1000"
-                value="0.001656013700016956"
-            /><property name="map_3_1" value="0.0007643546000053903" /><property
-                name="map_3_3"
-                value="0.0010798767999858684"
-            /><property name="map_3_5" value="0.0009497397000131968" /><property
-                name="map_3_10"
-                value="0.0013752603000057207"
-            /><property name="map_3_50" value="0.004301914400002715" /><property
-                name="map_3_100"
-                value="0.007852347499988355"
-            /><property name="map_3_500" value="0.03648081899998488" /><property
-                name="map_3_1000"
-                value="0.07042741230000046"
-            /><property name="map_5_1" value="0.0008564057999819851" /><property
-                name="map_5_3"
-                value="0.0011720616000047812"
-            /><property name="map_5_5" value="0.0013918105000129799" /><property
-                name="map_5_10"
-                value="0.002139142200007882"
-            /><property name="map_5_50" value="0.007513177600003473" /><property
-                name="map_5_100"
-                value="0.014605258500000672"
-            /><property name="map_5_500" value="0.06939749970001685" /><property
-                name="map_5_1000"
-                value="0.1380375744000048"
-            /><property
-                name="map_10_1"
-                value="0.0012960754000005182"
-            /><property
-                name="map_10_3"
-                value="0.0017153145999827756"
-            /><property name="map_10_5" value="0.002442255300002216" /><property
-                name="map_10_10"
-                value="0.004230511700006901"
-            /><property
-                name="map_10_50"
-                value="0.017822709699998995"
-            /><property
-                name="map_10_100"
-                value="0.034686654899996935"
-            /><property
-                name="map_10_500"
-                value="0.17235774309999669"
-            /><property
-                name="map_10_1000"
-                value="0.3465511792999905"
-            /><property name="map_50_1" value="0.002566490000003796" /><property
-                name="map_50_3"
-                value="0.0059200436999844895"
-            /><property name="map_50_5" value="0.009408373599990227" /><property
-                name="map_50_10"
-                value="0.018011189999992894"
-            /><property name="map_50_50" value="0.08686620270000275" /><property
-                name="map_50_100"
-                value="0.1722497661000034"
-            /><property name="map_50_500" value="0.8661733199000082" /><property
-                name="map_50_1000"
-                value="1.7322886266000068"
-            /><property
-                name="map_100_1"
-                value="0.004211915700011559"
-            /><property
-                name="map_100_3"
-                value="0.010974514700001237"
-            /><property name="map_100_5" value="0.227965779200008" /><property
-                name="map_100_10"
-                value="0.03518987229999766"
-            /><property
-                name="map_100_50"
-                value="0.17085161229999812"
-            /><property
-                name="map_100_100"
-                value="0.34511428409998646"
-            /><property
-                name="map_100_500"
-                value="1.7342964606999884"
-            /><property
-                name="map_100_1000"
-                value="3.442074956700003"
-            /><property
-                name="map_500_1"
-                value="0.017915996000010637"
-            /><property name="map_500_3" value="0.2614360746000102" /><property
-                name="map_500_5"
-                value="0.08634148479998202"
-            /><property
-                name="map_500_10"
-                value="0.17403728379999847"
-            /><property name="map_500_50" value="0.8676891550000164" /><property
-                name="map_500_100"
-                value="1.7377616246000116"
-            /><property name="map_500_500" value="8.68516921319997" /><property
-                name="map_500_1000"
-                value="17.557834703100024"
-            /><property
-                name="map_1000_1"
-                value="0.035289834400009566"
-            /><property
-                name="map_1000_3"
-                value="0.10406141889998252"
-            /><property name="map_1000_5" value="0.3818079075999776" /><property
-                name="map_1000_10"
-                value="0.34638206950003225"
-            /><property name="map_1000_50" value="1.741747145399995" /><property
-                name="map_1000_100"
-                value="3.4466244996000115"
-            /><property
-                name="map_1000_500"
-                value="17.562460276599996"
-            /><property
-                name="map_1000_1000"
-                value="35.299988834400025"
-            /><property
-                name="update_1_1"
-                value="7.345948999954998e-05"
-            /><property
-                name="update_1_3"
-                value="7.630226999935985e-05"
-            /><property
-                name="update_1_5"
-                value="6.962839000152599e-05"
-            /><property
-                name="update_1_10"
-                value="7.008491999840771e-05"
-            /><property
-                name="update_1_50"
-                value="7.012920000306621e-05"
-            /><property
-                name="update_1_100"
-                value="6.9817650000914e-05"
-            /><property
-                name="update_1_500"
-                value="7.15399199998501e-05"
-            /><property
-                name="update_1_1000"
-                value="7.031149999875197e-05"
-            /><property
-                name="update_3_1"
-                value="7.385012999748141e-05"
-            /><property
-                name="update_3_3"
-                value="0.00023861952000061136"
-            /><property
-                name="update_3_5"
-                value="0.00023964019999766605"
-            /><property
-                name="update_3_10"
-                value="0.00025225324000075486"
-            /><property
-                name="update_3_50"
-                value="0.0003063946100019166"
-            /><property
-                name="update_3_100"
-                value="0.00037844502000098143"
-            /><property
-                name="update_3_500"
-                value="0.0009479919500017787"
-            /><property
-                name="update_3_1000"
-                value="0.0016041470599975583"
-            /><property
-                name="update_5_1"
-                value="7.964253999944049e-05"
-            /><property
-                name="update_5_3"
-                value="0.00021099508000133938"
-            /><property
-                name="update_5_5"
-                value="0.00023004459999810932"
-            /><property
-                name="update_5_10"
-                value="0.00025106438000420893"
-            /><property
-                name="update_5_50"
-                value="0.0003598470399992948"
-            /><property
-                name="update_5_100"
-                value="0.000499300769997717"
-            /><property
-                name="update_5_500"
-                value="0.001577308640003139"
-            /><property
-                name="update_5_1000"
-                value="0.0030872388800025873"
-            /><property
-                name="update_10_1"
-                value="7.743139000012888e-05"
-            /><property
-                name="update_10_3"
-                value="0.00025175435000164727"
-            /><property
-                name="update_10_5"
-                value="0.0002718817300001319"
-            /><property
-                name="update_10_10"
-                value="0.0002988098300011188"
-            /><property
-                name="update_10_50"
-                value="0.0005838852299984864"
-            /><property
-                name="update_10_100"
-                value="0.0009463819999973567"
-            /><property
-                name="update_10_500"
-                value="0.0038199834700026257"
-            /><property
-                name="update_10_1000"
-                value="0.007363330749999477"
-            /><property
-                name="update_50_1"
-                value="0.00011621116000242182"
-            /><property
-                name="update_50_3"
-                value="0.0003353151999999682"
-            /><property
-                name="update_50_5"
-                value="0.00040404728000339676"
-            /><property
-                name="update_50_10"
-                value="0.0005829855100000714"
-            /><property
-                name="update_50_50"
-                value="0.001971380400000271"
-            /><property
-                name="update_50_100"
-                value="0.0037358599500021228"
-            /><property
-                name="update_50_500"
-                value="0.018474758870002005"
-            /><property
-                name="update_50_1000"
-                value="0.037440992019996885"
-            /><property
-                name="update_100_1"
-                value="0.0001567926300003819"
-            /><property
-                name="update_100_3"
-                value="0.00044327194999823407"
-            /><property
-                name="update_100_5"
-                value="0.0005877391400008491"
-            /><property
-                name="update_100_10"
-                value="0.0009446417700019083"
-            /><property
-                name="update_100_50"
-                value="0.0037219633399990927"
-            /><property
-                name="update_100_100"
-                value="0.007238748770000711"
-            /><property
-                name="update_100_500"
-                value="0.036584064640001086"
-            /><property
-                name="update_100_1000"
-                value="0.0743319477299974"
-            /><property
-                name="update_500_1"
-                value="0.0004237168700001348"
-            /><property
-                name="update_500_3"
-                value="0.0012827064200018868"
-            /><property
-                name="update_500_5"
-                value="0.0019616147200031265"
-            /><property
-                name="update_500_10"
-                value="0.0037335667599973023"
-            /><property
-                name="update_500_50"
-                value="0.017656636140000046"
-            /><property
-                name="update_500_100"
-                value="0.03559332888999961"
-            /><property
-                name="update_500_500"
-                value="0.18688779198999783"
-            /><property
-                name="update_500_1000"
-                value="0.35930153620000055"
-            /><property
-                name="update_1000_1"
-                value="0.0007788758600008805"
-            /><property
-                name="update_1000_3"
-                value="0.002316202040001372"
-            /><property
-                name="update_1000_5"
-                value="0.0037043892800011236"
-            /><property
-                name="update_1000_10"
-                value="0.007124848580001526"
-            /><property
-                name="update_1000_50"
-                value="0.03587750819000121"
-            /><property
-                name="update_1000_100"
-                value="0.07254028596999888"
-            /><property
-                name="update_1000_500"
-                value="0.36261054995999986"
-            /><property
-                name="update_1000_1000"
-                value="0.7201181451299999"
-            /></properties><testcase
+    >
+        <properties>
+            <property name="map_1_1" value="0.000686207499984448" />
+            <property name="map_1_3" value="0.000758863900000506" />
+            <property name="map_1_5" value="0.0008335591000104614" />
+            <property name="map_1_10" value="0.0006564468000078705" />
+            <property name="map_1_50" value="0.0007122776999949565" />
+            <property name="map_1_100" value="0.000824575100000402" />
+            <property name="map_1_500" value="0.0012073327000052814" />
+            <property name="map_1_1000" value="0.001656013700016956" />
+            <property name="map_3_1" value="0.0007643546000053903" />
+            <property name="map_3_3" value="0.0010798767999858684" />
+            <property name="map_3_5" value="0.0009497397000131968" />
+            <property name="map_3_10" value="0.0013752603000057207" />
+            <property name="map_3_50" value="0.004301914400002715" />
+            <property name="map_3_100" value="0.007852347499988355" />
+            <property name="map_3_500" value="0.03648081899998488" />
+            <property name="map_3_1000" value="0.07042741230000046" />
+            <property name="map_5_1" value="0.0008564057999819851" />
+            <property name="map_5_3" value="0.0011720616000047812" />
+            <property name="map_5_5" value="0.0013918105000129799" />
+            <property name="map_5_10" value="0.002139142200007882" />
+            <property name="map_5_50" value="0.007513177600003473" />
+            <property name="map_5_100" value="0.014605258500000672" />
+            <property name="map_5_500" value="0.06939749970001685" />
+            <property name="map_5_1000" value="0.1380375744000048" />
+            <property name="map_10_1" value="0.0012960754000005182" />
+            <property name="map_10_3" value="0.0017153145999827756" />
+            <property name="map_10_5" value="0.002442255300002216" />
+            <property name="map_10_10" value="0.004230511700006901" />
+            <property name="map_10_50" value="0.017822709699998995" />
+            <property name="map_10_100" value="0.034686654899996935" />
+            <property name="map_10_500" value="0.17235774309999669" />
+            <property name="map_10_1000" value="0.3465511792999905" />
+            <property name="map_50_1" value="0.002566490000003796" />
+            <property name="map_50_3" value="0.0059200436999844895" />
+            <property name="map_50_5" value="0.009408373599990227" />
+            <property name="map_50_10" value="0.018011189999992894" />
+            <property name="map_50_50" value="0.08686620270000275" />
+            <property name="map_50_100" value="0.1722497661000034" />
+            <property name="map_50_500" value="0.8661733199000082" />
+            <property name="map_50_1000" value="1.7322886266000068" />
+            <property name="map_100_1" value="0.004211915700011559" />
+            <property name="map_100_3" value="0.010974514700001237" />
+            <property name="map_100_5" value="0.022796577920000" />
+            <property name="map_100_10" value="0.03518987229999766" />
+            <property name="map_100_50" value="0.17085161229999812" />
+            <property name="map_100_100" value="0.34511428409998646" />
+            <property name="map_100_500" value="1.7342964606999884" />
+            <property name="map_100_1000" value="3.442074956700003" />
+            <property name="map_500_1" value="0.017915996000010637" />
+            <property name="map_500_3" value="0.2614360746000102" />
+            <property name="map_500_5" value="0.08634148479998202" />
+            <property name="map_500_10" value="0.17403728379999847" />
+            <property name="map_500_50" value="0.8676891550000164" />
+            <property name="map_500_100" value="1.7377616246000116" />
+            <property name="map_500_500" value="8.68516921319997" />
+            <property name="map_500_1000" value="17.557834703100024" />
+            <property name="map_1000_1" value="0.035289834400009566" />
+            <property name="map_1000_3" value="0.10406141889998252" />
+            <property name="map_1000_5" value="0.3818079075999776" />
+            <property name="map_1000_10" value="0.34638206950003225" />
+            <property name="map_1000_50" value="1.741747145399995" />
+            <property name="map_1000_100" value="3.4466244996000115" />
+            <property name="map_1000_500" value="17.562460276599996" />
+            <property name="map_1000_1000" value="35.299988834400025" />
+            <property name="update_1_1" value="7.345948999954998e-05" />
+            <property name="update_1_3" value="7.630226999935985e-05" />
+            <property name="update_1_5" value="6.962839000152599e-05" />
+            <property name="update_1_10" value="7.008491999840771e-05" />
+            <property name="update_1_50" value="7.012920000306621e-05" />
+            <property name="update_1_100" value="6.9817650000914e-05" />
+            <property name="update_1_500" value="7.15399199998501e-05" />
+            <property name="update_1_1000" value="7.031149999875197e-05" />
+            <property name="update_3_1" value="7.385012999748141e-05" />
+            <property name="update_3_3" value="0.00023861952000061136" />
+            <property name="update_3_5" value="0.00023964019999766605" />
+            <property name="update_3_10" value="0.00025225324000075486" />
+            <property name="update_3_50" value="0.0003063946100019166" />
+            <property name="update_3_100" value="0.00037844502000098143" />
+            <property name="update_3_500" value="0.0009479919500017787" />
+            <property name="update_3_1000" value="0.0016041470599975583" />
+            <property name="update_5_1" value="7.964253999944049e-05" />
+            <property name="update_5_3" value="0.00021099508000133938" />
+            <property name="update_5_5" value="0.00023004459999810932" />
+            <property name="update_5_10" value="0.00025106438000420893" />
+            <property name="update_5_50" value="0.0003598470399992948" />
+            <property name="update_5_100" value="0.000499300769997717" />
+            <property name="update_5_500" value="0.001577308640003139" />
+            <property name="update_5_1000" value="0.0030872388800025873" />
+            <property name="update_10_1" value="7.743139000012888e-05" />
+            <property name="update_10_3" value="0.00025175435000164727" />
+            <property name="update_10_5" value="0.0002718817300001319" />
+            <property name="update_10_10" value="0.0002988098300011188" />
+            <property name="update_10_50" value="0.0005838852299984864" />
+            <property name="update_10_100" value="0.0009463819999973567" />
+            <property name="update_10_500" value="0.0038199834700026257" />
+            <property name="update_10_1000" value="0.007363330749999477" />
+            <property name="update_50_1" value="0.00011621116000242182" />
+            <property name="update_50_3" value="0.0003353151999999682" />
+            <property name="update_50_5" value="0.00040404728000339676" />
+            <property name="update_50_10" value="0.0005829855100000714" />
+            <property name="update_50_50" value="0.001971380400000271" />
+            <property name="update_50_100" value="0.0037358599500021228" />
+            <property name="update_50_500" value="0.018474758870002005" />
+            <property name="update_50_1000" value="0.037440992019996885" />
+            <property name="update_100_1" value="0.0001567926300003819" />
+            <property name="update_100_3" value="0.00044327194999823407" />
+            <property name="update_100_5" value="0.0005877391400008491" />
+            <property name="update_100_10" value="0.0009446417700019083" />
+            <property name="update_100_50" value="0.0037219633399990927" />
+            <property name="update_100_100" value="0.007238748770000711" />
+            <property name="update_100_500" value="0.036584064640001086" />
+            <property name="update_100_1000" value="0.0743319477299974" />
+            <property name="update_500_1" value="0.0004237168700001348" />
+            <property name="update_500_3" value="0.0012827064200018868" />
+            <property name="update_500_5" value="0.0019616147200031265" />
+            <property name="update_500_10" value="0.0037335667599973023" />
+            <property name="update_500_50" value="0.017656636140000046" />
+            <property name="update_500_100" value="0.03559332888999961" />
+            <property name="update_500_500" value="0.18688779198999783" />
+            <property name="update_500_1000" value="0.35930153620000055" />
+            <property name="update_1000_1" value="0.0007788758600008805" />
+            <property name="update_1000_3" value="0.002316202040001372" />
+            <property name="update_1000_5" value="0.0037043892800011236" />
+            <property name="update_1000_10" value="0.007124848580001526" />
+            <property name="update_1000_50" value="0.03587750819000121" />
+            <property name="update_1000_100" value="0.07254028596999888" />
+            <property name="update_1000_500" value="0.36261054995999986" />
+            <property name="update_1000_1000" value="0.7201181451299999" />
+        </properties>
+        <testcase
             classname="tests.test_bench"
             name="test_map_size"
             time="1089.515"
-        /><testcase time="2.176" /></testsuite></testsuites>
+        />
+        <testcase time="2.176" />
+    </testsuite>
+</testsuites>
