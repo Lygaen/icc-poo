@@ -127,6 +127,8 @@ class Weapon(GameObject):
     def on_mouse_motion(self, x: int, y: int, dx: int, dy: int) -> None:
         self.__mouse_position = (x, y)
 
+    def get_weapon_texture(self) -> arcade.Texture: ...
+
     @staticmethod
     def change_weapon(current_weapon: "Weapon") -> "Weapon":
         """Change weapon, returning a new weapon
@@ -239,6 +241,11 @@ class Bow(Weapon):
             self.spawn_next_tick = True
             self.last_shot = ARROW_WAIT_TIME
 
+    BOW_UI_TEXTURE = arcade.load_texture("assets/bow.png")
+
+    def get_weapon_texture(self) -> arcade.Texture:
+        return self.BOW_UI_TEXTURE
+
     def destroy(self, is_health_death: bool = False) -> None:
         super().destroy()
 
@@ -264,6 +271,11 @@ class Sword(Weapon):
 
         for hits in self.map.check_for_collisions_all(self):
             hits.damage(self, DamageSource.PLAYER, SWORD_DOT_DAMAGE)
+
+    SWORD_UI_TEXTURE = arcade.load_texture("assets/sword_silver.png")
+
+    def get_weapon_texture(self) -> arcade.Texture:
+        return self.SWORD_UI_TEXTURE
 
 
 class Player(GameObject):

@@ -37,6 +37,11 @@ class GameView(arcade.View):
         self.camera = BetterCamera()
         self.ui_camera = arcade.Camera2D()
 
+    def on_resize(self, width: int, height: int) -> None:
+        super().on_resize(width, height)
+        self.camera.match_window()
+        self.ui_camera.match_window()
+
     def on_draw(self) -> None:
         """Render the screen."""
         self.clear()
@@ -50,9 +55,60 @@ class GameView(arcade.View):
         with self.ui_camera.activate():
             self.draw_ui()
 
+    COIN_UI_TEXTURE = arcade.load_texture(":resources:/images/items/coinGold.png")
+
     def draw_ui(self) -> None:
-        top = self.window.size[1]
-        arcade.Text(f"Score : {self.score}", 50, top - 50, (255, 255, 255), 18).draw()
+        top = self.ui_camera.top
+        padding = 25
+
+        life_bar_size = 150
+        arcade.draw_lbwh_rectangle_filled(
+            padding * 2, top - padding - 50, life_bar_size, 20, (255, 0, 0)
+        )
+        arcade.draw_lbwh_rectangle_filled(
+            padding * 2,
+            top - padding - 50,
+            (self.map.player.health_points / self.map.player.max_hp) * life_bar_size,
+            20,
+            (0, 255, 0),
+        )
+        arcade.Text(
+            f"{self.map.player.health_points}/{self.map.player.max_hp}",
+            padding * 2 + life_bar_size + padding,
+            top - padding - 50,
+            arcade.color.LIGHT_GRAY,
+            18,
+        ).draw()
+
+        arcade.draw_texture_rect(
+            self.COIN_UI_TEXTURE,
+            arcade.rect.XYWH(
+                padding * 2,
+                top - 2 * padding - 50 - 9,
+                64,
+                64,
+                arcade.rect.AnchorPoint.CENTER_LEFT,
+            ),
+        )
+
+        arcade.Text(
+            f"{self.score}",
+            padding * 2 + 64,
+            top - 2 * padding - 50 - 18,
+            (255, 255, 255),
+            18,
+        ).draw()
+
+        arcade.draw_texture_rect(
+            self.map.player.weapon.get_weapon_texture(),
+            arcade.rect.XYWH(
+                padding * 2 + 64 + 10 + padding,
+                top - 2 * padding - 50 - 9,
+                64,
+                64,
+                arcade.rect.AnchorPoint.CENTER_LEFT,
+            ),
+        )
 
     def on_update(self, delta_time: float) -> None:
         """Updates all related internals
