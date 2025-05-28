@@ -2,6 +2,9 @@
 
 EPFL's 2025 autumn programmation project. The project was a game, using the [arcade.py](https://api.arcade.academy/en/stable/) library. It was made with [Martin Gremeaux-Bader](https://people.epfl.ch/martin.gremeaux-bader).
 
+> If viewing outside of the GitHub repository, the rendering of the svgs in `images` in the `DESIGN.md` file might break.
+> Try opening the [repository on GitHub](https://github.com/Lygaen/icc-poo) if having rendering issues.
+
 ## How to play / use
 First of all, you need to clone this repository :
 ```sh
