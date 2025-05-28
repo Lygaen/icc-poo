@@ -196,7 +196,10 @@ class Bow(Weapon):
                 if dir.y < 0:
                     angle = -angle - (math.pi / 2) + math.pi
                 self.radians = angle
-            else:  # We collided with something
+            elif self.velocity != (
+                0,
+                0,
+            ):  # We collided with something, and the arrow is moving
                 self.velocity = (0, 0)
                 for hits in filtered:
                     if hits.damage(self, DamageSource.PLAYER, ARROW_DAMAGE):
