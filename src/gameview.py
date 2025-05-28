@@ -42,9 +42,16 @@ class GameView(arcade.View):
         self.camera.match_window()
         self.ui_camera.match_window()
 
+    BACKGROUND_IMAGE = arcade.load_texture(":resources:images/backgrounds/stars.png")
+
     def on_draw(self) -> None:
         """Render the screen."""
-        self.clear()
+        self.clear(arcade.color.BLACK_OLIVE)
+
+        arcade.draw_texture_rect(
+            self.BACKGROUND_IMAGE,
+            self.window.rect,
+        )
 
         with self.camera.activate():
             self.map.draw()

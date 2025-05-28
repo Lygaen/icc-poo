@@ -293,16 +293,18 @@ class Map:
                         )
                     )
                 case "|":
-                    self.__physics_objects.append(
-                        Gate(
-                            [self],
-                            info,
-                            (x, y),
-                            scale=self.__GRID_SCALE,
-                            center_x=pos.x,
-                            center_y=pos.y,
-                        )
+                    gate = Gate(
+                        [self],
+                        info,
+                        (x, y),
+                        scale=self.__GRID_SCALE,
+                        center_x=pos.x,
+                        center_y=pos.y,
                     )
+                    if gate.isOpen:
+                        self.__passthrough_objects.append(gate)
+                    else:
+                        self.__physics_objects.append(gate)
                 case "o":
                     self.__passthrough_objects.append(
                         Slime(
