@@ -65,7 +65,7 @@ class GameView(arcade.View):
     COIN_UI_TEXTURE = arcade.load_texture(":resources:/images/items/coinGold.png")
 
     def draw_ui(self) -> None:
-        top = self.ui_camera.top
+        top = self.ui_camera.height
         padding = 25
 
         life_bar_size = 150
