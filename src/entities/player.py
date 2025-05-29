@@ -1,4 +1,5 @@
 import math
+from abc import abstractmethod
 from typing import Any, Final
 
 import arcade
@@ -127,6 +128,7 @@ class Weapon(GameObject):
     def on_mouse_motion(self, x: int, y: int, dx: int, dy: int) -> None:
         self.__mouse_position = (x, y)
 
+    @abstractmethod
     def get_weapon_texture(self) -> arcade.Texture: ...
 
     @staticmethod

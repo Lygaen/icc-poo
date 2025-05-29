@@ -1,5 +1,15 @@
 # DESIGN
-## Diagramme d'Inhéritance
+## Hierarchie
+Afin de nous aider à implémenter les fonctionnalités de chaque semaine, nous avons mis en place un système de hierarchie de classes.
+
+Tout commence au niveau du `GameObject`. A l'image d'autres moteurs de jeu, celui-ci décrit une entité, un object, un solide, un interactible etc. Un `GameObject` implémente donc naturellement `arcade.Sprite` afin d'être pouvoir dessiné et manipulé correctement.
+
+Cette abstraction permet notamment de manipuler les objets du mondes tout en leur rajoutant de la fonctionnalité commune (ex: points de vie, invulnerabilité, destruction, etc). La classe `GameObject` a des méthodes simples qui permettent d'être facilement overridable. Par exemple, ils implémentent `destroy`, une fonction pour pouvoir s'enlever de la map.
+
+Ensuite, les objets ayant besoin de fonctionnalité supplémentaire implémentent `GameObject`, overridant les fonctions `on_update` au besoin. Ces inhéritances permettent de séparer le code correctement entre les différentes fonctionnalités nécessaires.
+
+### Diagramme
+Notre hierarchie peut être décrite par le diagramme suivant:
 
 ![](images/inheritance.svg)
 
@@ -85,6 +95,8 @@ Les mécanismes appelés dans le `update` sont tous en `O(1)` ou en `O(k)`. En e
 2. Parcourir les `Map#game_objects` pour en sortir un sprite voulue (`O(k)`)
 3. Des changements d'états sur les sprites ou appeler des procédures sur d'autres sprites (`O(1)`)
 
+Ainsi, au plus, la fonction `update` va traverser `k` sprites qui vont effectuer au pire des cas des appels en `O(k)`. La complexité du `update` est donc en `O(k^2)`.
+
 ## Benchmarks
 Des benchmarks ont été effectués pour appuyer nos arguments de la section analyse des performances. Voici les résultats sous forme de tableaux.
 
@@ -120,7 +132,7 @@ Show[ListPointPlot3D[data, PlotStyle -> Red, BoxRatios -> {1, 1, 0.5}],
 
 ![](images/graph-map.svg)
 
-Nous voyons bien que les données suivent une progression linéaire du second ordre, ce qui prouve que notre opération est en `O(n^2)`.
+Nous voyons bien que les données suivent une progression linéaire du second ordre, ce qui prouve que notre opération est en `O(n^2)`. Si nous essayons d'utiliser un modèle de regréssion linéaire du premier ordre (`O(n)`), nous obtenons une erreur de ~30%.
 
 ### Update
 | Largeur (→), Hauteur (↓) | 1       | 3       | 5       | 10      | 50      | 100     | 500     | 1000    |
@@ -147,4 +159,4 @@ Show[ListPointPlot3D[data, PlotStyle -> Red, BoxRatios -> {1, 1, 0.5}],
 
 ![](images/update-map.svg)
 
-Comme plutôt, nous voyons bien que les données suivent une progression linéaire du second ordre, ce qui prouve que notre opération est en `O(n^2)`.
+Comme plutôt, nous voyons bien que les données suivent une progression linéaire du second ordre, ce qui prouve que notre opération est en `O(n^2)`. Si nous essayons d'utiliser un modèle de regréssion linéaire du premier ordre (`O(n)`), nous obtenons une erreur de ~20%.
