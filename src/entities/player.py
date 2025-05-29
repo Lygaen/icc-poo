@@ -185,6 +185,7 @@ class Bow(Weapon):
                 ob
                 for ob in objects
                 if ob.__class__.__name__ not in ["Bow", "Player", "Arrow"]
+                and ob.visible
             ]  # Ignore collisions with the bow, player or other arrows
 
             if len(filtered) == 0:  # Free arroooooww
