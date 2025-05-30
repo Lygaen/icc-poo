@@ -49,7 +49,6 @@ This projects uses, as prescribed by the course :
 - [UV](https://astral.sh/uv/) as a project / version manager
 - [PyTest](https://pytest.org/) for testing / coverage
 - [MyPy](https://mypy-lang.org/) for a stronger typing system
-- [Arcade](https://api.arcade.academy/en/latest/index.html) for the game engine
 
 ## Extensions
 We added two extensions to this project:
