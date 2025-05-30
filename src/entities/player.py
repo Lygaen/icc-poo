@@ -25,7 +25,7 @@ PLAYER_COYOTE_TIME = 0.07
 """Base timer buffer for coyote time, in seconds.
 """
 
-SWORD_DOT_DAMAGE = 175
+SWORD_DOT_DAMAGE = 75
 """Sword damage-over-time.
 """
 
